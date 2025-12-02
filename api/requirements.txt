@@ -1,0 +1,11 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+pandas
+numpy
+scikit-learn
+joblib
+pydantic
+pytest
+httpx
+pylint
+black
