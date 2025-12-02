@@ -1,21 +1,52 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=40&pause=1000&color=FF1493&center=true&vCenter=true&width=600&lines=ONCOGUARD+AI;CLINICAL+TRIAGE+SYSTEM" alt="Typing SVG" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=40&pause=1000&color=FF1493&center=true&vCenter=true&width=600&lines=ONCOGUARD+AI;OBJECTIVE+2:+RISK+STRATIFICATION" alt="Typing SVG" />
 
 <p align="center">
+    <img src="https://img.shields.io/badge/Module-Objective%202-FF1493?style=for-the-badge&logo=none" />
     <img src="https://img.shields.io/badge/Accuracy-99.8%25-2ea44f?style=for-the-badge&logo=none" />
-    <img src="https://img.shields.io/badge/Model-SGD--SVM-ff1493?style=for-the-badge&logo=scikitlearn&logoColor=white" />
-    <img src="https://img.shields.io/badge/Status-Production-000000?style=for-the-badge&border=white" />
+    <img src="https://img.shields.io/badge/Model-SGD--SVM-000000?style=for-the-badge&logo=scikitlearn&logoColor=white" />
 </p>
 
-<h3 align="center" style="color: #999; font-weight: 400;">From Raw Data to Diagnosis</h3>
+<h3 align="center" style="color: #999; font-weight: 400;">Intelligent Triage & Predictive Modeling</h3>
 
 </div>
 
 ---
 
-## 🧬 1. The Data Pipeline
-> *Translating biological complexity into mathematical structure.*
+## 👥 Project Scope & Responsibilities
+> *This documentation details the development of **Objective 2**. Objectives 1 & 3 are handled by external modules.*
+
+<table>
+  <thead>
+    <tr>
+      <th align="center" width="30%">Objective 1 (Teammate A)</th>
+      <th align="center" width="40%" style="background-color: #161b22; border-bottom: 3px solid #ff1493;">✨ Objective 2 (My Focus)</th>
+      <th align="center" width="30%">Objective 3 (Teammate B)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">Data Ingestion & Infrastructure</td>
+      <td align="center" style="background-color: #0d1117;"><b>Predictive Modeling & Risk Engine</b></td>
+      <td align="center">Dashboarding & Deployment</td>
+    </tr>
+    <tr>
+      <td align="center" style="color: #777; font-size: 12px;">SQL / Warehouse Setup</td>
+      <td align="center" style="color: #ccc; font-size: 12px;">
+        • Data Preprocessing<br>
+        • Algorithm Selection (SGD-SVM)<br>
+        • Clinical Metric Optimization
+      </td>
+      <td align="center" style="color: #777; font-size: 12px;">Streamlit / API Integration</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+## 🧬 1. The Data Pipeline (Obj 2 Prep)
+> *Translating raw clinical inputs into model-ready tensors.*
 
 <table>
   <tr>
@@ -43,12 +74,12 @@
 <br>
 
 ## 🧠 2. The Model Arena
-> *We pitted three algorithms against each other. Simplicity won.*
+> *We pitted three algorithms against each other to find the best "Brain" for triage.*
 
 <table>
   <thead>
     <tr>
-      <th align="left">Model</th>
+      <th align="left">Contender</th>
       <th align="left">Mechanism</th>
       <th align="center">AUC Score</th>
       <th align="center">Status</th>
@@ -78,8 +109,8 @@
 
 <br>
 
-## 🎯 3. Success Metrics
-> *Understanding the "Cost" of errors in a medical context.*
+## 🎯 3. Clinical Metrics
+> *Defining "Success" in the context of patient safety (Objective 2 Key Deliverable).*
 
 <table>
   <tr>
@@ -106,17 +137,6 @@
 
 <br>
 
-## 💼 4. Business Intelligence
-> *Delivering actionable value beyond just "predictions".*
-
-| ID | Objective | Value Add |
-| :--- | :--- | :--- |
-| **DSO 3** | **Explainability** | We interpret the "Why" using Feature Importance. |
-| **DSO 1** | **Calibration** | We provide exact probability scores, not just labels. |
-| **DSO 2** | **Stratification** | We categorize patients to allocate hospital resources efficiently. |
-
-<br>
-
 ## ⚡ Quick Start
 
 **1. Installation**
@@ -126,10 +146,10 @@ cd oncoguard
 make install
 ```
 
-**2. Run API**
+**2. Run Objective 2 Module**
 ```bash
 make run
-# Serving on localhost:8000
+# API endpoint for Risk Stratification active at localhost:8000
 ```
 
 ---
@@ -137,7 +157,7 @@ make run
 <div align="center">
 
 <p style="font-size: 12px; color: #555;">
-    <b>ONCOGUARD AI</b> • 2025 Clinical Support Systems • <i>"Production Ready"</i>
+    <b>ONCOGUARD AI</b> • Objective 2 Module • <i>"Production Ready"</i>
 </p>
 
 </div>
