@@ -17,6 +17,7 @@
 ## 👥 Project Scope & Responsibilities
 > *This documentation details the development of **Objective 2**. Objectives 1 & 3 are handled by external modules.*
 
+<<<<<<< HEAD
 <table>
   <thead>
     <tr>
@@ -140,6 +141,9 @@
 ## ⚡ Quick Start
 
 **1. Installation**
+=======
+
+
 ```bash
 git clone https://github.com/your-username/oncoguard.git
 cd oncoguard
@@ -154,10 +158,26 @@ make run
 
 ---
 
-<div align="center">
 
-<p style="font-size: 12px; color: #555;">
-    <b>ONCOGUARD AI</b> • Objective 2 Module • <i>"Production Ready"</i>
-</p>
 
+<div style="width: 100%; margin-top: 50px; padding: 30px 0; border-top: 1px solid #333; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <div style="color: #e8e8e8; font-weight: 800; letter-spacing: 1px; font-size: 16px;">
+            ONCOGUARD <span style="color: #ff1493;">AI</span>
+        </div>
+        <div style="font-size: 11px; color: #777; margin-top: 5px;">
+            &copy; 2025 Clinical Support Systems
+        </div>
+    </div>
+    <div style="text-align: right; font-size: 11px; line-height: 1.6;">
+        <div style="color: #999;">
+            Status: <span style="color: #2ed573; font-weight: bold;">● Production Ready</span>
+        </div>
+        <div style="color: #999;">
+            Engine: <strong style="color: #e8e8e8;">SGD-SVM</strong>
+        </div>
+    </div>
 </div>
+
+### 2. Clone & Setup
+```bash 
