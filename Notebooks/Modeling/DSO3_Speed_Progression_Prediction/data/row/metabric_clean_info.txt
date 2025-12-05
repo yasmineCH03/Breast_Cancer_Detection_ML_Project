@@ -1,0 +1,97 @@
+═══════════════════════════════════════════════════════════════════
+    DONNÉES METABRIC NETTOYÉES - INFORMATIONS
+═══════════════════════════════════════════════════════════════════
+
+📅 Date d'export : 2025-12-05 10:51:37
+📂 Fichier : metabric_clean.csv
+📊 Shape : (1904, 27)
+
+──────────────────────────────────────────────────────────────────────
+📋 STRUCTURE DU DATASET
+──────────────────────────────────────────────────────────────────────
+
+FEATURES (24 colonnes) :
+
+   1. age_at_diagnosis
+   2. tumor_size
+   3. lymph_nodes_examined_positive
+   4. nottingham_prognostic_index
+   5. mutation_count
+   6. grade
+   7. stage_encoded
+   8. cellularity_encoded
+   9. er_status_binary
+  10. her2_status_binary
+  11. pr_status_binary
+  12. pam50_+_claudin-low_subtype_encoded
+  13. integrative_cluster_encoded
+  14. 3-gene_classifier_subtype_encoded
+  15. hormone_receptor_score
+  16. triple_negative
+  17. size_category
+  18. grade_stage_interaction
+  19. high_risk
+  20. pik3ca_mut
+  21. tp53_mut
+  22. gata3_mut
+  23. map3k1_mut
+  24. cdh1_mut
+
+CIBLES (3 colonnes) :
+
+  1. aggressiveness_score
+  2. growth_rate
+  3. evolution_6m
+
+──────────────────────────────────────────────────────────────────────
+⚠️ IMPORTANT
+──────────────────────────────────────────────────────────────────────
+
+✅ Les features sont NON STANDARDISÉES
+   → La standardisation doit être faite APRÈS le split train/test
+   → Cela évite le data leakage
+
+──────────────────────────────────────────────────────────────────────
+📊 PRÉPARATION APPLIQUÉE
+──────────────────────────────────────────────────────────────────────
+
+  ✅ Nettoyage (valeurs manquantes, outliers)
+  ✅ Feature Engineering (features dérivées)
+  ✅ Encodage des variables catégorielles
+  ✅ Création des 3 variables cibles
+  ✅ Sélection des features finales
+  ✅ Analyse de corrélation
+
+──────────────────────────────────────────────────────────────────────
+🚀 UTILISATION (Notebook de Modélisation)
+──────────────────────────────────────────────────────────────────────
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# 1. Charger les données
+data = pd. read_csv('data/metabric_clean.csv', index_col=0)
+
+# 2.  Séparer features (X) et cibles (y)
+target_cols = ['aggressiveness_score', 'growth_rate', 'evolution_6m']
+X = data. drop(columns=target_cols)
+y = data[target_cols]
+
+# 3. Split Train/Test (80/20)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42,
+    stratify=y['evolution_6m']
+)
+
+# 4. Standardisation (APRÈS le split)
+scaler = StandardScaler()
+X_train_scaled = scaler. fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Reconvertir en DataFrame
+X_train_scaled = pd.DataFrame(X_train_scaled, columns=X_train.columns, index=X_train.index)
+X_test_scaled = pd. DataFrame(X_test_scaled, columns=X_test.columns, index=X_test.index)
+
+# 5.  Entraîner vos modèles
+# model. fit(X_train_scaled, y_train)
