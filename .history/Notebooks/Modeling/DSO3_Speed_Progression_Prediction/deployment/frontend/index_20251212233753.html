@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>METABRIC - Calculateur Automatique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom:  10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-section {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap:  10px;
+        }
+
+        . section-title: first-child {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        . form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding:  12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input[type="number"]: focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .radio-option label:hover {
+            border-color: #667eea;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-option {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        . toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top:  0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height:  26px;
+            width:  26px;
+            left:  4px;
+            bottom:  4px;
+            background-color: white;
+            transition:  0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #27ae60;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .predict-button {
+            width: 100%;
+            padding:  15px;
+            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border:  none;
+            border-radius:  8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
+        }
+
+        .predict-button:hover: not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .predict-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .calculated-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top:  30px;
+        }
+
+        .calculated-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow:  0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .calculated-item . label {
+            font-weight:  600;
+            color: #555;
+        }
+
+        .calculated-item .value {
+            font-size: 20px;
+            font-weight:  bold;
+            color: #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius:  20px;
+            font-size:  12px;
+            font-weight:  bold;
+        }
+
+        .badge-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+
+        . info-box p {
+            color: #1976d2;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        #ml_results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding:  15px;
+            border-radius:  8px 8px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .toggle-group {
+                flex-direction: column;
+            }
+
+            .radio-option {
+                min-width: 100%;
+            }
+
+            .toggle-option {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 METABRIC Calculator</h1>
+            <p>Calcul automatique des indices pronostiques + Prédiction ML</p>
+        </div>
+
+        <div class="form-section">
+            <!-- SECTION 1: PATIENT -->
+            <div class="section-title">
+                👤 Informations Patient
+            </div>
+
+            <div class="form-group">
+                <label for="age">Âge au diagnostic (années) *</label>
+                <input type="number" id="age" placeholder="Ex: 54" min="20" max="100" step="0.1">
+            </div>
+
+            <!-- SECTION 2: TUMEUR -->
+            <div class="section-title">
+                🏥 Caractéristiques Tumorales
+            </div>
+
+            <div class="form-group">
+                <label for="tumor_size">Taille tumeur (mm) *</label>
+                <input type="number" id="tumor_size" placeholder="Ex: 23" min="1" max="200" step="0.1">
+            </div>
+
+            <div class="form-group">
+                <label>Stage TNM (0-4) *</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="stage0" name="stage" value="0">
+                        <label for="stage0">0</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="stage1" name="stage" value="1">
+                        <label for="stage1">1</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="stage2" name="stage" value="2" checked>
+                        <label for="stage2">2</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="stage3" name="stage" value="3">
+                        <label for="stage3">3</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="stage4" name="stage" value="4">
+                        <label for="stage4">4</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Grade histologique (1-3) *</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="grade1" name="grade" value="1">
+                        <label for="grade1">1<br><small>Bien diff. </small></label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="grade2" name="grade" value="2">
+                        <label for="grade2">2<br><small>Modéré</small></label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="grade3" name="grade" value="3" checked>
+                        <label for="grade3">3<br><small>Peu diff.</small></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="lymph_nodes">Ganglions lymphatiques positifs</label>
+                <input type="number" id="lymph_nodes" placeholder="Ex: 0" min="0" max="50" step="1" value="0">
+            </div>
+
+            <!-- SECTION 3: BIOMARQUEURS -->
+            <div class="section-title">
+                🧬 Biomarqueurs
+            </div>
+
+            <div class="toggle-group">
+                <div class="toggle-option">
+                    <div class="toggle-label">
+                        <span>Récepteurs ER</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="er_status" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span id="er_label" style="font-weight: bold; color: #27ae60;">Positif</span>
+                    </div>
+                </div>
+
+                <div class="toggle-option">
+                    <div class="toggle-label">
+                        <span>HER2</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="her2_status">
+                            <span class="slider"></span>
+                        </label>
+                        <span id="her2_label" style="font-weight: bold; color: #e74c3c;">Négatif</span>
+                    </div>
+                </div>
+
+                <div class="toggle-option">
+                    <div class="toggle-label">
+                        <span>PR</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="pr_status" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span id="pr_label" style="font-weight: bold; color: #27ae60;">Positif</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOUTON PRÉDICTION ML -->
+            <button class="predict-button" onclick="predictWithModel()" id="predict_btn">
+                🔬 Prédire avec Modèle ML
+            </button>
+
+            <!-- SECTION 4: RÉSULTATS CALCULÉS AUTOMATIQUEMENT -->
+            <div class="calculated-section">
+                <div class="section-title" style="border:  none; margin-top: 0;">
+                    📊 Indices Calculés Automatiquement
+                </div>
+
+                <div class="calculated-item">
+                    <span class="label">Nottingham Prognostic Index (NPI)</span>
+                    <span class="value" id="npi_value">-</span>
+                </div>
+
+                <div class="calculated-item">
+                    <span class="label">Profil Moléculaire</span>
+                    <span id="molecular_profile">-</span>
+                </div>
+
+                <div class="calculated-item">
+                    <span class="label">Catégorie Risque NPI</span>
+                    <span id="npi_category">-</span>
+                </div>
+
+                <div class="calculated-item">
+                    <span class="label">Triple Négatif</span>
+                    <span id="triple_negative">-</span>
+                </div>
+
+                <div class="info-box" id="info_box" style="display: none;">
+                    <p id="info_text"></p>
+                </div>
+            </div>
+
+            <!-- SECTION 5: RÉSULTATS ML -->
+            <div id="ml_results">
+                <div class="results-header">
+                    🤖 Résultats Prédiction Machine Learning
+                </div>
+                <div class="calculated-section" style="margin-top: 0; border-radius: 0 0 8px 8px;">
+                    <div id="ml_content">
+                        <!-- Les résultats s'afficheront ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // FONCTIONS DE CALCUL AUTOMATIQUE
+        // ====================================================================
+
+        // Calcul Nottingham Prognostic Index (NPI)
+        function calculateNPI(tumorSize, stage, grade) {
+            if (! tumorSize || tumorSize <= 0) return null;
+            
+            const taille_cm = tumorSize / 10;
+            const npi = (0.2 * taille_cm) + parseFloat(stage) + parseFloat(grade);
+            
+            return npi. toFixed(2);
+        }
+
+        // Catégorie de risque NPI
+        function getNPICategory(npi) {
+            if (! npi) return { text: '-', class: '' };
+            
+            if (npi <= 3.4) {
+                return { text: 'Bon pronostic', class: 'badge-success' };
+            } else if (npi <= 5.4) {
+                return { text: 'Pronostic modéré', class: 'badge-warning' };
+            } else {
+                return { text: 'Pronostic défavorable', class: 'badge-danger' };
+            }
+        }
+
+        // Déterminer profil moléculaire
+        function getMolecularProfile(er, her2, pr) {
+            if (!er && !her2 && !pr) {
+                return { text: 'Triple Négatif', class: 'badge-danger' };
+            } else if (her2) {
+                return { text: 'HER2+', class: 'badge-warning' };
+            } else if (er || pr) {
+                return { text:  'Luminal (ER+/HER2-)', class: 'badge-success' };
+            }
+            return { text: 'Indéterminé', class: '' };
+        }
+
+        // Vérifier Triple Négatif
+        function isTripleNegative(er, her2, pr) {
+            return ! er && !her2 && ! pr;
+        }
+
+        // ====================================================================
+        // MISE À JOUR INTERFACE (CALCULS AUTOMATIQUES)
+        // ====================================================================
+
+        function updateCalculations() {
+            const tumorSize = parseFloat(document. getElementById('tumor_size').value) || 0;
+            const stage = document.querySelector('input[name="stage"]: checked')?.value || '2';
+            const grade = document. querySelector('input[name="grade"]:checked')?.value || '3';
+            
+            const er = document.getElementById('er_status').checked;
+            const her2 = document.getElementById('her2_status').checked;
+            const pr = document.getElementById('pr_status').checked;
+
+            // Calcul NPI
+            const npi = calculateNPI(tumorSize, stage, grade);
+            const npiCategory = getNPICategory(parseFloat(npi));
+
+            // Profil moléculaire
+            const profile = getMolecularProfile(er, her2, pr);
+
+            // Triple Négatif
+            const tripleNeg = isTripleNegative(er, her2, pr);
+
+            // Afficher résultats
+            document.getElementById('npi_value').textContent = npi || '-';
+            
+            const profileEl = document.getElementById('molecular_profile');
+            profileEl.innerHTML = npi ? `<span class="badge ${profile.class}">${profile.text}</span>` : '-';
+
+            const categoryEl = document.getElementById('npi_category');
+            categoryEl.innerHTML = npi ? `<span class="badge ${npiCategory.class}">${npiCategory.text}</span>` : '-';
+
+            const tripleNegEl = document.getElementById('triple_negative');
+            tripleNegEl.innerHTML = tripleNeg 
+                ? '<span class="badge badge-danger">OUI</span>' 
+                :  '<span class="badge badge-success">NON</span>';
+
+            // Info box
+            const infoBox = document.getElementById('info_box');
+            const infoText = document.getElementById('info_text');
+
+            if (npi) {
+                infoBox.style.display = 'block';
+                let message = `<strong>NPI = ${npi}</strong><br>`;
+                message += `Formule :  (0.2 × ${(tumorSize/10).toFixed(1)}cm) + ${stage} + ${grade} = ${npi}<br>`;
+                
+                if (tripleNeg) {
+                    message += `<br>⚠️ <strong>Triple Négatif détecté</strong> :  Absence de récepteurs ER, HER2 et PR.`;
+                }
+                
+                if (parseFloat(npi) > 5.4) {
+                    message += `<br>⚠️ <strong>Attention</strong> : NPI > 5.4 indique un risque élevé.`;
+                }
+
+                infoText.innerHTML = message;
+            } else {
+                infoBox.style. display = 'none';
+            }
+        }
+
+        // ====================================================================
+        // PRÉDICTION AVEC MODÈLE ML
+        // ====================================================================
+
+        async function predictWithModel() {
+            // Récupérer valeurs
+            const age = parseFloat(document.getElementById('age')?.value);
+            const tumorSize = parseFloat(document.getElementById('tumor_size')?.value);
+            const stage = parseFloat(document.querySelector('input[name="stage"]: checked')?.value);
+            const grade = parseFloat(document.querySelector('input[name="grade"]:checked')?.value);
+            const lymphNodes = parseInt(document.getElementById('lymph_nodes')?.value) || 0;
+            
+            const er = document.getElementById('er_status')?.checked ?  1 : 0;
+            const her2 = document. getElementById('her2_status')?.checked ? 1 : 0;
+            const pr = document. getElementById('pr_status')?.checked ? 1 : 0;
+            
+            const npi = parseFloat(document.getElementById('npi_value')?.textContent) || 0;
+            
+            // Validation
+            if (! age || ! tumorSize) {
+                alert('⚠️ Veuillez remplir au minimum l\'âge et la taille de la tumeur');
+                return;
+            }
+            
+            if (npi === 0) {
+                alert('⚠️ Le NPI ne peut pas être calculé.  Vérifiez les données saisies.');
+                return;
+            }
+            
+            // Calculer features dérivées
+            const hormone_receptor_score = er + pr;
+            const triple_negative = (er === 0 && her2 === 0 && pr === 0) ? 1 : 0;
+            
+            let size_category;
+            if (tumorSize < 10) size_category = 0;
+            else if (tumorSize < 30) size_category = 1;
+            else size_category = 2;
+            
+            const grade_stage_interaction = grade * stage;
+            const high_risk = npi > 5.4 ?  1 : 0;
+            
+            // Préparer données pour API
+            const data = {
+                age_at_diagnosis: age,
+                tumor_size: tumorSize,
+                tumor_stage_encoded: stage,
+                neoplasm_histologic_grade_encoded: grade,
+                cellularity_encoded: 2,  // Valeur par défaut High
+                lymph_nodes_examined_positive: lymphNodes,
+                nottingham_prognostic_index:  npi,
+                mutation_count: 5,  // Valeur par défaut
+                er_status_binary: er,
+                her2_status_binary: her2,
+                pr_status_binary: pr,
+                overall_survival_months: 100,  // Valeur par défaut
+                overall_survival_binary: 1,
+                death_from_cancer_binary: 0,
+                'pam50_+_claudin-low_subtype_encoded': 3,
+                'integrative_cluster_encoded': 5,
+                '3-gene_classifier_subtype_encoded': 2,
+                
+                // Features dérivées
+                hormone_receptor_score:  hormone_receptor_score,
+                triple_negative:  triple_negative,
+                size_category: size_category,
+                grade_stage_interaction: grade_stage_interaction,
+                high_risk: high_risk
+            };
+            
+            // Afficher loading
+            const button = document.getElementById('predict_btn');
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Analyse en cours...';
+            button.disabled = true;
+            
+            try {
+                // Appeler API
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                // Restaurer bouton
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                if (result.status === 'success') {
+                    const pred = result.predictions;
+                    
+                    // Afficher résultats
+                    const resultsDiv = document.getElementById('ml_results');
+                    const contentDiv = document.getElementById('ml_content');
+                    
+                    // Déterminer couleur risque
+                    let riskBadgeClass = 'badge-success';
+                    if (pred.risk_level === 'Élevé') riskBadgeClass = 'badge-danger';
+                    else if (pred.risk_level === 'Modéré') riskBadgeClass = 'badge-warning';
+                    
+                    let evolBadgeClass = 'badge-success';
+                    if (pred.evolution_6m === 2) evolBadgeClass = 'badge-danger';
+                    else if (pred.evolution_6m === 1) evolBadgeClass = 'badge-warning';
+                    
+                    contentDiv.innerHTML = `
+                        <div class="calculated-item">
+                            <span class="label">🎯 Score d'Agressivité</span>
+                            <span class="value">${pred.aggressiveness_score. toFixed(2)}/10</span>
+                        </div>
+                        <div class="calculated-item">
+                            <span class="label">📈 Taux de Croissance</span>
+                            <span class="value">${pred. growth_rate.toFixed(2)}%/mois</span>
+                        </div>
+                        <div class="calculated-item">
+                            <span class="label">⏱️ Évolution 6 mois</span>
+                            <span class="badge ${evolBadgeClass}">${pred.evolution_6m_label}</span>
+                        </div>
+                        <div class="calculated-item">
+                            <span class="label">⚠️ Risque Global</span>
+                            <span class="badge ${riskBadgeClass}">${pred.risk_level}</span>
+                        </div>
+                        
+                        <div class="info-box" style="margin-top: 15px;">
+                            <p>
+                                <strong>🤖 Prédiction générée par : </strong> ${result.model}<br>
+                                ${pred.details ?  `<strong>Triple Négatif :</strong> ${pred.details.triple_negative ?  'OUI ⚠️' : 'NON ✓'}` : ''}
+                            </p>
+                        </div>
+                    `;
+                    
+                    resultsDiv.style.display = 'block';
+                    
+                    // Scroll vers résultats
+                    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    
+                } else {
+                    alert('❌ Erreur :  ' + (result.message || result.error || 'Erreur inconnue'));
+                    console.error('Erreur API:', result);
+                }
+                
+            } catch (error) {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                alert('❌ Erreur de connexion à l\'API.\n\nVérifiez que :\n1. L\'API est démarrée (python app.py)\n2. L\'URL est correcte (http://localhost:5000)\n\nDétails : ' + error.message);
+                console.error('Erreur:', error);
+            }
+        }
+
+        // ====================================================================
+        // EVENT LISTENERS
+        // ====================================================================
+
+        // Mise à jour labels toggle
+        document.getElementById('er_status').addEventListener('change', function() {
+            const label = document.getElementById('er_label');
+            label.textContent = this.checked ? 'Positif' : 'Négatif';
+            label. style.color = this.checked ?  '#27ae60' : '#e74c3c';
+            updateCalculations();
+        });
+
+        document.getElementById('her2_status').addEventListener('change', function() {
+            const label = document.getElementById('her2_label');
+            label.textContent = this.checked ? 'Positif' :  'Négatif';
+            label.style.color = this.checked ? '#27ae60' : '#e74c3c';
+            updateCalculations();
+        });
+
+        document.getElementById('pr_status').addEventListener('change', function() {
+            const label = document.getElementById('pr_label');
+            label.textContent = this. checked ? 'Positif' : 'Négatif';
+            label.style.color = this.checked ? '#27ae60' : '#e74c3c';
+            updateCalculations();
+        });
+
+        // Mise à jour temps réel
+        document.getElementById('tumor_size').addEventListener('input', updateCalculations);
+        document.getElementById('lymph_nodes').addEventListener('input', updateCalculations);
+
+        document.querySelectorAll('input[name="stage"]').forEach(radio => {
+            radio.addEventListener('change', updateCalculations);
+        });
+
+        document.querySelectorAll('input[name="grade"]').forEach(radio => {
+            radio.addEventListener('change', updateCalculations);
+        });
+
+        // Calcul initial
+        updateCalculations();
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "model_name": "Gradient Boosting",
+  "date_training": "2025-12-12 23:14:39",
+  "n_features": 22,
+  "feature_names": [
+    "age_at_diagnosis",
+    "tumor_size",
+    "nottingham_prognostic_index",
+    "lymph_nodes_examined_positive",
+    "mutation_count",
+    "overall_survival_months",
+    "er_status_binary",
+    "her2_status_binary",
+    "pr_status_binary",
+    "tumor_stage_encoded",
+    "neoplasm_histologic_grade_encoded",
+    "cellularity_encoded",
+    "pam50_+_claudin-low_subtype_encoded",
+    "integrative_cluster_encoded",
+    "3-gene_classifier_subtype_encoded",
+    "overall_survival_binary",
+    "death_from_cancer_binary",
+    "hormone_receptor_score",
+    "triple_negative",
+    "size_category",
+    "grade_stage_interaction",
+    "high_risk"
+  ],
+  "performance": {
+    "r2_aggressiveness": 0.977483542781129,
+    "r2_growth_rate": 0.9825025654116916,
+    "accuracy_evolution_6m": 0.9816272965879265
+  },
+  "dataset": {
+    "name": "METABRIC",
+    "n_samples_train": 1523,
+    "n_samples_test": 381
+  }
+}
