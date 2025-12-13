@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosalytix - MLOps Master Deployment Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        
+        /* Custom scrollbar for code blocks */
+        .code-block::-webkit-scrollbar { height: 8px; }
+        .code-block::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .code-block::-webkit-scrollbar-track { background: #1e293b; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white border-b-4 border-pink-500 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fa-solid fa-server text-pink-500 text-2xl mr-3"></i>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Rosalytix <span class="text-pink-400">MLOps</span></h1>
+                    <p class="text-xs text-slate-400 font-mono">MASTER INTEGRATION PLAN v1.0</p>
+                </div>
+            </div>
+            <div class="flex space-x-4 text-sm font-medium">
+                <a href="#architecture" class="hover:text-pink-400 transition">Architecture</a>
+                <a href="#endpoints" class="hover:text-pink-400 transition">API Endpoints</a>
+                <a href="#frontend-tasks" class="hover:text-pink-400 transition">Frontend Tasks</a>
+                <a href="#docker" class="hover:text-pink-400 transition">Docker Setup</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-10 space-y-16">
+
+        <!-- SECTION 1: SYSTEM ARCHITECTURE -->
+        <section id="architecture">
+            <div class="flex items-center mb-6">
+                <div class="bg-pink-100 p-3 rounded-lg text-pink-600 mr-4"><i class="fa-solid fa-layer-group text-2xl"></i></div>
+                <h2 class="text-3xl font-bold text-slate-900">1. System Architecture</h2>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+                <p class="text-lg text-slate-600 mb-8">
+                    The platform consists of three isolated Docker containers orchestrated by Docker Compose. 
+                    The Frontend communicates with the Backend via REST API calls.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="border border-slate-200 rounded-lg p-6 bg-slate-50 relative">
+                        <div class="absolute -top-3 left-4 bg-blue-600 text-white px-3 py-1 text-xs font-bold rounded shadow-sm">Container 1</div>
+                        <h3 class="font-bold text-lg mb-2"><i class="fa-brands fa-html5 text-orange-500 mr-2"></i> Frontend Service</h3>
+                        <p class="text-sm text-slate-500 mb-4">Serves static HTML/JS/CSS files via Nginx.</p>
+                        <ul class="text-sm space-y-2 font-mono text-slate-700">
+                            <li>- index_pink_october.html</li>
+                            <li>- evaluation_dashboard.html</li>
+                            <li>- signin.html</li>
+                            <li>- Port: 8080</li>
+                        </ul>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center justify-center text-slate-300">
+                        <i class="fa-solid fa-arrow-right-arrow-left text-2xl"></i>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="border border-slate-200 rounded-lg p-6 bg-slate-50 relative">
+                        <div class="absolute -top-3 left-4 bg-green-600 text-white px-3 py-1 text-xs font-bold rounded shadow-sm">Container 2</div>
+                        <h3 class="font-bold text-lg mb-2"><i class="fa-brands fa-python text-yellow-500 mr-2"></i> Backend API</h3>
+                        <p class="text-sm text-slate-500 mb-4">FastAPI server running Python ML inference.</p>
+                        <ul class="text-sm space-y-2 font-mono text-slate-700">
+                            <li>- main.py (Router)</li>
+                            <li>- ML Models (.pkl/.joblib)</li>
+                            <li>- Data Schemas (Pydantic)</li>
+                            <li>- Port: 8000</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: API ENDPOINTS SPECIFICATION -->
+        <section id="endpoints">
+            <div class="flex items-center mb-6">
+                <div class="bg-pink-100 p-3 rounded-lg text-pink-600 mr-4"><i class="fa-solid fa-network-wired text-2xl"></i></div>
+                <h2 class="text-3xl font-bold text-slate-900">2. API Specification</h2>
+            </div>
+            <p class="text-slate-600 mb-6">
+                The Backend team must implement these exact routes in FastAPI. The Frontend team will consume them using <code class="bg-slate-100 px-1 rounded font-mono text-pink-600">fetch()</code>.
+            </p>
+
+            <!-- GROUP A: MEDICAL INTERFACE -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">Group A: Medical Interface (Doctor's View)</h3>
+                <div class="space-y-4">
+                    
+                    <!-- Endpoint 1 -->
+                    <div class="bg-slate-900 rounded-lg overflow-hidden">
+                        <div class="bg-slate-800 px-4 py-2 flex justify-between items-center">
+                            <span class="font-mono text-green-400 font-bold">POST /api/v1/cellular/predict</span>
+                            <span class="text-xs text-slate-400">Single Prediction (WBCD)</span>
+                        </div>
+                        <div class="p-4 grid md:grid-cols-2 gap-4 text-xs font-mono">
+                            <div class="text-slate-300">
+                                <span class="text-slate-500 block mb-1">// INPUT JSON</span>
+                                {<br>
+                                &nbsp;&nbsp;"radius_mean": 17.99,<br>
+                                &nbsp;&nbsp;"texture_mean": 10.38,<br>
+                                &nbsp;&nbsp;"perimeter_mean": 122.8,<br>
+                                &nbsp;&nbsp;... (all features)<br>
+                                }
+                            </div>
+                            <div class="text-green-300 border-l border-slate-700 pl-4">
+                                <span class="text-slate-500 block mb-1">// OUTPUT JSON</span>
+                                {<br>
+                                &nbsp;&nbsp;"diagnosis": "Malignant",<br>
+                                &nbsp;&nbsp;"confidence": 0.98,<br>
+                                &nbsp;&nbsp;"risk_tier": "High"<br>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Endpoint 2 -->
+                    <div class="bg-slate-900 rounded-lg overflow-hidden">
+                        <div class="bg-slate-800 px-4 py-2 flex justify-between items-center">
+                            <span class="font-mono text-green-400 font-bold">POST /api/v1/clinical/prognosis</span>
+                            <span class="text-xs text-slate-400">Prognosis & Forecast (METABRIC)</span>
+                        </div>
+                        <div class="p-4 grid md:grid-cols-2 gap-4 text-xs font-mono">
+                            <div class="text-slate-300">
+                                <span class="text-slate-500 block mb-1">// INPUT JSON</span>
+                                {<br>
+                                &nbsp;&nbsp;"age": 55,<br>
+                                &nbsp;&nbsp;"tumor_size": 25,<br>
+                                &nbsp;&nbsp;"lymph_nodes": 4,<br>
+                                &nbsp;&nbsp;...<br>
+                                }
+                            </div>
+                            <div class="text-green-300 border-l border-slate-700 pl-4">
+                                <span class="text-slate-500 block mb-1">// OUTPUT JSON</span>
+                                {<br>
+                                &nbsp;&nbsp;"aggressiveness_score": 78,<br>
+                                &nbsp;&nbsp;"growth_forecast": [25, 27, 30, 35, 42] <span class="text-slate-500">// Array for Chart.js</span><br>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Endpoint 3 (Batch) -->
+                    <div class="bg-slate-900 rounded-lg overflow-hidden">
+                        <div class="bg-slate-800 px-4 py-2 flex justify-between items-center">
+                            <span class="font-mono text-green-400 font-bold">POST /api/v1/cellular/batch</span>
+                            <span class="text-xs text-slate-400">CSV File Upload</span>
+                        </div>
+                        <div class="p-4 text-xs font-mono text-slate-300">
+                            Accepts <code class="text-pink-400">multipart/form-data</code> (CSV file). Returns a JSON list of predictions for the table.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP B: TECHNICAL INTERFACE -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-slate-800 mb-4 border-l-4 border-pink-500 pl-3">Group B: Technical Interface (ML Engineer's View)</h3>
+                <p class="text-sm text-slate-500 mb-4">These endpoints power the Evaluation Dashboard charts.</p>
+                
+                <div class="space-y-4">
+                    <!-- Eval Endpoint 1 -->
+                    <div class="bg-slate-900 rounded-lg overflow-hidden">
+                        <div class="bg-slate-800 px-4 py-2 flex justify-between items-center">
+                            <span class="font-mono text-blue-400 font-bold">GET /api/v1/evaluation/cellular/metrics</span>
+                            <span class="text-xs text-slate-400">Model Comparison Data</span>
+                        </div>
+                        <div class="p-4 text-xs font-mono text-blue-200">
+                            Returns performance data (Accuracy, AUC, F1, Recall) for all candidate models (RF, SVM, XGBoost) to populate the comparison table.
+                        </div>
+                    </div>
+
+                    <!-- Eval Endpoint 2 -->
+                    <div class="bg-slate-900 rounded-lg overflow-hidden">
+                        <div class="bg-slate-800 px-4 py-2 flex justify-between items-center">
+                            <span class="font-mono text-blue-400 font-bold">POST /api/v1/evaluation/cellular/shap</span>
+                            <span class="text-xs text-slate-400">Global SHAP Values</span>
+                        </div>
+                        <div class="p-4 text-xs font-mono text-blue-200">
+                            Returns the top feature names and their mean |SHAP| values for the Summary Plot bar chart.
+                        </div>
+                    </div>
+
+                    <!-- Eval Endpoint 3 -->
+                    <div class="bg-slate-900 rounded-lg overflow-hidden">
+                        <div class="bg-slate-800 px-4 py-2 flex justify-between items-center">
+                            <span class="font-mono text-blue-400 font-bold">GET /api/v1/evaluation/clinical/residuals</span>
+                            <span class="text-xs text-slate-400">Regression Error Plot</span>
+                        </div>
+                        <div class="p-4 text-xs font-mono text-blue-200">
+                            Returns X/Y coordinates of Actual vs. Predicted values to plot the Residual scatter chart for METABRIC model evaluation.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: FRONTEND TASKS -->
+        <section id="frontend-tasks">
+            <div class="flex items-center mb-6">
+                <div class="bg-pink-100 p-3 rounded-lg text-pink-600 mr-4"><i class="fa-solid fa-code text-2xl"></i></div>
+                <h2 class="text-3xl font-bold text-slate-900">3. Frontend Tasks (HTML/JS)</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-lg mb-4 text-pink-600">A. Login Logic (signin.html)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-slate-600">
+                        <li>Implement simple role-based redirection.</li>
+                        <li>If user selects <strong>"Doctor"</strong> &rarr; Go to <code class="bg-slate-100 p-1 rounded">index_pink_october.html</code>.</li>
+                        <li>If user selects <strong>"ML Engineer"</strong> &rarr; Go to <code class="bg-slate-100 p-1 rounded">evaluation_dashboard.html</code>.</li>
+                        <li>(Optional) Add simple JWT token storage in localStorage.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-lg mb-4 text-pink-600">B. Data Integration</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-slate-600">
+                        <li>Replace all <code>mockCellularData</code> arrays in JS with <code>fetch()</code> calls.</li>
+                        <li>Parse the JSON response from the API.</li>
+                        <li>Update <code>Chart.js</code> instances with the real data returned from the <code>/evaluation</code> endpoints.</li>
+                        <li>Handle API errors (e.g., if backend is offline, show an alert).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: DOCKER SETUP -->
+        <section id="docker">
+            <div class="flex items-center mb-6">
+                <div class="bg-pink-100 p-3 rounded-lg text-pink-600 mr-4"><i class="fa-brands fa-docker text-2xl"></i></div>
+                <h2 class="text-3xl font-bold text-slate-900">4. Docker Configuration</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6">Create the following files in your project root to containerize the application.</p>
+
+            <div class="space-y-8">
+                <!-- Dockerfile: Backend -->
+                <div>
+                    <h4 class="font-bold text-slate-800 mb-2">/backend/Dockerfile</h4>
+                    <pre class="bg-slate-900 text-slate-300 p-4 rounded-lg text-sm code-font code-block overflow-x-auto">
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy app code
+COPY ./app ./app
+
+# Run FastAPI with Uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+                    </pre>
+                </div>
+
+                <!-- docker-compose.yml -->
+                <div>
+                    <h4 class="font-bold text-slate-800 mb-2">/docker-compose.yml</h4>
+                    <pre class="bg-slate-900 text-slate-300 p-4 rounded-lg text-sm code-font code-block overflow-x-auto">
+version: '3.8'
+
+services:
+  # 1. The Brain (FastAPI)
+  api:
+    build: ./backend
+    container_name: rosalytix_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app  # Hot-reload
+    environment:
+      - ALLOW_ORIGINS=*
+
+  # 2. The Face (Nginx Website)
+  web:
+    image: nginx:alpine
+    container_name: rosalytix_frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html # Mount HTML files
+    depends_on:
+      - api
+                    </pre>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h4 class="font-bold text-blue-800 mb-2">🚀 How to Launch</h4>
+                <ol class="list-decimal list-inside text-blue-800 space-y-2 font-mono text-sm">
+                    <li>Open terminal in project root.</li>
+                    <li>Run: <span class="bg-white px-2 py-1 rounded border border-blue-200">docker-compose up --build</span></li>
+                    <li>Access Website: <a href="http://localhost:8080" class="underline">http://localhost:8080</a></li>
+                    <li>Access API Docs: <a href="http://localhost:8000/docs" class="underline">http://localhost:8000/docs</a></li>
+                </ol>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-10 text-center text-sm">
+        <p>&copy; 2025 Rosalytix Project Team. Prepared for MLOps Deployment Phase.</p>
+    </footer>
+
+</body>
+</html>

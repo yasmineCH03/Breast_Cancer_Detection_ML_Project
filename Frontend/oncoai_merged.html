@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-pink-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OncoCare – Octobre Rose Edition</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .numeric { font-variant-numeric: tabular-nums; }
+        
+        .page-view { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .page-view.active { display: block; opacity: 1; animation: fadeIn 0.6s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+
+        .slide-over { transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .slide-over.open { transform: translateX(0); }
+        .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .overlay.open { opacity: 1; pointer-events: auto; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fce7f3; }
+        ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #be185d; }
+        
+        .table-xs th, .table-xs td { font-size: 10px; padding: 4px 6px; }
+        .table-xs thead th { font-size: 10px; }
+        .badge{display:inline-block;padding:1px 6px;border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.03em}
+        .badge-malignant{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+        .badge-benign{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0}
+        .badge-critical{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+        .badge-high{background:#ffe4e6;color:#9f1239;border:1px solid #fecdd3}
+        .badge-medium{background:#fef3c7;color:#b45309;border:1px solid #fde68a}
+        .badge-low{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0}
+        .badge-vlow{background:#ecfeff;color:#0e7490;border:1px solid #a5f3fc}
+        .micro-card{position:relative}
+        .micro-top{height:4px;border-top-left-radius:12px;border-top-right-radius:12px}
+        .micro-icon{width:34px;height:34px;font-size:16px}
+        .indicator-dot{width:8px;height:8px;border-radius:999px;display:inline-block;box-shadow:0 0 0 3px rgba(255,255,255,.7)}
+        .disclose-content{transition:max-height .3s ease,opacity .3s ease;max-height:0;opacity:0}
+        .disclose-content.open{max-height:240px;opacity:1}
+        @media (prefers-reduced-motion: reduce){
+          .disclose-content{transition:none}
+        }
+    </style>
+</head>
+
+<body class="h-full text-slate-800 antialiased overflow-hidden bg-pink-50">
+
+<div class="flex h-screen w-full relative">
+
+    <aside class="w-20 lg:w-64 flex flex-col bg-white border-r border-pink-100 z-50 shadow-sm">
+        <div class="h-20 flex items-center gap-3 px-0 lg:px-6 justify-center lg:justify-start border-b border-pink-100">
+            <svg class="h-10 w-10 drop-shadow-sm flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#db2777" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
+            </svg>
+            <div class="hidden lg:block">
+                <span class="font-bold text-2xl tracking-tight text-slate-900">Onco<span class="text-pink-600">Care</span></span>
+                <p class="text-[10px] text-pink-500 font-medium uppercase tracking-widest">Octobre Rose Edition</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 py-6 px-3 space-y-1">
+            <button onclick="router('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
+                <i class="ph ph-squares-four text-xl"></i><span class="hidden lg:block text-sm">Dashboard</span>
+            </button>
+            
+            <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Modèles IA</div>
+            
+            <button onclick="router('model1')" id="nav-model1" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
+                <i class="ph ph-microscope text-xl"></i><span class="hidden lg:block text-sm">Cellular Analysis</span>
+            </button>
+            <button onclick="router('model2')" id="nav-model2" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition group font-medium">
+                <i class="ph ph-chart-line-up text-xl"></i><span class="hidden lg:block text-sm">Clinical Prognosis</span>
+            </button>
+            <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Documentation</div>
+            <button onclick="router('docs')" id="nav-docs" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
+                <i class="ph ph-book-open text-xl"></i><span class="hidden lg:block text-sm">Docs & Resources</span>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-pink-100 text-center lg:text-left">
+            <div class="flex items-center gap-3 justify-center lg:justify-start">
+                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-md">SJ</div>
+                <div class="hidden lg:block text-xs">
+                    <p class="text-slate-900 font-bold">Dr. Sarah Jenkins</p>
+                    <p class="text-pink-500">Oncology Dept.</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+
+    <main class="flex-1 flex flex-col min-w-0 relative h-full bg-pink-50">
+        
+        <header class="h-20 border-b border-pink-100 bg-white/90 backdrop-blur-md flex items-center justify-between px-6 z-30 flex-shrink-0 shadow-sm">
+            <div class="flex items-center gap-3">
+                <h1 id="page-title" class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-snug text-slate-900">OncoCare Dashboard</h1>
+                <span class="px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-[10px] font-bold text-pink-600 uppercase tracking-wide flex items-center space-x-2">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="#db2777" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
+                    </svg>
+                    <span>Octobre Rose</span>
+                </span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative text-slate-400 hover:text-pink-600 transition">
+                    <i class="ph ph-bell text-xl"></i>
+                    <span class="absolute top-0 right-0 h-2 w-2 bg-pink-500 rounded-full ring-2 ring-white"></span>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 scroll-smooth relative">
+
+            <div id="view-dashboard" class="page-view active space-y-10">
+                <div class="bg-white rounded-2xl shadow-md border border-pink-100 overflow-hidden relative">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-pink-500 to-rose-600"></div>
+                    <div class="absolute -right-10 -top-10 opacity-20 transform rotate-12">
+                        <svg class="w-[300px] h-auto" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="#f472b6" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
+                        </svg>
+                    </div>
+                    <div class="p-10 md:p-14 text-center relative z-10">
+                        <div class="flex justify-center mb-6">
+                            <div class="bg-pink-100 px-4 py-1 rounded-full border border-pink-200 flex items-center space-x-2">
+                                <i class="ph ph-heart text-pink-600"></i>
+                                <span class="text-pink-800 font-bold text-sm tracking-wide">OCTOBRE ROSE 2025</span>
+                            </div>
+                        </div>
+                        <blockquote class="font-serif text-3xl md:text-5xl text-slate-800 mb-6 leading-tight">
+                            "Hope is stronger than fear.<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600">Early detection saves lives.</span>"
+                        </blockquote>
+                        <p class="text-slate-600 max-w-2xl mx-auto text-[15px] md:text-base leading-relaxed">
+                            Unified AI diagnostics supporting the fight against breast cancer. Select a workflow below to begin analysis.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="micro-card border border-pink-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500" role="group">
+                        <div class="micro-top bg-gradient-to-r from-pink-500 to-rose-500"></div>
+                        <div class="micro-body grid grid-cols-[auto,1fr,auto] items-center gap-3 px-4 py-3">
+                            <div class="micro-icon rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center" aria-hidden="true"><i class="ph ph-microscope"></i></div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-sm font-bold text-slate-900">Cellular Analysis</h2>
+                                    <span class="indicator-dot bg-pink-500" aria-label="Ready"></span>
+                                </div>
+                                <p class="text-[12px] text-slate-600 truncate">FNA biopsy (WBCD) • Benign/Malignant • Risk tiers</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button class="text-[11px] px-2 py-1 rounded bg-pink-50 border border-pink-200 text-pink-700 hover:bg-pink-600 hover:text-white transition" onclick="router('model1')">Open</button>
+                                <button class="text-[11px] px-2 py-1 rounded bg-white border border-pink-200 text-slate-700 hover:bg-pink-50 transition" aria-controls="cellular-details" aria-expanded="false" onclick="toggleCardDetails('cellular-details', this)">Details</button>
+                            </div>
+                        </div>
+                        <div id="cellular-details" class="disclose-content px-4 pb-3" hidden>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="p-2 rounded-lg bg-pink-50 border border-pink-100">
+                                    <div class="text-[10px] font-bold text-pink-600 uppercase">Focus</div>
+                                    <div class="text-[12px] text-slate-700">Morphology, nucleus, texture</div>
+                                </div>
+                                <div class="p-2 rounded-lg bg-pink-50 border border-pink-100">
+                                    <div class="text-[10px] font-bold text-pink-600 uppercase">Output</div>
+                                    <div class="text-[12px] text-slate-700">Prediction, probability, tier</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="micro-card border border-rose-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500" role="group">
+                        <div class="micro-top bg-gradient-to-r from-rose-500 to-pink-500"></div>
+                        <div class="micro-body grid grid-cols-[auto,1fr,auto] items-center gap-3 px-4 py-3">
+                            <div class="micro-icon rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center" aria-hidden="true"><i class="ph ph-heart-pulse"></i></div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-sm font-bold text-slate-900">Clinical Prognosis</h2>
+                                    <span class="indicator-dot bg-rose-500" aria-label="Ready"></span>
+                                </div>
+                                <p class="text-[12px] text-slate-600 truncate">History & genomics • Aggressiveness • Timeline</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button class="text-[11px] px-2 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white transition" onclick="router('model2')">Open</button>
+                                <button class="text-[11px] px-2 py-1 rounded bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 transition" aria-controls="prognosis-details" aria-expanded="false" onclick="toggleCardDetails('prognosis-details', this)">Details</button>
+                            </div>
+                        </div>
+                        <div id="prognosis-details" class="disclose-content px-4 pb-3" hidden>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="p-2 rounded-lg bg-rose-50 border border-rose-100">
+                                    <div class="text-[10px] font-bold text-rose-600 uppercase">Focus</div>
+                                    <div class="text-[12px] text-slate-700">Clinical factors, genomics</div>
+                                </div>
+                                <div class="p-2 rounded-lg bg-rose-50 border border-rose-100">
+                                    <div class="text-[10px] font-bold text-rose-600 uppercase">Output</div>
+                                    <div class="text-[12px] text-slate-700">Prognosis, trajectory</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl border border-pink-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-pink-100 flex items-center justify-between">
+                            <h3 class="font-display text-lg font-bold text-slate-900">Saved Batch Predictions</h3>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-slate-500">5 per page</span>
+                                <button id="dbp-prev" class="px-2 py-1 text-[10px] rounded border border-pink-200 bg-white text-slate-700">Prev</button>
+                                <button id="dbp-next" class="px-2 py-1 text-[10px] rounded border border-pink-200 bg-white text-slate-700">Next</button>
+                                <span class="text-[10px] text-slate-500">Page <span id="dbp-page">1</span>/<span id="dbp-pages">1</span></span>
+                            </div>
+                            <div class="overflow-auto border border-pink-100 rounded-xl">
+                                <table class="w-full text-xs text-left table-xs">
+                                    <thead class="bg-pink-50 text-pink-900 font-semibold border-b border-pink-100">
+                                        <tr>
+                                            <th class="px-3 py-2">Patient</th>
+                                            <th class="px-3 py-2">Prediction</th>
+                                            <th class="px-3 py-2">Probability</th>
+                                            <th class="px-3 py-2">Risk</th>
+                                            <th class="px-3 py-2">Action</th>
+                                            <th class="px-3 py-2">Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dbp-table-body" class="divide-y divide-pink-100 bg-white"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-pink-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-pink-100">
+                            <h3 class="font-display text-lg font-bold text-slate-900">Clinical Outcomes (Under Construction)</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="overflow-auto border border-pink-100 rounded-xl">
+                                <table class="w-full text-xs text-left table-xs">
+                                    <thead class="bg-pink-50 text-pink-900 font-semibold border-b border-pink-100">
+                                        <tr>
+                                            <th class="px-3 py-2">ID</th>
+                                            <th class="px-3 py-2">Metric</th>
+                                            <th class="px-3 py-2">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-pink-100 bg-white text-xs">
+                                        <tr><td class="px-3 py-2" colspan="3" class="text-slate-500">No data yet</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-model1" class="page-view">
+                
+                <div class="flex gap-4 border-b border-pink-200 mb-6">
+                    <button onclick="switchSubTab('tab-single')" id="btn-tab-single" class="tab-btn pb-3 px-1 text-sm font-semibold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition">
+                        <i class="ph ph-user mr-1"></i> Single Patient
+                    </button>
+                    <button onclick="switchSubTab('tab-batch')" id="btn-tab-batch" class="tab-btn pb-3 px-1 text-sm font-semibold text-pink-600 border-b-2 border-pink-600 transition">
+                        <i class="ph ph-files mr-1"></i> Batch Analysis (CSV)
+                    </button>
+                </div>
+
+                <div id="tab-single" class="tab-content">
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="bg-white rounded-xl border border-pink-200 shadow-sm p-6">
+                            <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span class="h-6 w-6 rounded bg-pink-100 text-pink-600 flex items-center justify-center text-xs"><i class="ph ph-faders"></i></span>
+                                    Cellular Features (30 Parameters)
+                                </h3>
+                                <button id="btnGenerateData" onclick="fillRandomData()" class="text-xs font-bold text-pink-600 bg-pink-50 px-3 py-1.5 rounded-lg border border-pink-100 hover:bg-pink-100 transition flex items-center gap-1">
+                                    <i class="ph ph-magic-wand"></i> Generate Data
+                                </button>
+                            </div>
+                            <div id="inputs-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6 max-h-60 overflow-y-auto pr-2"></div>
+                            
+                            <div class="border-t border-pink-100 pt-4 flex justify-end">
+                                <button id="btnRunPrediction" onclick="runExtendedPrediction()" class="bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-600 hover:to-fuchsia-700 text-white px-8 py-3 rounded-xl text-sm font-bold shadow-lg shadow-pink-200 transition flex items-center gap-2">
+                                    <i class="ph ph-lightning"></i> RUN PREDICTION
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="extended-results" class="hidden bg-white rounded-xl border border-pink-200 shadow-xl overflow-hidden">
+                            <div id="result-card-bg" class="p-8 bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+                                <div class="relative z-10 flex items-center gap-6">
+                                    <div id="result-icon-container" class="h-20 w-20 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20">
+                                        <i id="result-icon" class="ph ph-scan text-4xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-pink-100 uppercase tracking-widest">AI Diagnosis</p>
+                                        <h2 id="result-diagnosis" class="text-4xl font-display font-bold text-white mt-1">---</h2>
+                                        <p class="text-sm text-pink-100 mt-2 flex items-center gap-2">
+                                            Confidence: <span id="result-score" class="font-mono numeric text-white font-bold">0%</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="relative z-10 text-right">
+                                    <div class="inline-block px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/10">
+                                        <p class="text-[10px] text-pink-100 uppercase font-bold">Risk Level</p>
+                                        <p id="result-tier" class="text-xl font-bold text-white">---</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <div class="lg:col-span-2">
+                                    <h4 class="font-bold text-slate-800 text-sm mb-4">Top 5 Critical Features</h4>
+                                    <div class="overflow-hidden rounded-lg border border-pink-200">
+                                        <table class="w-full text-sm text-left">
+                                            <thead class="bg-pink-50 text-pink-900 font-semibold border-b border-pink-200">
+                                                <tr><th class="px-4 py-3">Feature</th><th class="px-4 py-3">Value</th><th class="px-4 py-3">Impact</th></tr>
+                                            </thead>
+                                            <tbody id="top-features-body" class="divide-y divide-pink-100 bg-white"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="lg:col-span-1 flex flex-col gap-3">
+                                    <button onclick="exportSinglePDF()" class="w-full p-4 rounded-xl border border-pink-200 hover:border-pink-500 hover:bg-pink-50 transition bg-white flex items-center gap-3 group">
+                                        <i class="ph ph-file-pdf text-2xl text-pink-600"></i>
+                                        <div class="text-left"><p class="font-bold text-slate-700 text-sm">PDF Report</p><p class="text-[10px] text-slate-400">Full diagnostic</p></div>
+                                    </button>
+                                    <button onclick="exportSingleExcel()" class="w-full p-4 rounded-xl border border-pink-200 hover:border-emerald-500 hover:bg-emerald-50 transition bg-white flex items-center gap-3 group">
+                                        <i class="ph ph-file-xls text-2xl text-emerald-600"></i>
+                                        <div class="text-left"><p class="font-bold text-slate-700 text-sm">Excel Export</p><p class="text-[10px] text-slate-400">Raw data</p></div>
+                                    </button>
+                                    <button onclick="saveSingleToDB(this)" class="w-full p-4 rounded-xl border border-pink-200 hover:border-fuchsia-500 hover:bg-fuchsia-50 transition bg-white flex items-center gap-3 group">
+                                        <i class="ph ph-database text-2xl text-fuchsia-600"></i>
+                                        <div class="text-left"><p class="font-bold text-slate-700 text-sm">Save to DB</p><p class="text-[10px] text-slate-400">Append to batch CSV</p></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-batch" class="tab-content active">
+                    <div class="grid grid-cols-1 gap-4">
+                        
+                        <div id="upload-box" class="bg-white rounded-xl border-2 border-dashed border-pink-200 p-12 text-center hover:border-pink-400 hover:bg-pink-50/30 transition cursor-pointer" onclick="simulateCSVUpload()">
+                            <div class="h-20 w-20 rounded-full bg-pink-50 text-pink-400 mx-auto flex items-center justify-center mb-4">
+                                <i class="ph ph-file-csv text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">Upload Patient CSV Batch</h3>
+                            <p class="text-sm text-slate-500 mt-2">Click to simulate importing 15 patients</p>
+                        </div>
+                        <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+
+                        <div id="batch-results-container" class="hidden flex flex-col gap-4">
+                            
+                            <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl border border-pink-200 shadow-sm sticky top-0 z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-2 px-3 py-2 bg-pink-50 rounded-lg border border-pink-200">
+                                        <i class="ph ph-funnel text-pink-400"></i>
+                                        <span class="text-xs font-bold text-pink-600 uppercase">Filters</span>
+                                    </div>
+                                    <select id="filter-pred" onchange="filterTable()" class="bg-white border border-pink-200 text-slate-700 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block p-2 outline-none">
+                                        <option value="all">Diagnosis: All</option>
+                                        <option value="malin">Malignant</option>
+                                        <option value="benin">Benign</option>
+                                    </select>
+                                    <select id="filter-tier" onchange="filterTable()" class="bg-white border border-pink-200 text-slate-700 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block p-2 outline-none">
+                                        <option value="all">Risk: All</option>
+                                        <option value="high">High</option>
+                                        <option value="mod">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-xs text-slate-400 font-mono"><span id="row-count" class="font-bold text-slate-700">0</span> rows</span>
+                                    <button onclick="triggerNewBatch()" class="bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-600 hover:to-fuchsia-700 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded-lg shadow-lg shadow-pink-200 transition flex items-center gap-2">
+                                        <i class="ph ph-file-plus"></i> Upload New Batch
+                                    </button>
+                                    
+                                    <button onclick="saveBatchToDB(this)" class="bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-600 hover:to-fuchsia-700 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded-lg shadow-lg shadow-pink-200 transition flex items-center gap-2">
+                                        <i class="ph ph-database"></i> Save All
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-xl border border-pink-200 shadow-sm overflow-hidden">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead class="bg-pink-50 text-pink-900 text-xs font-bold uppercase border-b border-pink-200">
+                                            <tr>
+                                                <th class="px-6 py-4">Patient ID</th>
+                                                <th class="px-6 py-4">Prediction</th>
+                                                <th class="px-6 py-4">Confidence</th>
+                                                <th class="px-6 py-4">Risk Tier</th>
+                                                <th class="px-6 py-4">Action</th>
+                                                <th class="px-6 py-4">Top Features</th>
+                                                <th class="px-6 py-4 text-right">Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="batch-table-body" class="text-sm text-slate-600 divide-y divide-pink-100"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="view-model2" class="page-view">
+                <div class="h-full min-h-[400px] flex items-center justify-center">
+                    <div class="text-center p-8 bg-white rounded-2xl border border-rose-200 shadow-sm max-w-md">
+                        <i class="ph ph-cone text-6xl text-rose-500 mb-4 inline-block"></i>
+                        <h2 class="text-xl font-bold text-slate-800">Under Construction</h2>
+                        <p class="text-sm text-slate-500 mt-2">The clinical prognosis model is currently being developed.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-docs" class="page-view">
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
+                        <div class="p-6 border-b border-pink-100 flex items-center justify-between">
+                            <h2 class="font-display text-xl font-bold text-slate-900">Documentation & Resources</h2>
+                            <span class="px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-[10px] font-bold text-pink-600 uppercase tracking-wide">WBCD Model</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <div class="lg:col-span-2">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="bg-pink-50 rounded-xl p-6 border border-pink-100">
+                                            <div class="text-xs font-bold text-pink-500 uppercase">Accuracy</div>
+                                            <div id="doc-acc" class="text-3xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
+                                        </div>
+                                        <div class="bg-pink-50 rounded-xl p-6 border border-pink-100">
+                                            <div class="text-xs font-bold text-pink-500 uppercase">Error Rate</div>
+                                            <div id="doc-error" class="text-3xl font-mono numeric font-bold text-rose-600 mt-1">--%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
+                        <div class="p-6 border-b border-pink-100">
+                            <h3 class="font-display text-lg font-bold text-slate-900">Actions & References</h3>
+                        </div>
+                        <div class="p-6">
+                            <ul id="doc-actions" class="list-disc list-inside text-sm text-slate-700 space-y-1"></ul>
+                            <div class="mt-6">
+                                <div class="text-xs font-bold text-pink-500 uppercase mb-3">Clinical Sources</div>
+                                <ul id="doc-sources" class="list-disc list-inside text-sm text-slate-700 space-y-1"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <div id="slide-overlay" class="overlay fixed inset-0 bg-slate-900/50 z-40 backdrop-blur-sm" onclick="closeDetails()"></div>
+    
+    <div id="patient-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-pink-200 flex flex-col">
+        <div class="px-6 py-4 border-b border-pink-100 flex justify-between items-center bg-pink-50/50 sticky top-0 z-10">
+            <div>
+                <h3 class="font-display font-bold text-lg text-slate-800">Patient Details</h3>
+                <p id="detail-id" class="text-xs font-mono text-slate-500">#---</p>
+            </div>
+            <button onclick="closeDetails()" class="h-8 w-8 rounded-full bg-white border border-pink-200 text-slate-500 hover:text-pink-600 hover:border-pink-300 flex items-center justify-center transition">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <div id="detail-card-bg" class="rounded-2xl p-6 text-white relative overflow-hidden transition-colors">
+                <div class="relative z-10 flex items-center gap-6">
+                    <div id="detail-icon-box" class="h-16 w-16 rounded-xl flex items-center justify-center border border-white/20">
+                        <i id="detail-icon" class="ph ph-scan text-3xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold opacity-70 uppercase tracking-widest">Diagnosis</p>
+                        <h2 id="detail-pred" class="text-3xl font-display font-bold mt-1">---</h2>
+                        <div class="flex items-center gap-2 mt-2 text-sm opacity-90">
+                            <span class="font-mono" id="detail-score">0%</span> probability
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-0 right-0 w-48 h-48 bg-white rounded-full blur-3xl opacity-10 -translate-y-1/2 translate-x-1/2"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Risk Tier</p>
+                    <p id="detail-tier" class="font-bold text-slate-700 mt-1">---</p>
+                </div>
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Required Action</p>
+                    <p id="detail-action" class="font-bold text-slate-700 mt-1">---</p>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                    <i class="ph ph-list-magnifying-glass text-pink-600"></i> Feature Analysis (Top 5)
+                </h4>
+                <div class="border border-pink-200 rounded-xl overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-pink-50 text-pink-900 text-xs font-semibold">
+                            <tr><th class="px-4 py-2">Metric</th><th class="px-4 py-2">Value</th><th class="px-4 py-2">Impact</th></tr>
+                        </thead>
+                        <tbody id="detail-features-body" class="divide-y divide-pink-100 bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-pink-100 mt-auto bg-pink-50/30 grid grid-cols-3 gap-3">
+            <button onclick="exportPDF()" class="py-2.5 rounded-lg border border-pink-200 bg-white text-slate-700 font-bold text-sm hover:border-pink-500 hover:text-pink-600 transition flex items-center justify-center gap-2">
+                <i class="ph ph-file-pdf text-lg"></i> PDF
+            </button>
+            <button onclick="exportExcel()" class="py-2.5 rounded-lg border border-pink-200 bg-white text-slate-700 font-bold text-sm hover:border-emerald-500 hover:text-emerald-600 transition flex items-center justify-center gap-2">
+                <i class="ph ph-file-xls text-lg"></i> Excel
+            </button>
+            <button onclick="closeDetails()" class="py-2.5 rounded-lg bg-pink-200 text-pink-700 font-bold text-sm hover:bg-pink-300 transition">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <div id="dbp-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-pink-200 flex flex-col">
+        <div class="px-6 py-4 border-b border-pink-100 flex justify-between items-center bg-pink-50/50 sticky top-0 z-10">
+            <div>
+                <h3 class="font-display font-bold text-lg text-slate-800">Saved Patient Details</h3>
+                <p id="dbp-detail-id" class="text-xs font-mono text-slate-500">#---</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="dbpExportCSV()" class="h-8 px-3 rounded bg-white border border-pink-200 text-slate-700 text-xs">CSV</button>
+                <button onclick="dbpExportPDF()" class="h-8 px-3 rounded bg-white border border-pink-200 text-slate-700 text-xs">PDF</button>
+                <button onclick="closeDbpDetails()" class="h-8 w-8 rounded-full bg-white border border-pink-200 text-slate-500 hover:text-pink-600 hover:border-pink-300 flex items-center justify-center transition">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-6 space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Prediction</p>
+                    <div id="dbp-detail-pred" class="mt-1"></div>
+                </div>
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Probability</p>
+                    <p id="dbp-detail-prob" class="font-mono font-bold text-slate-700 mt-1">--</p>
+                </div>
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Risk Tier</p>
+                    <div id="dbp-detail-tier" class="mt-1"></div>
+                </div>
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Action</p>
+                    <p id="dbp-detail-action" class="font-bold text-slate-700 mt-1">---</p>
+                </div>
+            </div>
+            <div class="p-4 rounded-xl border border-pink-200 bg-white">
+                <p class="text-xs font-bold text-pink-500 uppercase">Timestamp</p>
+                <p id="dbp-detail-time" class="text-xs font-mono text-slate-600">--</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-800 text-sm mb-3">Top Features</h4>
+                <div class="border border-pink-200 rounded-xl overflow-hidden">
+                    <table class="w-full text-xs table-xs">
+                        <thead class="bg-pink-50 text-pink-900 text-xs font-semibold">
+                            <tr><th class="px-3 py-2">Feature</th><th class="px-3 py-2">Value</th></tr>
+                        </thead>
+                        <tbody id="dbp-detail-features" class="divide-y divide-pink-100 bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    // --- ROUTER SYSTEM ---
+    function router(viewId) {
+        document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+        
+        const target = document.getElementById('view-' + viewId);
+        if(target) target.classList.add('active');
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('bg-pink-50', 'text-pink-600', 'bg-rose-50', 'text-rose-600');
+            btn.classList.add('text-slate-500');
+        });
+        
+        const activeNav = document.getElementById('nav-' + viewId);
+        if(activeNav) {
+            activeNav.classList.remove('text-slate-500');
+            if(viewId === 'model2') {
+                activeNav.classList.add('bg-rose-50', 'text-rose-600');
+            } else {
+                activeNav.classList.add('bg-pink-50', 'text-pink-600');
+            }
+        }
+
+        const titles = { 
+            'dashboard': "OncoCare Dashboard", 
+            'model1': "Cellular Analysis", 
+            'model2': "Clinical Prognosis",
+            'docs': "Documentation & Resources"
+        };
+        document.getElementById('page-title').innerText = titles[viewId] || "OncoCare";
+        if(viewId === 'docs') loadDocs();
+        if(viewId === 'dashboard') loadSavedBatchSimple();
+    }
+
+    // --- TAB MANAGEMENT ---
+    function switchSubTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('text-pink-600', 'border-pink-600');
+            btn.classList.add('text-slate-500', 'border-transparent');
+        });
+        
+        const btn = document.getElementById('btn-' + tabId);
+        btn.classList.remove('text-slate-500', 'border-transparent');
+        btn.classList.add('text-pink-600', 'border-pink-600');
+    }
+
+    // --- SINGLE PATIENT LOGIC ---
+    const originGuess = (location.protocol.startsWith('http') ? location.origin : 'http://localhost:8000');
+    const API_BASE = ((originGuess.includes(':8080') || originGuess.includes(':8081')) || originGuess.startsWith('file')) ? 'http://127.0.0.1:8000' : originGuess;
+    if(!location.origin.includes(':8000')){
+        try {
+            window.location.href = 'http://localhost:8000/ui/oncoai_merged.html';
+        } catch (_) {}
+    }
+    const featureNames = [
+        "Radius Mean", "Texture Mean", "Perimeter Mean", "Area Mean", "Smoothness Mean",
+        "Compactness Mean", "Concavity Mean", "Concave Points Mean", "Symmetry Mean", "Fractal Dim Mean",
+        "Radius SE", "Texture SE", "Perimeter SE", "Area SE", "Smoothness SE",
+        "Compactness SE", "Concavity SE", "Concave Points SE", "Symmetry SE", "Fractal Dim SE",
+        "Radius Worst", "Texture Worst", "Perimeter Worst", "Area Worst", "Smoothness Worst",
+        "Compactness Worst", "Concavity Worst", "Concave Points Worst", "Symmetry Worst", "Fractal Dim Worst"
+    ];
+    const apiFeatureKeys = [
+        'radius_mean','texture_mean','perimeter_mean','area_mean',
+        'smoothness_mean','compactness_mean','concavity_mean','concave_points_mean','symmetry_mean','fractal_dimension_mean',
+        'radius_se','texture_se','perimeter_se','area_se','smoothness_se',
+        'compactness_se','concavity_se','concave_points_se','symmetry_se','fractal_dimension_se',
+        'radius_worst','texture_worst','perimeter_worst','area_worst','smoothness_worst',
+        'compactness_worst','concavity_worst','concave_points_worst','symmetry_worst','fractal_dimension_worst'
+    ];
+
+    function initInputs() {
+        const grid = document.getElementById('inputs-grid');
+        featureNames.forEach((name, index) => {
+            const div = document.createElement('div');
+            div.innerHTML = `<label class="block text-[10px] font-bold text-slate-400 uppercase truncate mb-1" title="${name}">${name}</label><input type="number" id="inp_${index}" class="w-full bg-pink-50 border border-pink-200 rounded px-2 py-1.5 text-xs font-mono focus:border-pink-500 outline-none transition" placeholder="0.00" step="0.01">`;
+            grid.appendChild(div);
+        });
+    }
+
+    async function fillRandomData() {
+        const btn = document.getElementById('btnGenerateData');
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Loading...';
+        const wantMalignant = typeof window.event !== 'undefined' && (window.event.shiftKey || window.event.altKey);
+        const url = API_BASE + "/api/v1/wbcd/sample" + (wantMalignant ? "?diagnosis=malignant" : "");
+        console.log('Generate Data: requesting sample from', url);
+        try {
+            const r = await fetch(url);
+            if(!r.ok){ throw new Error('Sample fetch failed: ' + r.status); }
+            const j = await r.json();
+            apiFeatureKeys.forEach((k, index) => {
+                const val = j.features[k];
+                const num = typeof val === 'number' ? val : parseFloat(val);
+                document.getElementById(`inp_${index}`).value = Number.isFinite(num) ? num : '';
+            });
+            console.log('Generate Data: populated fields for', j.patient_id);
+        } catch (e) {
+            console.error('Generate Data error', e);
+            alert('Failed to load sample data. Please try again.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    }
+
+    async function runExtendedPrediction() {
+        const btn = document.getElementById('btnRunPrediction');
+        const original = btn.innerHTML;
+        const payload = {};
+        const missing = [];
+        apiFeatureKeys.forEach((k, i) => {
+            const raw = document.getElementById(`inp_${i}`).value;
+            const v = parseFloat(raw);
+            if(raw === '' || !Number.isFinite(v)) missing.push(k);
+            payload[k] = v;
+        });
+        if(missing.length){
+            console.warn('Validation failed: missing/invalid fields', missing);
+            alert('Please fill all fields with valid numbers before prediction.');
+            return;
+        }
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i> Predicting...';
+        console.log('Submitting single patient payload to', API_BASE, payload);
+        try {
+            const r = await fetch(API_BASE + "/api/v1/cellular/predict", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+            if(!r.ok){
+                const text = await r.text();
+                throw new Error('API error ' + r.status + ': ' + text);
+            }
+            const j = await r.json();
+            const results = document.getElementById('extended-results');
+            results.classList.remove('hidden');
+            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const diag = j.diagnosis?.predicted_class || "BENIGN";
+            const prob = (j.diagnosis?.malignancy_probability || 0) * 100;
+            const conf = j.diagnosis?.confidence || "LOW";
+            const tier = j.risk_assessment?.risk_tier || "LOW";
+            const elDiag = document.getElementById('result-diagnosis');
+            const elIconContainer = document.getElementById('result-icon-container');
+            const elIcon = document.getElementById('result-icon');
+            const elTier = document.getElementById('result-tier');
+            document.getElementById('result-score').innerText = prob.toFixed(1) + "% (" + conf + ")";
+            const tierLower = (tier || '').toString().toLowerCase();
+            const card = document.getElementById('result-card-bg');
+            if (tierLower.includes('critical')) {
+                card.className = "p-8 bg-gradient-to-r from-red-700 to-red-900 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-red-900/20 flex items-center justify-center border border-white/30";
+            } else if (tierLower.includes('high')) {
+                card.className = "p-8 bg-gradient-to-r from-rose-600 to-rose-800 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-rose-900/20 flex items-center justify-center border border-white/30";
+            } else if (tierLower.includes('medium') || tierLower === 'mod') {
+                card.className = "p-8 bg-gradient-to-r from-amber-500 to-orange-600 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-amber-900/20 flex items-center justify-center border border-white/30";
+            } else if (tierLower.includes('very')) {
+                card.className = "p-8 bg-gradient-to-r from-emerald-300 to-emerald-500 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-emerald-900/20 flex items-center justify-center border border-white/30";
+            } else {
+                card.className = "p-8 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-emerald-900/20 flex items-center justify-center border border-white/30";
+            }
+            if (diag === "MALIGNANT") {
+                elDiag.innerText = "MALIGNANT";
+                elIcon.className = "ph ph-warning-octagon text-4xl text-white";
+            } else {
+                elDiag.innerText = "BENIGN";
+                elIcon.className = "ph ph-shield-check text-4xl text-white";
+            }
+            const t = (tier || '').toString().toLowerCase();
+            const friendly = t.includes('critical') ? 'CRITICAL RISK' :
+                             t.includes('high') ? 'HIGH RISK' :
+                             (t.includes('medium') || t === 'mod') ? 'MEDIUM RISK' :
+                             t.includes('very') ? 'VERY LOW RISK' :
+                             'LOW RISK';
+            elTier.innerText = friendly;
+            const tbody = document.getElementById('top-features-body');
+            tbody.innerHTML = '';
+            const all = j.explainability?.all_features || [];
+            const totalImp = all.reduce((sum, f) => sum + (typeof f.importance === 'number' ? f.importance : 0), 0) || (j.explainability?.top_features || []).reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0);
+            const originals = j.explainability?.original_features || {};
+            const labelOf = (k) => {
+                const idx = apiFeatureKeys.indexOf(k);
+                return idx >= 0 ? featureNames[idx] : k;
+            };
+            (j.explainability?.top_features || []).forEach(tf => {
+                const key = tf.feature;
+                const raw = originals[key];
+                const rawStr = typeof raw === 'number' ? raw.toFixed(2) : (raw ?? '');
+                const pct = totalImp ? ((tf.importance || 0) / totalImp) * 100 : 0;
+                const pctStr = pct.toFixed(1) + '%';
+                const impact = `<span class="text-pink-600 font-bold flex items-center gap-1"><i class="ph ph-trend-up"></i> ${pctStr}</span>`;
+                tbody.innerHTML += `<tr class="hover:bg-pink-50 transition"><td class="px-4 py-3 font-medium text-slate-700">${labelOf(key)}</td><td class="px-4 py-3 font-mono text-slate-500">${rawStr}</td><td class="px-4 py-3 text-xs">${impact}</td></tr>`;
+            });
+            console.log('Prediction result', j);
+            window.singleResult = j;
+            window.singleOriginal = j.explainability?.original_features || apiFeatureKeys.reduce((acc,k,i)=>{ acc[k] = parseFloat(document.getElementById(`inp_${i}`).value||''); return acc; }, {});
+            window.singleMeta = {
+                id: j.patient_identifier || ('S-' + Date.now()),
+                isMal: diag === 'MALIGNANT',
+                prob: prob.toFixed(1),
+                tier: tier,
+                tierCode: (tierLower.includes('high')||tierLower.includes('critical'))?'high':(tierLower.includes('medium')||tierLower==='mod')?'mod':'low',
+                action: (j.risk_assessment?.evidence_based_actions||[])[0]?.action || 'Monitor'
+            };
+        } catch (e) {
+            console.error('Prediction error', e);
+            alert('Prediction failed. Please check inputs and try again.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    }
+
+    // --- BATCH LOGIC ---
+    let allPatients = [];
+    const labelOf = (k) => {
+        const idx = apiFeatureKeys.indexOf(k);
+        return idx >= 0 ? featureNames[idx] : k;
+    };
+
+    function simulateCSVUpload() {
+        const uploadBox = document.getElementById('upload-box');
+        const fileInput = document.getElementById('csvFileInput');
+        fileInput.value = '';
+        fileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if(!file){ return; }
+            const results = document.getElementById('batch-results-container');
+            uploadBox.innerHTML = '<i class="ph ph-spinner ph-spin text-3xl text-pink-500"></i><p class="text-slate-500 mt-2">Processing batch...</p>';
+            console.log('Uploading CSV file', file.name, file.size);
+            try {
+                const fd = new FormData();
+                fd.append('file', file, file.name);
+                const r = await fetch(API_BASE + "/api/v1/cellular/batch", {
+                    method: "POST",
+                    body: fd
+                });
+                if(!r.ok){
+                    const text = await r.text();
+                    throw new Error('Batch API error ' + r.status + ': ' + text);
+                }
+                const j = await r.json();
+                console.log('Batch API result', j);
+                uploadBox.style.display = 'none';
+                results.classList.remove('hidden');
+                allPatients = transformBatchResults(j.results || []);
+                renderBatchTable(allPatients);
+            } catch (err) {
+                console.error('Batch upload error', err);
+                alert('Batch processing failed. Ensure CSV has all required columns and try again.');
+                uploadBox.innerHTML = `
+                    <div class="h-20 w-20 rounded-full bg-pink-50 text-pink-400 mx-auto flex items-center justify-center mb-4">
+                        <i class="ph ph-file-csv text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Upload Patient CSV Batch</h3>
+                    <p class="text-sm text-slate-500 mt-2">Click to simulate importing 15 patients</p>`;
+            }
+        };
+        fileInput.click();
+    }
+
+    function transformBatchResults(results) {
+        return results.filter(r => r && r.processing_status === 'SUCCESS').map((r, i) => {
+            const isMal = (r.diagnosis?.predicted_class || '').toUpperCase() === 'MALIGNANT';
+            const prob = ((r.diagnosis?.malignancy_probability || 0) * 100).toFixed(1);
+            const tierText = (r.risk_assessment?.risk_tier || '').toLowerCase();
+            const tierCode = tierText.includes('high') || tierText.includes('critical') ? 'high'
+                            : (tierText.includes('medium') || tierText === 'mod') ? 'mod'
+                            : 'low';
+            const action = (r.risk_assessment?.evidence_based_actions || [])[0]?.action || (isMal ? 'Urgent Review' : 'Monitor');
+            const top = (r.explainability?.top_features || []).slice(0, 5);
+            const originals = r.explainability?.original_features || {};
+            const features = top.map(tf => ({
+                name: labelOf(tf.feature),
+                val: (typeof originals[tf.feature] === 'number') ? originals[tf.feature].toFixed(2) : '',
+                crit: (typeof tf.importance === 'number') ? (tf.importance > (top.reduce((s,f)=>s+(f.importance||0),0)/top.length)) : false
+            }));
+            return {
+                id: r.patient_identifier || `PT-${2500+i}`,
+                isMal,
+                prob,
+                tier: (tierText.includes('critical') ? 'Critical' : tierText.includes('high') ? 'High' : tierText.includes('medium') ? 'Medium' : 'Low'),
+                tierCode,
+                action,
+                features,
+                raw: r
+            };
+        });
+    }
+
+    function renderBatchTable(data) {
+        const tbody = document.getElementById('batch-table-body');
+        document.getElementById('row-count').innerText = data.length;
+        tbody.innerHTML = '';
+        
+        data.forEach(p => {
+            const predBadge = p.isMal ? 
+                '<span class="px-2 py-1 rounded text-xs font-bold border text-pink-600 bg-pink-50 border-pink-100">Malignant</span>' : 
+                '<span class="px-2 py-1 rounded text-xs font-bold border text-emerald-600 bg-emerald-50 border-emerald-100">Benign</span>';
+            
+            const tierColor = p.tierCode === 'high' ? 'text-rose-700 bg-rose-100' : 
+                (p.tierCode === 'mod' ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100');
+            
+            const features = p.features.slice(0,3).map(f => 
+                `<span class="inline-block px-1.5 py-0.5 bg-pink-100 text-pink-600 rounded text-[10px] mr-1 border border-pink-200">${f.name}</span>`
+            ).join('') + '...';
+            
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-pink-50 transition border-b border-pink-50";
+            tr.innerHTML = `
+                <td class="px-6 py-4 font-mono font-medium text-slate-700">${p.id}</td>
+                <td class="px-6 py-4">${predBadge}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-mono w-8 text-right">${p.prob}%</span>
+                        <div class="h-1.5 w-16 bg-pink-100 rounded-full overflow-hidden">
+                            <div class="h-full ${p.isMal ? 'bg-pink-500' : 'bg-emerald-500'}" style="width: ${p.prob}%"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${tierColor}">${p.tier}</span></td>
+                <td class="px-6 py-4 font-medium text-xs text-slate-700">${p.action}</td>
+                <td class="px-6 py-4">${features}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="openDetails(this.dataset.pid)" data-pid="${p.id}" class="text-xs font-bold text-pink-600 hover:bg-pink-50 px-3 py-1.5 rounded-lg border border-transparent hover:border-pink-100 transition">
+                        View Details
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterTable() {
+        const pVal = document.getElementById('filter-pred').value;
+        const tVal = document.getElementById('filter-tier').value;
+        
+        const filtered = allPatients.filter(p => {
+            const mPred = pVal === 'all' ? true : (pVal === 'malin' ? p.isMal : !p.isMal);
+            const mTier = tVal === 'all' ? true : (p.tierCode === tVal);
+            return mPred && mTier;
+        });
+        
+        renderBatchTable(filtered);
+    }
+
+    async function triggerNewBatch() {
+        const btn = document.querySelector('#batch-results-container button[onclick="triggerNewBatch()"]');
+        const original = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Uploading...';
+        }
+        const fileInput = document.getElementById('csvFileInput');
+        fileInput.value = '';
+        fileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if(!file){
+                if (btn) { btn.disabled = false; btn.innerHTML = original; }
+                return;
+            }
+            try {
+                const fd = new FormData();
+                fd.append('file', file, file.name);
+                const r = await fetch(API_BASE + "/api/v1/cellular/batch", { method: "POST", body: fd });
+                if(!r.ok){
+                    const text = await r.text();
+                    throw new Error('Batch API error ' + r.status + ': ' + text);
+                }
+                const j = await r.json();
+                allPatients = transformBatchResults(j.results || []);
+                document.getElementById('batch-results-container').classList.remove('hidden');
+                document.getElementById('upload-box').style.display = 'none';
+                renderBatchTable(allPatients);
+                console.log('New batch uploaded', file.name, j);
+            } catch (err) {
+                console.error('New batch upload error', err);
+                alert('Batch processing failed. Ensure CSV has all required columns and try again.');
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = original; }
+            }
+        };
+        fileInput.click();
+    }
+
+    function saveBatchToDB(btn) {
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i class="ph ph-spinner ph-spin text-lg"></i> Saving...`;
+        try {
+            const rows = allPatients.map(p => {
+                const originals = (p.raw && p.raw.explainability) ? (p.raw.explainability.original_features || {}) : {};
+                const top = (p.raw && p.raw.explainability) ? (p.raw.explainability.top_features || []).slice(0,5) : [];
+                const obj = {
+                    patient_id: p.id,
+                    predicted_class: p.isMal ? 'MALIGNANT' : 'BENIGN',
+                    probability: Number(p.prob) / 100,
+                    risk_tier: p.tier,
+                    action: p.action,
+                    timestamp: new Date().toISOString()
+                };
+                for(let i=0;i<5;i++){
+                    const tf = top[i];
+                    if(tf && tf.feature){
+                        const key = tf.feature;
+                        obj[`top${i+1}_name`] = labelOf(key);
+                        obj[`top${i+1}_value`] = typeof originals[key] === 'number' ? Number(originals[key].toFixed(2)) : '';
+                    } else {
+                        obj[`top${i+1}_name`] = '';
+                        obj[`top${i+1}_value`] = '';
+                    }
+                }
+                return obj;
+            });
+            console.log('Saving batch outcomes', rows);
+            fetch(API_BASE + "/api/v1/cellular/batch/save", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ rows })
+            }).then(async r => {
+                if(!r.ok){
+                    const text = await r.text();
+                    throw new Error('Save error ' + r.status + ': ' + text);
+                }
+                return r.json();
+            }).then(j => {
+                console.log('Save response', j);
+                const saved = Number(j.rows_saved || 0);
+                if(saved > 0){
+                    btn.innerHTML = `<i class="ph ph-check text-lg"></i> Saved (${saved})`;
+                    btn.className = btn.className.replace('from-pink-500 to-fuchsia-600', 'from-emerald-500 to-emerald-600');
+                    setTimeout(() => {
+                        btn.innerHTML = original;
+                        btn.className = btn.className.replace('from-emerald-500 to-emerald-600', 'from-pink-500 to-fuchsia-600');
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    alert('No rows saved. Verify batch results and try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = original;
+                }
+            }).catch(err => {
+                console.error('Save failed', err);
+                alert('Failed to save batch outcomes. Please try again.');
+                btn.disabled = false;
+                btn.innerHTML = original;
+            });
+        } catch (e) {
+            console.error('Unexpected save error', e);
+            alert('Failed to save batch outcomes. Please try again.');
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    }
+
+    // --- DETAILS SLIDE-OVER ---
+    function openDetails(pid) {
+        console.log('View Details clicked for PID:', pid);
+        const p = allPatients.find(x => String(x.id) === String(pid));
+        if(!p){
+            console.warn('Patient not found in current batch', pid, allPatients.map(x=>x.id));
+            alert('Patient details unavailable. Please re-upload batch and try again.');
+            return;
+        }
+        window.currentPatient = p;
+        
+        document.getElementById('detail-id').innerText = p.id;
+        document.getElementById('detail-pred').innerText = p.isMal ? "MALIGNANT" : "BENIGN";
+        document.getElementById('detail-score').innerText = p.prob + "%";
+        document.getElementById('detail-tier').innerText = p.tier + " Risk";
+        document.getElementById('detail-action').innerText = p.action;
+        
+        const card = document.getElementById('detail-card-bg');
+        const box = document.getElementById('detail-icon-box');
+        const icon = document.getElementById('detail-icon');
+        if (p.tierCode === 'high') {
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-rose-600 to-red-800";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-rose-700";
+        } else if (p.tierCode === 'mod') {
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-amber-500 to-orange-600";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-amber-700";
+        } else {
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-emerald-400 to-emerald-600";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-emerald-700";
+        }
+        icon.className = p.isMal ? "ph ph-warning-octagon text-3xl" : "ph ph-shield-check text-3xl";
+        
+        const tbody = document.getElementById('detail-features-body');
+        tbody.innerHTML = '';
+        const raw = (p.raw && p.raw.explainability) ? p.raw.explainability.original_features : {};
+        const top = (p.raw && p.raw.explainability) ? (p.raw.explainability.top_features || []) : [];
+        const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0);
+        (top.length ? top : p.features.map(f => ({ feature: f.name, importance: 0 })) ).slice(0,5).forEach(tf => {
+            const key = typeof tf.feature === 'string' ? tf.feature : tf.name;
+            const label = labelOf(key);
+            const rawVal = raw[key];
+            const valStr = (typeof rawVal === 'number') ? rawVal.toFixed(2) : (p.features.find(f => f.name === label)?.val || '');
+            const pct = totalImp ? ((tf.importance || 0) / totalImp) * 100 : 0;
+            const pctStr = pct.toFixed(1) + '%';
+            const impact = `<span class="text-pink-600 font-bold flex items-center gap-1"><i class="ph ph-trend-up"></i> ${pctStr}</span>`;
+            tbody.innerHTML += `<tr class="hover:bg-pink-50"><td class="px-4 py-2 font-medium text-slate-700">${label}</td><td class="px-4 py-2 font-mono text-slate-500">${valStr}</td><td class="px-4 py-2 text-xs">${impact}</td></tr>`;
+        });
+        
+        document.getElementById('slide-overlay').classList.add('open');
+        document.getElementById('patient-slideover').classList.add('open');
+    }
+
+    function closeDetails() {
+        document.getElementById('slide-overlay').classList.remove('open');
+        document.getElementById('patient-slideover').classList.remove('open');
+    }
+
+    function exportPDF() { 
+        const p = window.currentPatient;
+        if(!p){ alert('Open a patient first using View Details.'); return; }
+        const raw = (p.raw && p.raw.explainability) ? p.raw.explainability.original_features : {};
+        const top = (p.raw && p.raw.explainability) ? (p.raw.explainability.top_features || []).slice(0,5) : [];
+        const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0) || 1;
+        const topRows = top.map(tf => {
+            const key = tf.feature || '';
+            const label = key ? labelOf(key) : '';
+            const val = (typeof raw[key] === 'number') ? raw[key].toFixed(2) : '';
+            const pct = (typeof tf.importance === 'number') ? ((tf.importance/totalImp)*100).toFixed(1) + '%' : '';
+            return `<tr><td class="cell feature">${label}</td><td class="cell value">${val}</td><td class="cell impact">${pct}</td></tr>`;
+        }).join('');
+        const topKeys = new Set(top.map(tf => tf.feature));
+        const otherRows = apiFeatureKeys.filter(k => !topKeys.has(k)).map(k => {
+            const label = labelOf(k);
+            const val = typeof raw[k] === 'number' ? raw[k].toFixed(2) : '';
+            return `<tr><td class="cell compact">${label}</td><td class="cell compact value">${val}</td></tr>`;
+        }).join('');
+        const today = new Date().toLocaleString();
+        const doc = `
+        <html><head><title>Patient ${p.id} Report</title>
+        <meta charset="utf-8">
+        <style>
+        body{font-family:system-ui,Segoe UI,Arial,sans-serif;color:#111827}
+        .letter{max-width:900px;margin:0 auto}
+        .header{padding:20px;color:white;background:linear-gradient(90deg, ${p.tierCode==='high'?'#dc2626,#7f1d1d':p.tierCode==='mod'?'#f59e0b,#c2410c':'#10b981,#047857'})}
+        .header h1{margin:0;font-size:22px;letter-spacing:.5px}
+        .header p{margin:4px 0 0 0;font-size:12px;opacity:.9}
+        .meta{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 20px;border-bottom:1px solid #e5e7eb}
+        .meta .left{font-size:13px;color:#374151}
+        .meta .right{text-align:right;font-size:12px;color:#6b7280}
+        .section{padding:16px 20px}
+        .title{font-weight:700;color:#111827;margin:0 0 8px 0}
+        .card{border:1px solid #e5e7eb;border-radius:12px;margin:12px 0;padding:16px}
+        .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.08em}
+        .pill.high{background:#fee2e2;color:#b91c1c}
+        .pill.mod{background:#fef3c7;color:#b45309}
+        .pill.low{background:#d1fae5;color:#065f46}
+        table{width:100%;border-collapse:collapse;margin-top:8px}
+        .cell{padding:8px 10px;border:1px solid #e5e7eb;font-size:12px}
+        .feature{font-weight:600;color:#111827}
+        .value{font-family:ui-monospace,Menlo,Consolas,monospace;color:#374151}
+        .impact{font-weight:700;color:#b91c1c;text-align:right}
+        .compact{font-size:11px}
+        .footer{padding:16px 20px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280}
+        .sign{margin-top:24px}
+        .sign .line{width:200px;height:1px;background:#e5e7eb;margin:8px 0}
+        @media print {.no-print{display:none}}
+        </style></head><body>
+        <div class="letter">
+            <div class="header">
+                <h1>OncoAI • Cellular Risk Assessment</h1>
+                <p>Report Date: ${today}</p>
+            </div>
+            <div class="meta">
+                <div class="left">
+                    <div><strong>Patient ID:</strong> ${p.id}</div>
+                    <div><strong>Diagnosis:</strong> ${p.isMal?'MALIGNANT':'BENIGN'}</div>
+                    <div><strong>Estimated Probability:</strong> ${p.prob}%</div>
+                </div>
+                <div class="right">
+                    <div><span class="pill ${p.tierCode}">${p.tier.toUpperCase()} RISK</span></div>
+                    <div><strong>Recommended Action:</strong> ${p.action}</div>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Subject</h2>
+                <div class="card">Evidence-based cellular analysis for breast lesion triage using calibrated classifier and guideline-informed thresholds.</div>
+            </div>
+            <div class="section">
+                <h2 class="title">Top 5 Features</h2>
+                <div class="card">
+                    <table>
+                        <thead><tr><th class="cell">Feature</th><th class="cell">Value</th><th class="cell">Impact</th></tr></thead>
+                        <tbody>${topRows}</tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Other Features (Compact)</h2>
+                <div class="card">
+                    <table>
+                        <thead><tr><th class="cell">Feature</th><th class="cell">Value</th></tr></thead>
+                        <tbody>${otherRows}</tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Clinical Notes</h2>
+                <div class="card">This report summarizes a machine-assisted assessment. Final clinical decisions should consider comprehensive patient history and imaging.</div>
+            </div>
+            <div class="footer">
+                <div class="sign">
+                    <div>Physician Signature</div>
+                    <div class="line"></div>
+                    <div>Date: ${today}</div>
+                </div>
+            </div>
+        </div>
+        </body></html>`;
+        const w = window.open('', '_blank');
+        if(!w){ alert('Popup blocked. Allow popups to export PDF.'); return; }
+        w.document.open();
+        w.document.write(doc);
+        w.document.close();
+        setTimeout(()=>{ try{ w.print(); }catch(e){} }, 500);
+    }
+    
+    function exportExcel() { 
+        const p = window.currentPatient;
+        if(!p){ alert('Open a patient first using View Details.'); return; }
+        const raw = (p.raw && p.raw.explainability) ? p.raw.explainability.original_features : {};
+        const header = ['patient_id'].concat(apiFeatureKeys).concat(['predicted_class','probability','risk_tier','action']);
+        const row = [p.id].concat(apiFeatureKeys.map(k => {
+            const v = raw[k];
+            return (typeof v === 'number') ? v : '';
+        })).concat([p.isMal?'MALIGNANT':'BENIGN', p.prob, p.tier, p.action]);
+        const top = (p.raw && p.raw.explainability) ? (p.raw.explainability.top_features || []).slice(0,5) : [];
+        const originals = (p.raw && p.raw.explainability) ? (p.raw.explainability.original_features || {}) : {};
+        const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0) || 1;
+        for(let i=0; i<5; i++){
+            const tf = top[i] || {};
+            const key = tf.feature || '';
+            const label = key ? labelOf(key) : '';
+            const val = (typeof originals[key] === 'number') ? originals[key].toFixed(2) : '';
+            const pct = (typeof tf.importance === 'number') ? ((tf.importance / totalImp) * 100).toFixed(1) + '%' : '';
+            header.push(`top${i+1}_name`, `top${i+1}_value`, `top${i+1}_impact_pct`);
+            row.push(label, val, pct);
+        }
+        const csv = header.join(',') + '\n' + row.join(',') + '\n';
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `patient_${p.id}_report.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function exportSinglePDF(){
+        const meta = window.singleMeta;
+        const res = window.singleResult;
+        const originals = window.singleOriginal || {};
+        if(!meta || !res){ alert('Run a prediction first.'); return; }
+        const top = (res.explainability?.top_features || []).slice(0,5);
+        const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0) || 1;
+        const topRows = top.map(tf => {
+            const key = tf.feature || '';
+            const label = key ? labelOf(key) : '';
+            const val = (typeof originals[key] === 'number') ? originals[key].toFixed(2) : '';
+            const pct = (typeof tf.importance === 'number') ? ((tf.importance/totalImp)*100).toFixed(1) + '%' : '';
+            return `<tr><td class="cell feature">${label}</td><td class="cell value">${val}</td><td class="cell impact">${pct}</td></tr>`;
+        }).join('');
+        const topKeys = new Set(top.map(tf => tf.feature));
+        const otherRows = apiFeatureKeys.filter(k => !topKeys.has(k)).map(k => {
+            const label = labelOf(k);
+            const val = typeof originals[k] === 'number' ? originals[k].toFixed(2) : '';
+            return `<tr><td class="cell compact">${label}</td><td class="cell compact value">${val}</td></tr>`;
+        }).join('');
+        const today = new Date().toLocaleString();
+        const doc = `
+        <html><head><title>Single Patient Report ${meta.id}</title>
+        <meta charset="utf-8">
+        <style>
+        body{font-family:system-ui,Segoe UI,Arial,sans-serif;color:#111827}
+        .letter{max-width:900px;margin:0 auto}
+        .header{padding:20px;color:white;background:linear-gradient(90deg, ${meta.tierCode==='high'?'#dc2626,#7f1d1d':meta.tierCode==='mod'?'#f59e0b,#c2410c':'#10b981,#047857'})}
+        .header h1{margin:0;font-size:22px;letter-spacing:.5px}
+        .header p{margin:4px 0 0 0;font-size:12px;opacity:.9}
+        .meta{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 20px;border-bottom:1px solid #e5e7eb}
+        .meta .left{font-size:13px;color:#374151}
+        .meta .right{text-align:right;font-size:12px;color:#6b7280}
+        .section{padding:16px 20px}
+        .title{font-weight:700;color:#111827;margin:0 0 8px 0}
+        .card{border:1px solid #e5e7eb;border-radius:12px;margin:12px 0;padding:16px}
+        .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.08em}
+        .pill.high{background:#fee2e2;color:#b91c1c}
+        .pill.mod{background:#fef3c7;color:#b45309}
+        .pill.low{background:#d1fae5;color:#065f46}
+        table{width:100%;border-collapse:collapse;margin-top:8px}
+        .cell{padding:8px 10px;border:1px solid #e5e7eb;font-size:12px}
+        .feature{font-weight:600;color:#111827}
+        .value{font-family:ui-monospace,Menlo,Consolas,monospace;color:#374151}
+        .impact{font-weight:700;color:#b91c1c;text-align:right}
+        .compact{font-size:11px}
+        .footer{padding:16px 20px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280}
+        .sign{margin-top:24px}
+        .sign .line{width:200px;height:1px;background:#e5e7eb;margin:8px 0}
+        @media print {.no-print{display:none}}
+        </style></head><body>
+        <div class="letter">
+            <div class="header">
+                <h1>OncoAI • Cellular Risk Assessment</h1>
+                <p>Report Date: ${today}</p>
+            </div>
+            <div class="meta">
+                <div class="left">
+                    <div><strong>Patient ID:</strong> ${meta.id}</div>
+                    <div><strong>Diagnosis:</strong> ${meta.isMal?'MALIGNANT':'BENIGN'}</div>
+                    <div><strong>Estimated Probability:</strong> ${meta.prob}%</div>
+                </div>
+                <div class="right">
+                    <div><span class="pill ${meta.tierCode}">${meta.tier.toUpperCase()} RISK</span></div>
+                    <div><strong>Recommended Action:</strong> ${meta.action}</div>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Subject</h2>
+                <div class="card">Evidence-based cellular analysis for breast lesion triage using calibrated classifier and guideline-informed thresholds.</div>
+            </div>
+            <div class="section">
+                <h2 class="title">Top 5 Features</h2>
+                <div class="card">
+                    <table>
+                        <thead><tr><th class="cell">Feature</th><th class="cell">Value</th><th class="cell">Impact</th></tr></thead>
+                        <tbody>${topRows}</tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Other Features (Compact)</h2>
+                <div class="card">
+                    <table>
+                        <thead><tr><th class="cell">Feature</th><th class="cell">Value</th></tr></thead>
+                        <tbody>${otherRows}</tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Clinical Notes</h2>
+                <div class="card">This report summarizes a machine-assisted assessment. Final clinical decisions should consider comprehensive patient history and imaging.</div>
+            </div>
+            <div class="footer">
+                <div class="sign">
+                    <div>Physician Signature</div>
+                    <div class="line"></div>
+                    <div>Date: ${today}</div>
+                </div>
+            </div>
+        </div>
+        </body></html>`;
+        const w = window.open('', '_blank');
+        if(!w){ alert('Popup blocked. Allow popups to export PDF.'); return; }
+        w.document.open();
+        w.document.write(doc);
+        w.document.close();
+        setTimeout(()=>{ try{ w.print(); }catch(e){} }, 500);
+    }
+    async function loadSavedBatchSimple(){
+        const tbody = document.getElementById('dbp-table-body');
+        if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="6">Loading...</td></tr>`;
+        try{
+            const url = location.origin.includes(':8000')
+                ? "/api/v1/cellular/batch/saved?page=1&page_size=100&order_by=timestamp_desc"
+                : "http://127.0.0.1:8000/api/v1/cellular/batch/saved?page=1&page_size=100&order_by=timestamp_desc";
+            const r = await fetch(url);
+            if(!r || !r.ok){
+                if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="6">Failed to load (HTTP ${r ? r.status : 'no response'})</td></tr>`;
+                return;
+            }
+            const txt = await r.text();
+            let j;
+            try{
+                j = JSON.parse(txt);
+            }catch(parseErr){
+                console.error('JSON parse error:', parseErr, txt.slice(0, 200));
+                if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="6">Invalid JSON</td></tr>`;
+                return;
+            }
+            window.savedRows = Array.isArray(j.rows) ? j.rows : [];
+            window.savedState = window.savedState || { page: 1, page_size: 5 };
+            if(window.savedRows.length === 0){
+                if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="6">No data</td></tr>`;
+                return;
+            }
+            renderSavedPage();
+        } catch(e){
+            console.error('Saved batch load error:', e);
+            if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="6">Failed to load</td></tr>`;
+        }
+    }
+    function renderSavedPage(){
+        const tbody = document.getElementById('dbp-table-body');
+        const pageSpan = document.getElementById('dbp-page');
+        const pagesSpan = document.getElementById('dbp-pages');
+        const s = window.savedState || { page: 1, page_size: 5 };
+        const rows = window.savedRows || [];
+        const totalPages = Math.max(1, Math.ceil(rows.length / s.page_size));
+        if(s.page > totalPages) s.page = totalPages;
+        const start = (s.page - 1) * s.page_size;
+        const pageRows = rows.slice(start, start + s.page_size);
+        if(pageSpan) pageSpan.innerText = String(s.page);
+        if(pagesSpan) pagesSpan.innerText = String(totalPages);
+        if(tbody){ tbody.innerHTML = ""; }
+        pageRows.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-pink-50 transition";
+            const pNum = typeof row.probability === 'number' ? Math.max(0, Math.min(1, row.probability)) : NaN;
+            const pPct = isNaN(pNum) ? "" : (pNum*100).toFixed(1) + "%";
+            const isMal = String(row.predicted_class || '').toUpperCase() === 'MALIGNANT';
+            const barColor = isMal ? '#f43f5e' : '#10b981';
+            const probHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="font-mono text-[10px]">${pPct || String(row.probability || '')}</span>
+                    <div class="w-16 h-1 bg-pink-100 rounded">
+                        <div class="h-1 rounded" style="width:${isNaN(pNum)?'0%':(pNum*100)+'%'};background:${barColor}"></div>
+                    </div>
+                </div>
+            `;
+            const pred = String(row.predicted_class || '').toUpperCase();
+            const predBadge = pred === 'MALIGNANT' 
+                ? '<span class="badge badge-malignant">MALIGNANT</span>'
+                : (pred === 'BENIGN' ? '<span class="badge badge-benign">BENIGN</span>' : `<span class="badge">${pred}</span>`);
+            const tier = String(row.risk_tier || '').toUpperCase();
+            const tierBadge = tier.includes('CRITICAL') ? '<span class="badge badge-critical">CRITICAL</span>' :
+                              tier.includes('HIGH') ? '<span class="badge badge-high">HIGH</span>' :
+                              tier.includes('MEDIUM') ? '<span class="badge badge-medium">MEDIUM</span>' :
+                              tier.includes('VERY') ? '<span class="badge badge-vlow">VERY LOW</span>' :
+                              '<span class="badge badge-low">LOW</span>';
+            const ts = String(row.timestamp || '');
+            const tpos = ts.indexOf('T');
+            const dateOnly = tpos > 0 ? ts.slice(0, tpos) : (function(s){ try{ return new Date(s).toISOString().slice(0,10); } catch(_){ return s; } })(ts);
+            tr.innerHTML = `
+                <td class="px-2 py-1"><span class="px-1.5 py-0.5 rounded bg-pink-50 border border-pink-100 font-mono text-[10px]">${String(row.patient_id || '')}</span></td>
+                <td class="px-2 py-1">${predBadge}</td>
+                <td class="px-2 py-1">${probHTML}</td>
+                <td class="px-2 py-1">${tierBadge}</td>
+                <td class="px-2 py-1 text-[10px]">${String(row.action || '')}</td>
+                <td class="px-2 py-1 font-mono text-slate-500 text-[10px]">${dateOnly}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    async function loadDashboardSavedBatch(page=1){
+        try{
+            const state = window.savedBatchState || { page: 1, page_size: 10, order_by: 'timestamp_desc', search: '' };
+            if(typeof page === 'number'){ state.page = page; }
+            const qs = new URLSearchParams({ page: String(1), page_size: String(200), order_by: state.order_by });
+            const useRelative = location.origin.includes(':8000');
+            const urls = useRelative
+                ? ["/api/v1/cellular/batch/saved?" + qs.toString()]
+                : [
+                    API_BASE + "/api/v1/cellular/batch/saved?" + qs.toString(),
+                    "http://127.0.0.1:8000/api/v1/cellular/batch/saved?" + qs.toString(),
+                    "http://localhost:8000/api/v1/cellular/batch/saved?" + qs.toString()
+                ];
+            let r;
+            for (const u of urls) {
+                try {
+                    r = await fetch(u);
+                    if (r && r.ok) break;
+                } catch (e) {}
+            }
+            if(!r){ throw new Error("Saved batch fetch failed"); }
+            if(!r.ok){ throw new Error("Saved batch fetch failed"); }
+            const j = await r.json();
+            const k = j.kpis || {};
+            document.getElementById('kpi-total').innerText = Number(k.total || 0).toString();
+            document.getElementById('kpi-mal').innerText = Number(k.malignant || 0).toString();
+            document.getElementById('kpi-ben').innerText = Number(k.benign || 0).toString();
+            const avgp = Number(k.avg_probability || 0);
+            document.getElementById('kpi-avg').innerText = ((avgp*100).toFixed(1)) + "%";
+            document.getElementById('kpi-last').innerText = k.last_saved || "--";
+            const search = (state.search || '').toString().trim().toLowerCase();
+            const pageSize = Number(state.page_size || 10);
+            let rows = j.rows || [];
+            if(search){
+                rows = rows.filter(row => {
+                    const a = String(row.patient_id || '').toLowerCase();
+                    const b = String(row.predicted_class || '').toLowerCase();
+                    const c = String(row.risk_tier || '').toLowerCase();
+                    return a.includes(search) || b.includes(search) || c.includes(search);
+                });
+            }
+            const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+            if(state.page > totalPages) state.page = totalPages;
+            const start = (state.page - 1) * pageSize;
+            const pageRows = rows.slice(start, start + pageSize);
+            document.getElementById('kpi-page').innerText = String(state.page);
+            document.getElementById('kpi-pages').innerText = String(totalPages);
+            const tbody = document.getElementById('dbp-table-body');
+            tbody.innerHTML = "";
+            pageRows.forEach(row => {
+                const prob = typeof row.probability === 'number' ? (row.probability*100).toFixed(1) + "%" : "";
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-pink-50 transition text-xs";
+                tr.innerHTML = `
+                    <td class="px-3 py-2 font-mono text-slate-700">${String(row.patient_id || '')}</td>
+                    <td class="px-3 py-2">${formatPredBadge(String(row.predicted_class || ''))}</td>
+                    <td class="px-3 py-2 font-mono">${prob}</td>
+                    <td class="px-3 py-2">${formatTierBadge(String(row.risk_tier || ''))}</td>
+                    <td class="px-3 py-2">${String(row.action || '')}</td>
+                    <td class="px-3 py-2 font-mono text-slate-500">${String(row.timestamp || '')}</td>
+                    <td class="px-3 py-2 text-right">
+                        <button class="px-2 py-1 text-xs rounded border border-pink-200 bg-white text-pink-600" onclick="dbpOpen('${String(row.patient_id || '')}')">View</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            window.savedBatchState = state;
+            window.savedBatchRows = rows;
+        } catch(e){
+            try{
+                document.getElementById('kpi-total').innerText = "--";
+                document.getElementById('kpi-mal').innerText = "--";
+                document.getElementById('kpi-ben').innerText = "--";
+                document.getElementById('kpi-avg').innerText = "--";
+                document.getElementById('kpi-last').innerText = "--";
+                document.getElementById('kpi-page').innerText = "1";
+                document.getElementById('kpi-pages').innerText = "1";
+                const tbody = document.getElementById('dbp-table-body');
+                if(tbody){ tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="7">Failed to load saved batch data</td></tr>`; }
+            } catch(_) {}
+        }
+    }
+    function formatPredBadge(pred){
+        const p = (pred || '').toString().toUpperCase();
+        if(p === 'MALIGNANT') return '<span class="badge badge-malignant">MALIGNANT</span>';
+        if(p === 'BENIGN') return '<span class="badge badge-benign">BENIGN</span>';
+        return '<span class="badge">'+pred+'</span>';
+    }
+    function formatTierBadge(tier){
+        const t = (tier || '').toString().toUpperCase();
+        if(t.includes('CRITICAL')) return '<span class="badge badge-critical">CRITICAL</span>';
+        if(t.includes('HIGH')) return '<span class="badge badge-high">HIGH</span>';
+        if(t.includes('MEDIUM')) return '<span class="badge badge-medium">MEDIUM</span>';
+        if(t.includes('VERY')) return '<span class="badge badge-vlow">VERY LOW</span>';
+        return '<span class="badge badge-low">LOW</span>';
+    }
+    function dbpOpen(pid){
+        const rows = window.savedBatchRows || [];
+        const row = rows.find(r => String(r.patient_id || '') === String(pid));
+        if(!row) return;
+        window.currentSavedRow = row;
+        document.getElementById('dbp-detail-id').innerText = String(row.patient_id || '');
+        document.getElementById('dbp-detail-pred').innerHTML = formatPredBadge(String(row.predicted_class || ''));
+        document.getElementById('dbp-detail-prob').innerText = (typeof row.probability === 'number' ? (row.probability*100).toFixed(1) + '%' : '');
+        document.getElementById('dbp-detail-tier').innerHTML = formatTierBadge(String(row.risk_tier || ''));
+        document.getElementById('dbp-detail-action').innerText = String(row.action || '');
+        document.getElementById('dbp-detail-time').innerText = String(row.timestamp || '');
+        const top = [
+            {n:row.top1_name,v:row.top1_value},
+            {n:row.top2_name,v:row.top2_value},
+            {n:row.top3_name,v:row.top3_value},
+            {n:row.top4_name,v:row.top4_value},
+            {n:row.top5_name,v:row.top5_value},
+        ].filter(x => x.n);
+        const tbody = document.getElementById('dbp-detail-features');
+        tbody.innerHTML = '';
+        top.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="px-3 py-2">${String(t.n)}</td><td class="px-3 py-2 font-mono">${typeof t.v==='number' ? Number(t.v).toFixed(2) : String(t.v||'')}</td>`;
+            tbody.appendChild(tr);
+        });
+        document.getElementById('slide-overlay').classList.add('open');
+        document.getElementById('dbp-slideover').classList.add('open');
+    }
+    function closeDbpDetails(){
+        document.getElementById('slide-overlay').classList.remove('open');
+        document.getElementById('dbp-slideover').classList.remove('open');
+    }
+    function dbpExportCSV(){
+        const r = window.currentSavedRow || {};
+        const header = ['patient_id','predicted_class','probability','risk_tier','action','timestamp','top1_name','top1_value','top2_name','top2_value','top3_name','top3_value','top4_name','top4_value','top5_name','top5_value'];
+        const row = header.map(k => r[k] ?? '');
+        const csv = header.join(',') + '\n' + row.join(',') + '\n';
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `saved_${String(r.patient_id||'patient')}.csv`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+    function dbpExportPDF(){
+        const r = window.currentSavedRow || {};
+        const tierClass = (String(r.risk_tier||'').toUpperCase().includes('CRITICAL')) ? '#dc2626,#7f1d1d' :
+                          (String(r.risk_tier||'').toUpperCase().includes('HIGH')) ? '#f43f5e,#881337' :
+                          (String(r.risk_tier||'').toUpperCase().includes('MEDIUM')) ? '#f59e0b,#c2410c' : '#10b981,#047857';
+        const today = new Date().toLocaleString();
+        const rows = [
+            {k:'Top 1', n:r.top1_name, v:r.top1_value},
+            {k:'Top 2', n:r.top2_name, v:r.top2_value},
+            {k:'Top 3', n:r.top3_name, v:r.top3_value},
+            {k:'Top 4', n:r.top4_name, v:r.top4_value},
+            {k:'Top 5', n:r.top5_name, v:r.top5_value},
+        ].filter(x => x.n);
+        const features = rows.map(x => `<tr><td class="cell">${x.k}</td><td class="cell">${String(x.n)}</td><td class="cell">${typeof x.v==='number'?Number(x.v).toFixed(2):String(x.v||'')}</td></tr>`).join('');
+        const doc = `<html><head><meta charset="utf-8"><title>Patient ${String(r.patient_id||'')}</title><style>
+        body{font-family:system-ui,Segoe UI,Arial,sans-serif;color:#111827}
+        .wrap{max-width:900px;margin:0 auto}
+        .header{padding:20px;color:#fff;background:linear-gradient(90deg,${tierClass})}
+        .cell{padding:8px 10px;border:1px solid #e5e7eb;font-size:12px}
+        table{width:100%;border-collapse:collapse}
+        </style></head><body><div class="wrap">
+        <div class="header"><div><strong>OncoAI • Saved Batch Report</strong></div><div>${today}</div></div>
+        <h3>Patient ${String(r.patient_id||'')}</h3>
+        <div>Prediction: ${String(r.predicted_class||'')}</div>
+        <div>Probability: ${typeof r.probability==='number' ? (r.probability*100).toFixed(1)+'%' : ''}</div>
+        <div>Risk: ${String(r.risk_tier||'')}</div>
+        <div>Action: ${String(r.action||'')}</div>
+        <div>Timestamp: ${String(r.timestamp||'')}</div>
+        <h4>Top Features</h4>
+        <table><thead><tr><th class="cell">Rank</th><th class="cell">Feature</th><th class="cell">Value</th></tr></thead><tbody>${features||''}</tbody></table>
+        </div></body></html>`;
+        const w = window.open('', '_blank'); if(!w) return; w.document.open(); w.document.write(doc); w.document.close(); setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
+    }
+
+    function exportSingleExcel(){
+        const meta = window.singleMeta;
+        const res = window.singleResult;
+        const originals = window.singleOriginal || {};
+        if(!meta || !res){ alert('Run a prediction first.'); return; }
+        const header = ['patient_id'].concat(apiFeatureKeys).concat(['predicted_class','probability','risk_tier','action']);
+        const row = [meta.id].concat(apiFeatureKeys.map(k => {
+            const v = originals[k];
+            return (typeof v === 'number') ? v : '';
+        })).concat([meta.isMal?'MALIGNANT':'BENIGN', meta.prob, meta.tier, meta.action]);
+        const top = (res.explainability?.top_features || []).slice(0,5);
+        const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0) || 1;
+        for(let i=0; i<5; i++){
+            const tf = top[i] || {};
+            const key = tf.feature || '';
+            const label = key ? labelOf(key) : '';
+            const val = (typeof originals[key] === 'number') ? originals[key].toFixed(2) : '';
+            const pct = (typeof tf.importance === 'number') ? ((tf.importance / totalImp) * 100).toFixed(1) + '%' : '';
+            header.push(`top${i+1}_name`, `top${i+1}_value`, `top${i+1}_impact_pct`);
+            row.push(label, val, pct);
+        }
+        const csv = header.join(',') + '\n' + row.join(',') + '\n';
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `single_${meta.id}_report.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function saveSingleToDB(btn){
+        const original = btn.innerHTML;
+        const meta = window.singleMeta;
+        const res = window.singleResult;
+        const originals = window.singleOriginal || {};
+        if(!meta || !res){ alert('Run a prediction first.'); return; }
+        btn.disabled = true;
+        btn.innerHTML = `<i class="ph ph-spinner ph-spin text-lg"></i> Saving...`;
+        try{
+            const top = (res.explainability?.top_features || []).slice(0,5);
+            const row = {
+                patient_id: meta.id,
+                predicted_class: meta.isMal ? 'MALIGNANT' : 'BENIGN',
+                probability: Number(meta.prob) / 100,
+                risk_tier: meta.tier,
+                action: meta.action,
+                timestamp: new Date().toISOString()
+            };
+            for(let i=0;i<5;i++){
+                const tf = top[i];
+                if(tf && tf.feature){
+                    const key = tf.feature;
+                    row[`top${i+1}_name`] = labelOf(key);
+                    row[`top${i+1}_value`] = typeof originals[key] === 'number' ? Number(originals[key].toFixed(2)) : '';
+                } else {
+                    row[`top${i+1}_name`] = '';
+                    row[`top${i+1}_value`] = '';
+                }
+            }
+            fetch(API_BASE + "/api/v1/cellular/batch/save", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ rows: [row] })
+            }).then(async r => {
+                if(!r.ok){
+                    const text = await r.text();
+                    throw new Error('Save error ' + r.status + ': ' + text);
+                }
+                return r.json();
+            }).then(j => {
+                const saved = Number(j.rows_saved || 0);
+                if(saved > 0){
+                    btn.innerHTML = `<i class="ph ph-check text-lg"></i> Saved`;
+                    setTimeout(()=>{ btn.innerHTML = original; btn.disabled = false; }, 1500);
+                } else {
+                    alert('No rows saved. Try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = original;
+                }
+            }).catch(err => {
+                alert('Failed to save. Please try again.');
+                btn.disabled = false;
+                btn.innerHTML = original;
+            });
+        } catch(e){
+            alert('Failed to save. Please try again.');
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    }
+
+    async function loadDocs(){
+        try{
+            const mres = await fetch(API_BASE + "/api/v1/evaluation/cellular/metrics");
+            const metrics = await mres.json();
+            const models = metrics.models || [];
+            const prod = models.find(m => (m.status || "").toUpperCase() === "PRODUCTION") || models[0] || {};
+            const acc = Number(prod.accuracy || prod.Accuracy || 0);
+            const cm = prod.confusion_matrix || prod['Confusion Matrix'] || {};
+            const tn = Number(cm.TN || cm.tn || cm.true_negatives || 0);
+            const fp = Number(cm.FP || cm.fp || cm.false_positives || 0);
+            const fn = Number(cm.FN || cm.fn || cm.false_negatives || 0);
+            const tp = Number(cm.TP || cm.tp || cm.true_positives || 0);
+            const total = Number(metrics.test_set_size || (tn+fp+fn+tp));
+            const errorRate = total ? ((fp+fn)/total)*100 : 0;
+            const pct = v => (Number(v)*100).toFixed(1) + "%";
+            document.getElementById('doc-acc').innerText = pct(acc);
+            document.getElementById('doc-error').innerText = errorRate.toFixed(1) + "%";
+        } catch(e) {}
+        try{
+            const gres = await fetch(API_BASE + "/api/guidelines");
+            const g = await gres.json();
+            const src = g.clinical_references || [];
+            const ul = document.getElementById('doc-sources');
+            ul.innerHTML = "";
+            src.forEach(s => {
+                const li = document.createElement('li');
+                let text = "";
+                if (typeof s === 'string') {
+                    text = s;
+                } else if (s && (s.title || s.organization || s.year)) {
+                    const parts = [];
+                    if (s.title) parts.push(s.title);
+                    if (s.organization) parts.push(s.organization);
+                    const yearPart = s.year ? ("(" + s.year + ")") : "";
+                    text = parts.join(" — ");
+                    if (yearPart) text = text ? (text + " " + yearPart) : yearPart;
+                }
+                if (text) {
+                    li.innerText = text;
+                    ul.appendChild(li);
+                }
+            });
+            const actions = [];
+            const strat = g.risk_stratification || {};
+            ["critical","high","medium","low"].forEach(tier => {
+                const cfg = strat[tier];
+                if(cfg && cfg.actions){
+                    cfg.actions.forEach(a => {
+                        actions.push({tier, text:a, source: (cfg.source && cfg.source.title) ? cfg.source.title : ""});
+                    });
+                }
+            });
+            const al = document.getElementById('doc-actions');
+            al.innerHTML = "";
+            actions.forEach(x => {
+                const li = document.createElement('li');
+                li.innerText = "[" + x.tier.toUpperCase() + "] " + x.text + (x.source ? " — " + x.source : "");
+                al.appendChild(li);
+            });
+        } catch(e) {}
+        // Append notebook-defined guidelines and references
+        try{
+            if(!window.docsNotebookAppended){
+                const al = document.getElementById('doc-actions');
+                const appendAction = (tier, text, source) => {
+                    const li = document.createElement('li');
+                    li.innerText = "[" + tier + "] " + text + (source ? " — " + source : "");
+                    al.appendChild(li);
+                };
+                appendAction("CRITICAL", "Immediate diagnostic biopsy (24–48h)", "NCCN v3.2023; ACS");
+                appendAction("CRITICAL", "Multidisciplinary team referral (≤24h)", "ACS Treatment");
+                appendAction("CRITICAL", "Contrast-enhanced MRI if indicated", "NCCN");
+                appendAction("HIGH", "Diagnostic mammography + ultrasound (≤7 days)", "ACR BI-RADS");
+                appendAction("HIGH", "Biopsy if imaging confirms suspicion (≤14 days)", "NCCN");
+                appendAction("HIGH", "Genetic counseling if family history positive", "NCCN/ACS");
+                appendAction("MEDIUM", "Short-interval follow-up imaging (3–6 months)", "ACR BI-RADS Category 3");
+                appendAction("MEDIUM", "Clinical breast exam", "ACS");
+                appendAction("MEDIUM", "Lifestyle risk reduction counseling", "USPSTF/ACS");
+                appendAction("LOW", "Routine annual screening per age/risk", "ACS");
+                appendAction("LOW", "Breast self-awareness education", "ACS");
+                appendAction("LOW", "Primary care follow-up", "ACS");
+                const ul = document.getElementById('doc-sources');
+                const addSrc = (text) => { const li=document.createElement('li'); li.innerText=text; ul.appendChild(li); };
+                addSrc("NCCN Breast Cancer Screening and Diagnosis v3.2023");
+                addSrc("ACR BI-RADS Atlas, 5th Edition");
+                addSrc("USPSTF Breast Cancer Screening Recommendations");
+                addSrc("ACS Breast Cancer Early Detection Guidelines (2023)");
+                window.docsNotebookAppended = true;
+            }
+        } catch(e) {}
+    }
+    function toggleCardDetails(id, btn){
+        const el = document.getElementById(id);
+        if(!el) return;
+        const open = el.hasAttribute('hidden') ? false : el.classList.contains('open');
+        if(open){
+            el.classList.remove('open');
+            el.setAttribute('hidden','');
+            if(btn){ btn.setAttribute('aria-expanded','false'); }
+        } else {
+            el.classList.add('open');
+            el.removeAttribute('hidden');
+            if(btn){ btn.setAttribute('aria-expanded','true'); }
+        }
+    }
+    // INITIALIZATION
+    initInputs();
+    router('dashboard');
+    document.getElementById('btnGenerateData').addEventListener('click', () => console.log('Generate Data clicked'));
+    document.getElementById('btnRunPrediction').addEventListener('click', () => console.log('Run Prediction clicked'));
+    const btnR = document.getElementById('btnRefreshSaved');
+    if(btnR){ btnR.addEventListener('click', () => loadSavedBatchSimple()); }
+    const btnPrev = document.getElementById('dbp-prev');
+    const btnNext = document.getElementById('dbp-next');
+    window.savedState = { page: 1, page_size: 5 };
+    if(btnPrev){ btnPrev.addEventListener('click', ()=>{ const s=window.savedState; if(s.page>1){ s.page-=1; renderSavedPage(); }}); }
+    if(btnNext){ btnNext.addEventListener('click', ()=>{ const s=window.savedState; const total = Math.max(1, Math.ceil((window.savedRows||[]).length / s.page_size)); if(s.page<total){ s.page+=1; renderSavedPage(); }}); }
+</script>
+</body>
+</html>
