@@ -1,0 +1,23 @@
+patient_id,predicted_class,probability,risk_tier,action,timestamp,top1_name,top1_value,top2_name,top2_value,top3_name,top3_value,top4_name,top4_value,top5_name,top5_value
+853201,MALIGNANT,0.768,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-13T20:19:32.434Z,Texture Worst,19.52,Concave Points Mean,0.08,Radius SE,0.6,Radius Worst,20.01,Perimeter SE,4.66
+853401,MALIGNANT,0.9990000000000001,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:19:32.434Z,Concave Points Mean,0.12,Texture Worst,34.01,Radius SE,0.83,Concavity Worst,0.61,Concavity Mean,0.23
+85382601,MALIGNANT,0.997,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:19:32.434Z,Concave Points Mean,0.12,Concavity Mean,0.24,Texture Worst,32.09,Concavity Worst,0.56,Symmetry Worst,0.35
+854002,MALIGNANT,0.998,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:19:32.434Z,Concavity Worst,0.61,Symmetry Worst,0.37,Radius Worst,24.15,Area Worst,1813.0,Texture Worst,30.9
+854039,MALIGNANT,0.96,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:19:32.434Z,Symmetry Worst,0.43,Concavity Worst,0.53,Concave Points Worst,0.19,Concave Points Mean,0.08,Radius Worst,20.21
+854941,BENIGN,0.006999999999999999,LOW,CONTINUE SCREENING,2025-12-13T20:19:32.434Z,Symmetry Worst,0.2,Smoothness Worst,0.1,Concavity Worst,0.05,Radius SE,0.18,Concave Points Worst,0.05
+857155,BENIGN,0.055,LOW,CONTINUE SCREENING,2025-12-13T20:19:32.434Z,Texture Worst,20.7,Concave Points Worst,0.07,Texture Mean,14.63,Smoothness Worst,0.15,Concave Points Mean,0.03
+857156,BENIGN,0.294,LOW,CONTINUE SCREENING,2025-12-13T20:19:32.434Z,Texture Worst,31.82,Radius SE,0.23,Smoothness Worst,0.12,Compactness SE,0.01,Fractal Dim SE,0.0
+857343,BENIGN,0.023,LOW,CONTINUE SCREENING,2025-12-13T20:19:32.434Z,Concave Points Mean,0.01,Concave Points Worst,0.04,Concavity Worst,0.06,Symmetry Worst,0.24,Smoothness Worst,0.11
+857373,BENIGN,0.022000000000000002,LOW,CONTINUE SCREENING,2025-12-13T20:19:32.434Z,Symmetry Worst,0.23,Concave Points Mean,0.02,Radius SE,0.19,Smoothness Worst,0.11,Concavity Worst,0.1
+880001,BENIGN,0.019,LOW,CONTINUE SCREENING,2025-12-13T20:21:31.850Z,Symmetry Worst,0.23,Concave Points Mean,0.02,Radius SE,0.18,Smoothness Worst,0.11,Concavity Worst,0.1
+880002,MALIGNANT,0.971,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:21:31.850Z,Symmetry Worst,0.43,Concavity Worst,0.53,Concave Points Worst,0.19,Concave Points Mean,0.08,Radius Worst,20.4
+880003,MALIGNANT,0.998,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:21:31.850Z,Concavity Worst,0.61,Symmetry Worst,0.37,Radius Worst,24.3,Texture Worst,31.5,Area Worst,1824.8
+880004,BENIGN,0.013000000000000001,LOW,CONTINUE SCREENING,2025-12-13T20:21:31.850Z,Concave Points Mean,0.01,Concave Points Worst,0.04,Concavity Worst,0.05,Symmetry Worst,0.24,Smoothness Worst,0.11
+880005,MALIGNANT,0.9420000000000001,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:21:31.850Z,Concavity Worst,0.56,Symmetry Worst,0.35,Concavity Mean,0.17,Concave Points Mean,0.07,Concave Points Worst,0.17
+880006,MALIGNANT,0.7929999999999999,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-13T20:21:31.850Z,Concavity Worst,0.5,Concavity Mean,0.16,Symmetry Worst,0.32,Concave Points Mean,0.07,Concave Points Worst,0.15
+880007,MALIGNANT,0.62,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-13T20:21:31.850Z,Concavity Worst,0.48,Concavity Mean,0.15,Concave Points Mean,0.07,Symmetry Worst,0.31,Texture Worst,23.4
+880008,BENIGN,0.013999999999999999,LOW,CONTINUE SCREENING,2025-12-13T20:21:31.850Z,Concave Points Mean,0.01,Concave Points Worst,0.04,Concavity Worst,0.05,Symmetry Worst,0.24,Smoothness Worst,0.11
+880009,MALIGNANT,0.995,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:21:31.850Z,Concavity Worst,0.62,Symmetry Worst,0.37,Area Worst,1789.6,Concavity Mean,0.21,Radius Worst,23.2
+880010,MALIGNANT,0.958,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-13T20:21:31.850Z,Symmetry Worst,0.42,Concavity Worst,0.52,Concave Points Worst,0.19,Concave Points Mean,0.08,Radius Worst,20.0
+S-TEST-01,BENIGN,0.21,LOW,CONTINUE SCREENING,2025-12-13T21:05:00Z,Radius Mean,14.11,Texture Mean,12.87,Perimeter Mean,95.3,,,,
+S-1765657413073,BENIGN,0.057999999999999996,VERY LOW,CONTINUE SCREENING,2025-12-13T20:23:34.481Z,Radius SE,0.15,Concave Points Mean,0.02,Perimeter SE,1.25,Concavity Mean,0.04,Fractal Dim SE,0.0

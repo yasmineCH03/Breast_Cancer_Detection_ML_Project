@@ -1,0 +1,125 @@
+{
+  "top_n": 30,
+  "correlations": [
+    {
+      "feature": "concave points_worst",
+      "correlation": 0.7935660171412694
+    },
+    {
+      "feature": "perimeter_worst",
+      "correlation": 0.7829141371737594
+    },
+    {
+      "feature": "concave points_mean",
+      "correlation": 0.7766138400204371
+    },
+    {
+      "feature": "radius_worst",
+      "correlation": 0.7764537785950396
+    },
+    {
+      "feature": "perimeter_mean",
+      "correlation": 0.7426355297258334
+    },
+    {
+      "feature": "area_worst",
+      "correlation": 0.7338250349210504
+    },
+    {
+      "feature": "radius_mean",
+      "correlation": 0.7300285113754563
+    },
+    {
+      "feature": "area_mean",
+      "correlation": 0.7089838365853902
+    },
+    {
+      "feature": "concavity_mean",
+      "correlation": 0.6963597071719052
+    },
+    {
+      "feature": "concavity_worst",
+      "correlation": 0.6596102103692332
+    },
+    {
+      "feature": "compactness_mean",
+      "correlation": 0.5965336775082527
+    },
+    {
+      "feature": "compactness_worst",
+      "correlation": 0.5909982378417918
+    },
+    {
+      "feature": "radius_se",
+      "correlation": 0.5671338208247175
+    },
+    {
+      "feature": "perimeter_se",
+      "correlation": 0.5561407034314831
+    },
+    {
+      "feature": "area_se",
+      "correlation": 0.5482359402780241
+    },
+    {
+      "feature": "texture_worst",
+      "correlation": 0.4569028213967985
+    },
+    {
+      "feature": "smoothness_worst",
+      "correlation": 0.4214648610664026
+    },
+    {
+      "feature": "symmetry_worst",
+      "correlation": 0.4162943110486197
+    },
+    {
+      "feature": "texture_mean",
+      "correlation": 0.41518529984520475
+    },
+    {
+      "feature": "concave points_se",
+      "correlation": 0.4080423327165051
+    },
+    {
+      "feature": "smoothness_mean",
+      "correlation": 0.35855996508593324
+    },
+    {
+      "feature": "symmetry_mean",
+      "correlation": 0.33049855426254676
+    },
+    {
+      "feature": "fractal_dimension_worst",
+      "correlation": 0.32387218872082474
+    },
+    {
+      "feature": "compactness_se",
+      "correlation": 0.2929992442488586
+    },
+    {
+      "feature": "concavity_se",
+      "correlation": 0.2537297659808307
+    },
+    {
+      "feature": "fractal_dimension_se",
+      "correlation": 0.07797241739025584
+    },
+    {
+      "feature": "id",
+      "correlation": 0.03976850962171701
+    },
+    {
+      "feature": "symmetry_se",
+      "correlation": -0.006521755870647806
+    },
+    {
+      "feature": "texture_se",
+      "correlation": -0.008303332973877035
+    },
+    {
+      "feature": "fractal_dimension_mean",
+      "correlation": -0.012837602698431882
+    }
+  ]
+}

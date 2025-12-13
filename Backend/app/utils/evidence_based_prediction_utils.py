@@ -7,6 +7,7 @@ All risk stratification follows peer-reviewed clinical guidelines.
 
 import joblib
 import numpy as np
+import pandas as pd
 import json
 from datetime import datetime
 import os
@@ -15,6 +16,7 @@ import os
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '..', 'models', 'cellular_sgd_svm_v2.4.joblib')
 SCALER_PATH = os.path.join(os.path.dirname(__file__), '..', 'models', 'cellular_scaler.joblib')
 GUIDELINES_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'medical_guidelines.json')
+MODEL_COMPARISON_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'model_comparison.json')
 
 def load_medical_guidelines():
     """Load evidence-based medical guidelines."""
@@ -33,6 +35,72 @@ def load_production_model():
     except Exception as e:
         raise RuntimeError(f"Failed to load production model: {str(e)}")
 
+def load_classification_threshold(default=0.5):
+    try:
+        with open(MODEL_COMPARISON_PATH, 'r', encoding='utf-8') as f:
+            comp = json.load(f)
+        for m in comp.get('models', []):
+            if m.get('model_name') == 'SGD-SVM (v2.4)':
+                return float(m.get('classification_threshold', default))
+        return default
+    except Exception:
+        return default
+def compute_feature_contributions(model, features_scaled, feature_order):
+    def extract_linear_coefficients(m):
+        # Direct estimator
+        if hasattr(m, "coef_"):
+            return np.array(m.coef_[0], dtype=float)
+        # Pipeline (named_steps or steps)
+        if hasattr(m, "named_steps"):
+            steps = list(m.named_steps.values())
+            for step in reversed(steps):
+                if hasattr(step, "coef_"):
+                    return np.array(step.coef_[0], dtype=float)
+        if hasattr(m, "steps"):
+            for _, step in reversed(m.steps):
+                if hasattr(step, "coef_"):
+                    return np.array(step.coef_[0], dtype=float)
+        # CalibratedClassifierCV: check both base_estimator and estimator
+        if hasattr(m, "calibrated_classifiers_"):
+            agg = None
+            n = 0
+            for cc in m.calibrated_classifiers_:
+                base = getattr(cc, "base_estimator", None)
+                est = getattr(cc, "estimator", None)
+                cand = est if est is not None else base
+                w = None
+                if cand is None:
+                    continue
+                if hasattr(cand, "coef_"):
+                    w = np.array(cand.coef_[0], dtype=float)
+                elif hasattr(cand, "named_steps"):
+                    steps = list(cand.named_steps.values())
+                    for step in reversed(steps):
+                        if hasattr(step, "coef_"):
+                            w = np.array(step.coef_[0], dtype=float)
+                            break
+                elif hasattr(cand, "steps"):
+                    for _, step in reversed(cand.steps):
+                        if hasattr(step, "coef_"):
+                            w = np.array(step.coef_[0], dtype=float)
+                            break
+                if w is not None:
+                    if agg is None:
+                        agg = np.zeros_like(w, dtype=float)
+                    agg += w
+                    n += 1
+            if n > 0:
+                return agg / float(n)
+        return None
+    w = extract_linear_coefficients(model)
+    x = np.array(features_scaled[0], dtype=float)
+    if w is None:
+        contrib = x.astype(float).tolist()
+    else:
+        contrib = (w * x).tolist()
+    pairs = [{"feature": feature_order[i], "contribution": float(contrib[i]), "importance": float(abs(contrib[i]))} for i in range(len(feature_order))]
+    pairs_sorted = sorted(pairs, key=lambda d: d["importance"], reverse=True)
+    return pairs_sorted
 def get_evidence_based_risk_stratification(probability):
     """
     Evidence-based risk stratification based on clinical guidelines.
@@ -101,12 +169,16 @@ def predict_diagnosis_with_evidence(features_dict):
         raise ValueError(f"Missing features: {missing_features}")
     
     # Prepare features
-    features_array = np.array([features_dict[f] for f in feature_order]).reshape(1, -1)
-    features_scaled = scaler.transform(features_array)
+    features_df = pd.DataFrame([[features_dict[f] for f in feature_order]], columns=feature_order)
+    features_scaled = scaler.transform(features_df)
+    original_features = {f: float(features_dict[f]) for f in feature_order}
     
     # Predict
-    prediction = model.predict(features_scaled)[0]
     probability = model.predict_proba(features_scaled)[0][1]
+    threshold = load_classification_threshold(0.5)
+    prediction = 1 if probability >= threshold else 0
+    contributions = compute_feature_contributions(model, features_scaled, feature_order)
+    top5 = contributions[:5]
     
     # Get evidence-based risk stratification
     risk_assessment = get_evidence_based_risk_stratification(probability)
@@ -119,6 +191,11 @@ def predict_diagnosis_with_evidence(features_dict):
             "confidence": "HIGH" if probability >= 0.85 else "MODERATE" if probability >= 0.70 else "LOW"
         },
         "risk_assessment": risk_assessment,
+        "explainability": {
+            "top_features": top5,
+            "all_features": contributions,
+            "original_features": original_features
+        },
         "clinical_actions_summary": {
             "urgent_actions": [action for action in risk_assessment["evidence_based_actions"] 
                              if "IMMEDIATE" in action["action"] or "WITHIN 24" in action["action"]],

@@ -48,3 +48,36 @@ clean:
 	@find . -type f -name "*.pyc" -delete
 	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	@echo "✅ Clean complete"
+
+.PHONY: install-dev lint typecheck pytest eda-wbcd train-wbcd evaluate-wbcd
+
+install-dev:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found. Run 'make venv' first"; exit 1; fi
+	$(VENV)/bin/pip install --upgrade pip
+	$(VENV)/bin/pip install -r requirements-dev.txt
+
+lint:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found"; exit 1; fi
+	$(VENV)/bin/black --check .
+	$(VENV)/bin/isort --check-only .
+	$(VENV)/bin/ruff Backend
+
+typecheck:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found"; exit 1; fi
+	$(VENV)/bin/mypy Backend/app
+
+pytest:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found"; exit 1; fi
+	$(VENV)/bin/pytest -q
+
+eda-wbcd:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found"; exit 1; fi
+	$(VENV)/bin/python app/scripts/extract_wbcd_eda.py
+
+train-wbcd:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found"; exit 1; fi
+	$(VENV)/bin/python app/scripts/run_train_wbcd.py
+
+evaluate-wbcd:
+	@if [ ! -d "$(VENV)" ]; then echo "❌ Virtual environment not found"; exit 1; fi
+	$(VENV)/bin/python app/scripts/run_evaluate_wbcd.py
