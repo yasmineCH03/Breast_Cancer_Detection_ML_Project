@@ -1,0 +1,64 @@
+{
+  "dataset": "Wisconsin Breast Cancer Diagnostic (WBCD)",
+  "feature_count": 30,
+  "feature_order": [
+    "radius_mean",
+    "texture_mean",
+    "perimeter_mean",
+    "area_mean",
+    "smoothness_mean",
+    "compactness_mean",
+    "concavity_mean",
+    "concave points_mean",
+    "symmetry_mean",
+    "fractal_dimension_mean",
+    "radius_se",
+    "texture_se",
+    "perimeter_se",
+    "area_se",
+    "smoothness_se",
+    "compactness_se",
+    "concavity_se",
+    "concave points_se",
+    "symmetry_se",
+    "fractal_dimension_se",
+    "radius_worst",
+    "texture_worst",
+    "perimeter_worst",
+    "area_worst",
+    "smoothness_worst",
+    "compactness_worst",
+    "concavity_worst",
+    "concave points_worst",
+    "symmetry_worst",
+    "fractal_dimension_worst"
+  ],
+  "feature_descriptions": {
+    "radius_mean": "Mean of distances from center to points on the perimeter",
+    "texture_mean": "Standard deviation of gray-scale values",
+    "perimeter_mean": "Mean size of the core tumor",
+    "area_mean": "Mean area of the nucleus",
+    "smoothness_mean": "Mean of local variation in radius lengths",
+    "compactness_mean": "Mean of perimeter^2 / area - 1.0",
+    "concavity_mean": "Mean of severity of concave portions of the contour",
+    "concave_points_mean": "Mean for number of concave portions of the contour",
+    "symmetry_mean": "Mean of symmetry",
+    "fractal_dimension_mean": "Mean for \"coastline approximation\" - 1"
+  },
+  "target_mapping": {
+    "0": {
+      "label": "Benign",
+      "description": "Non-cancerous tumor"
+    },
+    "1": {
+      "label": "Malignant",
+      "description": "Cancerous tumor"
+    }
+  },
+  "data_preprocessing": {
+    "scaling": "StandardScaler (mean=0, std=1)",
+    "train_test_split": 0.7,
+    "random_state": 42,
+    "calibration": "Sigmoid calibration (5-fold)"
+  }
+}

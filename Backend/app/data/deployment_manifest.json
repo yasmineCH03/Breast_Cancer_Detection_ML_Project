@@ -1,0 +1,80 @@
+{
+  "application": "Breast Cancer Detection - Evidence-Based Production System",
+  "version": "2.4.0",
+  "deployment_date": "2025-12-12T22:31:03.651094",
+  "clinical_guidelines_compliance": {
+    "nccn": "v3.2023",
+    "acr": "BI-RADS 5th Edition",
+    "uspstf": "2016 Recommendations",
+    "acs": "2023 Guidelines"
+  },
+  "models_deployed": [
+    {
+      "name": "cellular_sgd_svm_v2.4.joblib",
+      "type": "Calibrated SGD-SVM Classifier",
+      "status": "PRODUCTION",
+      "accuracy": 0.9883040935672515,
+      "auc": 0.9979423868312758,
+      "clinical_validation": "Evidence-based risk stratification"
+    },
+    {
+      "name": "cellular_softmax_v1.0.joblib",
+      "type": "Softmax Regression",
+      "status": "ARCHIVED",
+      "accuracy": 0.9766081871345029,
+      "auc": 0.9976484420928865
+    }
+  ],
+  "evidence_based_components": [
+    "medical_guidelines.json",
+    "evidence_based_prediction_utils.py",
+    "shap_explainability.json"
+  ],
+  "data_files": [
+    "feature_metadata.json",
+    "model_comparison.json",
+    "shap_explainability.json",
+    "roc_curves.json",
+    "medical_guidelines.json"
+  ],
+  "system_requirements": {
+    "python": "3.8+",
+    "memory": "≥ 2GB",
+    "disk_space": "≥ 100MB",
+    "dependencies": [
+      "scikit-learn==1.2.2",
+      "joblib==1.2.0",
+      "numpy==1.24.3",
+      "pandas==1.5.3"
+    ]
+  },
+  "api_endpoints": [
+    "POST /api/v1/cellular/predict",
+    "POST /api/v1/cellular/batch",
+    "GET /api/v1/evaluation/cellular/metrics",
+    "POST /api/v1/evaluation/cellular/shap"
+  ],
+  "medical_compliance": {
+    "evidence_based": true,
+    "hipaa_ready": true,
+    "data_encryption": "AES-256",
+    "audit_logging": true,
+    "model_explainability": true,
+    "clinical_guidelines": [
+      "NCCN",
+      "ACR",
+      "USPSTF",
+      "ACS"
+    ]
+  },
+  "clinical_references": [
+    "National Comprehensive Cancer Network. Breast Cancer Screening and Diagnosis Guidelines v3.2023",
+    "American College of Radiology. BI-RADS Atlas, 5th Edition, 2019",
+    "U.S. Preventive Services Task Force. Breast Cancer: Screening, JAMA 2016",
+    "American Cancer Society. Breast Cancer Early Detection Guidelines, 2023",
+    "Bleicher RJ, et al. Time to Treatment and Survival in Breast Cancer. JAMA Surgery 2016"
+  ],
+  "maintenance_contact": "mlops-team@hospital.org",
+  "emergency_rollback": "cellular_softmax_v1.0.joblib",
+  "medical_disclaimer": "This system provides AI-assisted decision support based on evidence-based clinical guidelines. All predictions require physician review and clinical correlation."
+}

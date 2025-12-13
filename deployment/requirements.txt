@@ -1,5 +1,0 @@
-pulp
-pandas
-numpy
-matplotlib
-jupyter

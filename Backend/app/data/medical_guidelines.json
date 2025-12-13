@@ -1,0 +1,135 @@
+{
+  "risk_stratification": {
+    "critical_risk": {
+      "probability_threshold": 0.9,
+      "risk_tier": "CRITICAL",
+      "actions": [
+        {
+          "action": "IMMEDIATE DIAGNOSTIC BIOPSY",
+          "timeline": "Within 24-48 hours",
+          "source": "NCCN Guidelines v3.2023",
+          "rationale": "Lesions with >90% malignancy probability require immediate tissue diagnosis"
+        },
+        {
+          "action": "MULTIDISCIPLINARY TEAM REFERRAL",
+          "timeline": "Within 24 hours",
+          "source": "ACS Breast Cancer Treatment Guidelines",
+          "rationale": "Urgent coordination of breast surgeon, oncologist, and radiologist"
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "source": "NCCN Clinical Practice Guidelines in Oncology",
+          "reference": "Breast Cancer Screening and Diagnosis, Version 3.2023"
+        },
+        {
+          "source": "Bleicher et al., JAMA Surgery 2016",
+          "reference": "Delays >60 days worsen survival outcomes"
+        }
+      ]
+    },
+    "high_risk": {
+      "probability_threshold": 0.8,
+      "risk_tier": "HIGH",
+      "actions": [
+        {
+          "action": "DIAGNOSTIC IMAGING",
+          "timeline": "Within 7 days",
+          "source": "ACR BI-RADS 5th Edition",
+          "rationale": "BI-RADS 4 lesions require prompt evaluation"
+        },
+        {
+          "action": "BIOPSY IF IMAGING CONFIRMS",
+          "timeline": "Within 14 days",
+          "source": "NCCN Guidelines",
+          "rationale": "Suspicious findings need tissue confirmation"
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "source": "ACR Practice Parameter",
+          "reference": "Performance of Diagnostic Mammography, 2022"
+        },
+        {
+          "source": "Degnim et al., Annals of Surgical Oncology 2017",
+          "reference": "20-30% of high-risk lesions progress to malignancy"
+        }
+      ]
+    },
+    "medium_risk": {
+      "probability_threshold": 0.6,
+      "risk_tier": "MEDIUM",
+      "actions": [
+        {
+          "action": "SHORT-TERM FOLLOW-UP",
+          "timeline": "6 months",
+          "source": "ACR BI-RADS Category 3",
+          "rationale": "Probably benign lesions require stability assessment"
+        },
+        {
+          "action": "CLINICAL BREAST EXAMINATION",
+          "timeline": "Concurrent with imaging",
+          "source": "ACS Screening Guidelines",
+          "rationale": "Physical examination between imaging intervals"
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "source": "Sickles, Radiology 1991",
+          "reference": "98% of BI-RADS 3 lesions remain stable or resolve"
+        }
+      ]
+    },
+    "low_risk": {
+      "probability_threshold": 0.4,
+      "risk_tier": "LOW",
+      "actions": [
+        {
+          "action": "RETURN TO ROUTINE SCREENING",
+          "timeline": "Age-appropriate intervals",
+          "source": "USPSTF Recommendations",
+          "rationale": "Low suspicion findings follow standard screening"
+        },
+        {
+          "action": "BREAST SELF-AWARENESS EDUCATION",
+          "timeline": "Ongoing",
+          "source": "ACS Early Detection",
+          "rationale": "Patient education on normal changes"
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "source": "USPSTF, JAMA 2016",
+          "reference": "Breast Cancer: Screening recommendations"
+        }
+      ]
+    },
+    "very_low_risk": {
+      "probability_threshold": 0.0,
+      "risk_tier": "VERY LOW",
+      "actions": [
+        {
+          "action": "CONTINUE SCREENING",
+          "timeline": "Per guidelines",
+          "source": "ACR Recommendations",
+          "rationale": "Normal findings require no modification"
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "source": "ACS Guidelines 2023",
+          "reference": "Breast Cancer Early Detection"
+        }
+      ]
+    }
+  },
+  "clinical_references": [
+    "National Comprehensive Cancer Network. Breast Cancer Screening and Diagnosis Guidelines v3.2023",
+    "American College of Radiology. BI-RADS Atlas, 5th Edition, 2019",
+    "U.S. Preventive Services Task Force. Breast Cancer: Screening, JAMA 2016",
+    "American Cancer Society. Breast Cancer Early Detection Guidelines, 2023",
+    "Bleicher RJ, et al. Time to Treatment and Survival in Breast Cancer. JAMA Surgery 2016"
+  ],
+  "implementation_date": "2025-12-12T22:30:58.577420",
+  "version": "1.0.0"
+}
