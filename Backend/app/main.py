@@ -24,6 +24,14 @@ from app.utils.evidence_based_prediction_utils import (
     load_medical_guidelines
 )
 from app.services.wbcd_preprocessing import find_wbcd_csv, load_wbcd, clean_wbcd, get_feature_order
+from app.services.metabric_inference import load_artifacts, predict_single as metabric_predict_single, predict_batch as metabric_predict_batch, _default_paths
+from app.services.metabric_preprocessing import sanitize_record
+from typing import Dict, Any, List
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from pydantic import Field
 
 
 # ============================================================================
@@ -134,6 +142,17 @@ class DiagnosisResponse(BaseModel):
     used_model: str
     timestamp: str
     evidence_based: bool = True
+
+class MetabricPredictRequest(BaseModel):
+    patient_id: str | None = None
+    features: dict
+
+class MetabricPredictResponse(BaseModel):
+    patient_id: str | None = None
+    aggressiveness_score: float
+    growth_rate: float
+    evolution_6m_class: int
+    evolution_6m_raw: float
 
 # ============================================================================
 # 4. GROUP A: MEDICAL INTERFACE ENDPOINTS (DOCTOR'S VIEW)
@@ -579,6 +598,387 @@ async def get_residuals_data():
         ]
     }
 
+@app.get("/api/v1/metabric/model/info")
+async def get_metabric_model_info():
+    try:
+        import os, json
+        paths = _default_paths()
+        metadata = {}
+        try:
+            with open(paths["metadata"], "r", encoding="utf-8") as f:
+                metadata = json.load(f)
+        except Exception:
+            metadata = {}
+        feature_names = []
+        try:
+            import pandas as pd
+            candidates = [
+                os.environ.get("METABRIC_EVAL_DATA_PATH"),
+                os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "clean_metabric_final1.csv"),
+                os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "metabric_cleaned_final.csv"),
+            ]
+            eval_path = next((p for p in candidates if p and os.path.exists(p)), None)
+            df = pd.read_csv(eval_path, index_col=0) if eval_path else None
+            targets = ['aggressiveness_score','growth_rate','evolution_6m']
+            feature_names = [c for c in (df.columns if df is not None else []) if c not in targets]
+        except Exception:
+            feature_names = []
+        return {
+            "model_path": paths["model"],
+            "scaler_path": paths["scaler"],
+            "feature_count": len(feature_names),
+            "features": feature_names,
+            "metadata": metadata,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Model info error: {str(e)}")
+
+@app.post("/api/v1/metabric/predict")
+async def metabric_predict(req: MetabricPredictRequest):
+    try:
+        result = metabric_predict_single(req.features)
+        if req.patient_id:
+            result["patient_id"] = req.patient_id
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/v1/metabric/batch")
+async def metabric_batch(file: UploadFile = File(...)):
+    if not (file.filename and file.filename.endswith(".csv")):
+        raise HTTPException(status_code=400, detail="Only CSV files allowed")
+    try:
+        content = await file.read()
+        size_bytes = len(content)
+        if size_bytes > 20 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="CSV file too large (max 20MB)")
+        temp_path = f"temp_metabric_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        with open(temp_path, "wb") as f:
+            f.write(content)
+        try:
+            rows = metabric_predict_batch(temp_path)
+        finally:
+            try:
+                os.remove(temp_path)
+            except Exception:
+                pass
+        return {
+            "status": "success",
+            "rows": rows,
+            "count": len(rows),
+        }
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Batch error: {str(e)}")
+
+@app.get("/api/v1/metabric/evaluate")
+async def metabric_evaluate(data_path: str | None = None, algorithm: str = "gradient_boosting", test_size: float = 0.2, random_state: int = 42):
+    try:
+        path = data_path or os.environ.get("METABRIC_EVAL_DATA_PATH") or os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "clean_metabric_final1.csv")
+        import pandas as pd, numpy as np
+        from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error, accuracy_score
+        df = pd.read_csv(path, index_col=0)
+        targets = ['aggressiveness_score','growth_rate','evolution_6m']
+        # Ensure numeric-only features, drop targets
+        X_full = df.drop(columns=targets)
+        y_full = df[targets]
+        # Use numeric-only columns per notebook-style pipeline
+        X_full = X_full.select_dtypes(include=['float64','float32','int64','int32'])
+        # Train/test split using notebook logic
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_full.values, y_full.values, test_size=float(test_size), random_state=int(random_state)
+        )
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
+        if algorithm.lower() in ("gradient_boosting", "gb", "gbr"):
+            base = GradientBoostingRegressor(n_estimators=200, learning_rate=0.1, max_depth=5, random_state=int(random_state))
+        else:
+            base = RandomForestRegressor(n_estimators=200, max_depth=10, random_state=int(random_state), n_jobs=-1)
+        model = MultiOutputRegressor(base)
+        model.fit(X_train_scaled, y_train)
+        y_train_pred = model.predict(X_train_scaled)
+        y_test_pred = model.predict(X_test_scaled)
+        y_test_cls = np.round(y_test_pred[:, 2]).astype(int).clip(0, 2)
+        r2_aggr_train = r2_score(y_train[:, 0], y_train_pred[:, 0])
+        r2_aggr_test = r2_score(y_test[:, 0], y_test_pred[:, 0])
+        mae_aggr = mean_absolute_error(y_test[:, 0], y_test_pred[:, 0])
+        mse_aggr = mean_squared_error(y_test[:, 0], y_test_pred[:, 0])
+        r2_growth_train = r2_score(y_train[:, 1], y_train_pred[:, 1])
+        r2_growth_test = r2_score(y_test[:, 1], y_test_pred[:, 1])
+        mae_growth = mean_absolute_error(y_test[:, 1], y_test_pred[:, 1])
+        mse_growth = mean_squared_error(y_test[:, 1], y_test_pred[:, 1])
+        acc_evol = accuracy_score(y_test[:, 2], y_test_cls)
+        return sanitize_record({
+            "algorithm": "gradient_boosting" if isinstance(base, GradientBoostingRegressor) else "random_forest",
+            "r2_aggressiveness_train": r2_aggr_train,
+            "r2_aggressiveness": r2_aggr_test,
+            "mae_aggressiveness": mae_aggr,
+            "mse_aggressiveness": mse_aggr,
+            "r2_growth_rate_train": r2_growth_train,
+            "r2_growth_rate": r2_growth_test,
+            "mae_growth_rate": mae_growth,
+            "mse_growth_rate": mse_growth,
+            "accuracy_evolution_6m": acc_evol,
+            "test_size": float(test_size),
+            "random_state": int(random_state),
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Evaluate error: {str(e)}")
+
+@app.get("/api/v1/metabric/sample")
+async def metabric_sample():
+    """
+    Returns a random clinical record with features aligned to the model's expected inputs.
+    Also groups features into genetic, historical, and prognostic for UI display.
+    """
+    try:
+        _, _, feature_names, _ = load_artifacts()
+        candidates = [
+            os.environ.get("METABRIC_EVAL_DATA_PATH"),
+            os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "clean_metabric_final1.csv"),
+            os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "metabric_cleaned_final.csv"),
+        ]
+        path = next((p for p in candidates if p and os.path.exists(p)), None)
+        if not path:
+            raise HTTPException(status_code=404, detail="Evaluation dataset not found")
+        import pandas as pd, numpy as np
+        df = pd.read_csv(path, index_col=0)
+        targets = ['aggressiveness_score','growth_rate','evolution_6m']
+        cols = [c for c in df.columns if c in feature_names]
+        if not cols:
+            raise HTTPException(status_code=400, detail="No overlapping features between dataset and model")
+        idx = np.random.randint(0, len(df))
+        row = df.iloc[idx]
+        features = {c: float(row[c]) if isinstance(row[c], (int, float, np.integer, np.floating)) else row[c] for c in cols}
+        # Grouping by domain
+        genetic_keys = ['pik3ca_mut','tp53_mut','gata3_mut','map3k1_mut','cdh1_mut','integrative_cluster_encoded','pam50_+_claudin-low_subtype_encoded','3-gene_classifier_subtype_encoded']
+        historical_keys = ['age_at_diagnosis','tumor_size','lymph_nodes_examined_positive','mutation_count','overall_survival_months','tumor_stage_encoded','neoplasm_histologic_grade_encoded','cellularity_encoded','er_status_binary','pr_status_binary','her2_status_binary']
+        prognostic_keys = ['hormone_receptor_score','triple_negative','size_category','grade_stage_interaction','high_risk','overall_survival_binary','death_from_cancer_binary','nottingham_prognostic_index']
+        def pick(keys: List[str]) -> Dict[str, Any]:
+            return {k: features[k] for k in keys if k in features}
+        return sanitize_record({
+            "patient_id": f"SAMPLE_{idx}",
+            "features": features,
+            "categories": {
+                "genetic": pick(genetic_keys),
+                "historical": pick(historical_keys),
+                "prognostic": pick(prognostic_keys),
+            }
+        })
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Sample error: {str(e)}")
+
+@app.post("/api/v1/metabric/prognosis/save")
+async def save_metabric_prognosis(payload: dict):
+    """
+    Append prognosis outcomes to 'prognosis_db.csv' in app/data.
+    """
+    try:
+        rows = payload.get("rows", [])
+        if not isinstance(rows, list) or len(rows) == 0:
+            raise HTTPException(status_code=400, detail="No rows provided")
+        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        os.makedirs(data_dir, exist_ok=True)
+        db_path = os.path.join(data_dir, "prognosis_db.csv")
+        import csv
+        header = ["patient_id","aggressiveness_score","growth_rate","evolution_6m_class","timestamp"]
+        write_header = not os.path.exists(db_path)
+        with open(db_path, "a", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=header)
+            if write_header:
+                w.writeheader()
+            saved = 0
+            for r in rows:
+                try:
+                    obj = {
+                        "patient_id": str(r.get("patient_id") or r.get("id") or ""),
+                        "aggressiveness_score": float(r.get("aggressiveness_score")),
+                        "growth_rate": float(r.get("growth_rate")),
+                        "evolution_6m_class": int(r.get("evolution_6m_class")),
+                        "timestamp": str(r.get("timestamp") or datetime.now().isoformat()),
+                    }
+                    w.writerow(obj)
+                    saved += 1
+                except Exception:
+                    continue
+        return {"status": "ok", "rows_saved": saved, "path": db_path}
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prognosis save error: {str(e)}")
+
+@app.get("/api/v1/metabric/prognosis/saved")
+async def get_saved_prognosis(page: int = 1, page_size: int = 20, order_by: str = "timestamp_desc"):
+    try:
+        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        db_path = os.path.join(data_dir, "prognosis_db.csv")
+        if not os.path.exists(db_path):
+            return {
+                "status": "empty",
+                "rows": [],
+                "page": page,
+                "page_size": page_size,
+                "total_pages": 0
+            }
+        import pandas as pd
+        df = pd.read_csv(db_path)
+        df.replace([np.inf, -np.inf], np.nan, inplace=True)
+        if "timestamp" in df.columns:
+            try:
+                df["timestamp_parsed"] = pd.to_datetime(df["timestamp"], errors="coerce")
+            except Exception:
+                df["timestamp_parsed"] = pd.NaT
+        else:
+            df["timestamp_parsed"] = pd.NaT
+        if order_by == "timestamp_desc":
+            df = df.sort_values(by="timestamp_parsed", ascending=False, na_position="last")
+        elif order_by == "timestamp_asc":
+            df = df.sort_values(by="timestamp_parsed", ascending=True, na_position="last")
+        total = int(df.shape[0])
+        start = max((page - 1) * page_size, 0)
+        end = start + page_size
+        page_df = df.iloc[start:end].copy()
+        page_df.replace([np.inf, -np.inf], np.nan, inplace=True)
+        cols = ["patient_id","aggressiveness_score","growth_rate","evolution_6m_class","timestamp"]
+        for c in cols:
+            if c not in page_df.columns:
+                page_df[c] = None
+        page_df = page_df.where(pd.notnull(page_df), None)
+        rows_raw = page_df[cols].to_dict(orient="records")
+        def json_safe_value(v):
+            try:
+                if v is None:
+                    return None
+                if isinstance(v, float):
+                    if math.isnan(v) or math.isinf(v):
+                        return None
+                    return float(v)
+                if isinstance(v, (np.floating,)):
+                    fv = float(v)
+                    if math.isnan(fv) or math.isinf(fv):
+                        return None
+                    return fv
+                if isinstance(v, (np.integer,)):
+                    return int(v)
+                if isinstance(v, (pd.Timestamp,)):
+                    return pd.Timestamp(v).isoformat()
+                if isinstance(v, datetime):
+                    return v.isoformat()
+                if isinstance(v, str):
+                    return v
+                if v is np.nan:  # type: ignore
+                    return None
+                return v
+            except Exception:
+                return None
+        rows = [{k: json_safe_value(v) for k, v in r.items()} for r in rows_raw]
+        total_pages = int((total + page_size - 1) // page_size) if page_size > 0 else 0
+        return {
+            "status": "ok",
+            "rows": rows,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": total_pages
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Load saved prognosis error: {str(e)}")
+
+# ============================================================================
+# 5c. CLINICAL PROGRESSION METRICS (Deterministic)
+# ============================================================================
+_PROG_CACHE: Dict[str, Any] = {
+    "max_nodes": 1.0,
+    "min_npi": float("inf"),
+    "max_npi": float("-inf"),
+}
+
+class AggressivenessInput(BaseModel):
+    neoplasm_histologic_grade: float = Field(..., ge=0, description="Grade histologique (1–3)")
+    tumor_stage: float = Field(..., ge=0, description="Stade tumoral (0–4)")
+    lymph_nodes_examined_positive: float = Field(..., ge=0, description="Ganglions positifs")
+    nottingham_prognostic_index: float = Field(..., ge=0, description="NPI")
+
+@app.post("/api/v1/clinical/aggressiveness")
+async def calc_aggressiveness(payload: AggressivenessInput):
+    try:
+        g = max(0.0, float(payload.neoplasm_histologic_grade))
+        s = max(0.0, float(payload.tumor_stage))
+        nodes = max(0.0, float(payload.lymph_nodes_examined_positive))
+        npi = max(0.0, float(payload.nottingham_prognostic_index))
+        _PROG_CACHE["max_nodes"] = max(_PROG_CACHE.get("max_nodes", 1.0), nodes if nodes > 0 else _PROG_CACHE.get("max_nodes", 1.0))
+        _PROG_CACHE["min_npi"] = min(_PROG_CACHE.get("min_npi", float("inf")), npi)
+        _PROG_CACHE["max_npi"] = max(_PROG_CACHE.get("max_npi", float("-inf")), npi)
+        max_nodes = max(1.0, _PROG_CACHE["max_nodes"])
+        min_npi = _PROG_CACHE["min_npi"] if _PROG_CACHE["min_npi"] != float("inf") else 0.0
+        max_npi = _PROG_CACHE["max_npi"] if _PROG_CACHE["max_npi"] != float("-inf") else max(min_npi + 1.0, npi)
+        grade_norm = min(g / 3.0, 1.0)
+        stage_norm = min(s / 4.0, 1.0)
+        nodes_norm = min(nodes / max_nodes, 1.0)
+        npi_norm = 0.0 if max_npi == min_npi else (npi - min_npi) / (max_npi - min_npi)
+        score = grade_norm * 3.0 + stage_norm * 3.0 + nodes_norm * 2.0 + npi_norm * 2.0
+        return sanitize_record({
+            "score": float(score),
+            "components": {
+                "grade_norm": float(grade_norm),
+                "stage_norm": float(stage_norm),
+                "nodes_norm": float(nodes_norm),
+                "npi_norm": float(npi_norm),
+            },
+            "cache": {
+                "max_nodes": float(max_nodes),
+                "min_npi": float(min_npi),
+                "max_npi": float(max_npi),
+            }
+        })
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Aggressiveness error: {str(e)}")
+
+class GrowthRateInput(BaseModel):
+    tumor_size: float = Field(..., ge=0, description="Taille tumorale (mm)")
+    age_at_diagnosis: float = Field(..., ge=0, description="Âge au diagnostic (années)")
+    neoplasm_histologic_grade: float = Field(..., ge=0, description="Grade histologique (1–3)")
+
+@app.post("/api/v1/clinical/growth_rate")
+async def calc_growth_rate(payload: GrowthRateInput):
+    try:
+        size = max(0.0, float(payload.tumor_size))
+        age = max(0.0, float(payload.age_at_diagnosis))
+        grade = max(0.0, float(payload.neoplasm_histologic_grade))
+        years_since_onset = max(age - 40.0, 1.0)
+        rate = (size / years_since_onset) * (grade / 2.0)
+        rate = float(min(rate, 50.0))
+        return sanitize_record({
+            "rate": rate,
+            "factors": {
+                "tumor_size": float(size),
+                "years_since_onset": float(years_since_onset),
+                "grade_factor": float(grade / 2.0),
+            }
+        })
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Growth rate error: {str(e)}")
+
+class EvolutionInput(BaseModel):
+    aggressiveness_score: float = Field(..., ge=0, description="Aggressiveness score")
+
+@app.post("/api/v1/clinical/evolution6m")
+async def calc_evolution6m(payload: EvolutionInput):
+    try:
+        sc = float(payload.aggressiveness_score)
+        if sc < 5.0:
+            cat = 0
+        elif sc <= 7.0:
+            cat = 1
+        else:
+            cat = 2
+        return sanitize_record({ "category": int(cat) })
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Evolution 6m error: {str(e)}")
+
 # ============================================================================
 # 5b. WBCD EDA ENDPOINTS (Data Understanding)
 # ============================================================================
@@ -662,11 +1062,19 @@ async def get_wbcd_random_sample(diagnosis: str | None = None):
 @app.get("/api/health")
 async def health_check():
     """System health check"""
+    metabric_model_path = os.environ.get("METABRIC_MODEL_PATH") or os.path.join(os.path.dirname(__file__), "models", "metabric_model.pkl")
+    metabric_scaler_path = os.environ.get("METABRIC_SCALER_PATH") or os.path.join(os.path.dirname(__file__), "models", "metabric_scaler.pkl")
+    metabric_features_path = os.environ.get("METABRIC_FEATURES_PATH") or os.path.join(os.path.dirname(__file__), "models", "metabric_features.pkl")
     return {
         "status": "healthy" if production_model else "degraded",
         "service": "OncoAI Medical API",
         "version": "2.4.0",
         "model_loaded": production_model is not None,
+        "metabric_artifacts_present": all([
+            os.path.exists(metabric_model_path),
+            os.path.exists(metabric_scaler_path),
+            os.path.exists(metabric_features_path),
+        ]),
         "evidence_based": True,
         "clinical_guidelines": ["NCCN v3.2023", "ACR BI-RADS", "USPSTF", "ACS 2023"],
         "timestamp": datetime.now().isoformat()
