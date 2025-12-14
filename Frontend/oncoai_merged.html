@@ -15,6 +15,119 @@
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
         .numeric { font-variant-numeric: tabular-nums; }
+        * { transition: background-color .3s ease, color .3s ease, border-color .3s ease; }
+        
+        /* THEME COLOR SYSTEM
+           CSS variables define the full palette for light and dark themes.
+           WCAG target: AA contrast. Use --text on --bg for body and nav.
+           For interactive states, use hover/active vars to ensure contrast.
+        */
+        :root {
+          /* Brand */
+          --brand-primary: #db2777;
+          --brand-secondary: #f43f5e;
+          --brand-accent: #9f1239;
+          --icon: #334155;
+          /* Light theme palette */
+          --bg: #ffffff;
+          --bg-muted: #f8fafc;
+          --surface: #ffffff;
+          --surface-muted: #fdf2f8;
+          --text: #0f172a;
+          --text-muted: #334155;
+          --border: #e2e8f0;
+          --shadow: rgba(2,6,23,.08);
+          /* Navbar */
+          --nav-bg: rgba(255,255,255,.9);
+          --nav-text: #1f2937;
+          --nav-border: #f1f5f9;
+          --nav-hover-bg: #fdf2f8;
+          --nav-hover-text: #db2777;
+          --nav-active-bg: #fdf2f8;
+          --nav-active-text: #db2777;
+          /* Buttons */
+          --btn-bg: #fdf2f8;
+          --btn-text: #db2777;
+          --btn-border: #fce7f3;
+          /* Inputs */
+          --input-bg: #ffffff;
+          --input-text: #0f172a;
+          --input-border: #e2e8f0;
+        }
+        @media (prefers-color-scheme: dark) {
+          :root {
+            /* Dark theme defaults if no manual override */
+            --bg: #0f172a;
+            --bg-muted: #0b1220;
+            --surface: #0b1220;
+            --surface-muted: #111827;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: rgba(0,0,0,.5);
+            --nav-bg: rgba(11,18,32,.9);
+            --nav-text: #e2e8f0;
+            --nav-border: #1f2937;
+            --nav-hover-bg: #111827;
+            --nav-hover-text: #f472b6;
+            --nav-active-bg: #111827;
+            --nav-active-text: #f472b6;
+            --btn-bg: #111827;
+            --btn-text: #f472b6;
+            --btn-border: #1f2937;
+            --input-bg: #0b1220;
+            --input-text: #e2e8f0;
+            --input-border: #334155;
+            --icon: #cbd5e1;
+          }
+        }
+        /* Manual overrides via data-theme */
+        :root[data-theme="light"] {
+          --bg: #ffffff; --bg-muted: #f8fafc; --surface: #ffffff; --surface-muted: #fdf2f8;
+          --text: #0f172a; --text-muted: #334155; --border: #e2e8f0; --shadow: rgba(2,6,23,.08);
+          --nav-bg: rgba(255,255,255,.9); --nav-text: #1f2937; --nav-border: #f1f5f9;
+          --nav-hover-bg: #fdf2f8; --nav-hover-text: #db2777; --nav-active-bg: #fdf2f8; --nav-active-text: #db2777;
+          --btn-bg: #fdf2f8; --btn-text: #db2777; --btn-border: #fce7f3;
+          --input-bg: #ffffff; --input-text: #0f172a; --input-border: #e2e8f0;
+          --icon: #334155;
+        }
+        :root[data-theme="dark"] {
+          --bg: #0f172a; --bg-muted: #0b1220; --surface: #0b1220; --surface-muted: #111827;
+          --text: #e2e8f0; --text-muted: #94a3b8; --border: #334155; --shadow: rgba(0,0,0,.5);
+          --nav-bg: rgba(11,18,32,.9); --nav-text: #e2e8f0; --nav-border: #1f2937;
+          --nav-hover-bg: #111827; --nav-hover-text: #f472b6; --nav-active-bg: #111827; --nav-active-text: #f472b6;
+          --btn-bg: #111827; --btn-text: #f472b6; --btn-border: #1f2937;
+          --input-bg: #0b1220; --input-text: #e2e8f0; --input-border: #334155;
+          --icon: #cbd5e1;
+        }
+        /* Navbar skin using variables */
+        .nav-skin { background-color: var(--nav-bg) !important; border-color: var(--nav-border) !important; color: var(--nav-text) !important; }
+        .nav-link { color: var(--nav-text) !important; background-color: transparent; border: 1px solid transparent; }
+        .nav-link:hover { background-color: var(--nav-hover-bg) !important; color: var(--nav-hover-text) !important; }
+        .nav-link.active { background-color: var(--nav-active-bg) !important; color: var(--nav-active-text) !important; }
+        .nav-divider { border-color: var(--nav-border) !important; }
+        .btn-skin { background-color: var(--btn-bg) !important; color: var(--btn-text) !important; border-color: var(--btn-border) !important; }
+        .input-skin { background-color: var(--input-bg) !important; color: var(--input-text) !important; border-color: var(--input-border) !important; }
+        .app-bg { background-color: var(--bg-muted) !important; color: var(--text) !important; }
+        .surface { background-color: var(--surface) !important; color: var(--text) !important; box-shadow: 0 1px 2px var(--shadow); border-color: var(--border) !important; }
+        .text-primary { color: var(--brand-primary) !important; }
+        .icon-skin { color: var(--icon) !important; }
+        .theme-toggle { position: relative; width: 54px; height: 28px; border-radius: 999px; display: inline-flex; align-items: center; padding: 3px; background-color: var(--input-bg); border: 1px solid var(--input-border); }
+        .theme-toggle-knob { width: 22px; height: 22px; border-radius: 999px; display: grid; place-items: center; transform: translateX(0); transition: transform .25s ease; background-color: #fff; }
+        :root[data-theme="dark"] .theme-toggle-knob { transform: translateX(26px); background-color: #111827; }
+        .theme-apply input, .theme-apply select, .theme-apply textarea { background-color: var(--input-bg) !important; color: var(--input-text) !important; border-color: var(--input-border) !important; }
+        .btn-skin:hover { filter: brightness(1.02); box-shadow: 0 6px 14px var(--shadow); }
+        .nav-link:focus { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
+        /* Map common utility classes to theme variables for better coverage */
+        :root[data-theme="dark"] .bg-white { background-color: var(--surface) !important; }
+        :root[data-theme="dark"] .bg-pink-50 { background-color: var(--surface-muted) !important; }
+        :root[data-theme="dark"] .bg-rose-50 { background-color: var(--surface-muted) !important; }
+        :root[data-theme="dark"] .text-slate-900, :root[data-theme="dark"] .text-slate-800, :root[data-theme="dark"] .text-slate-700 { color: var(--text) !important; }
+        :root[data-theme="dark"] .text-slate-600, :root[data-theme="dark"] .text-slate-500 { color: var(--text-muted) !important; }
+        :root[data-theme="dark"] .border-pink-100, :root[data-theme="dark"] .border-rose-100, :root[data-theme="dark"] .border-rose-200, :root[data-theme="dark"] .border-slate-300 { border-color: var(--border) !important; }
+        :root[data-theme="dark"] .shadow-sm { box-shadow: 0 1px 2px var(--shadow) !important; }
+        .theme-switch-overlay { position: fixed; inset: 0; background: transparent; pointer-events: none; opacity: 0; transition: opacity .3s ease; z-index: 50; }
+        .theme-switching .theme-switch-overlay { background: rgba(0,0,0,.06); opacity: 1; pointer-events: auto; }
         
         .page-view { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .page-view.active { display: block; opacity: 1; animation: fadeIn 0.6s ease-out; }
@@ -28,6 +141,46 @@
         .slide-over.open { transform: translateX(0); }
         .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .overlay.open { opacity: 1; pointer-events: auto; }
+        .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 22px var(--shadow); }
+        .shine { position: relative; overflow: hidden; }
+        .shine::after { content: ""; position: absolute; left: -120%; top: 0; height: 100%; width: 120%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); transform: skewX(-20deg); animation: shine 2.4s infinite; }
+        @keyframes shine { from{left:-120%} to{left:120%} }
+        .shimmer { background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        /* prognosis layout styles */
+        .prognosis-card{border-radius:16px;border:1px solid #e2e8f0;background:linear-gradient(145deg,#ffffff 0%,#fdf2f8 100%);box-shadow:0 4px 20px rgba(0,0,0,.05);transition:all .3s cubic-bezier(.4,0,.2,1)}
+        .prognosis-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+        .prognosis-input{border-radius:10px;border:2px solid #e2e8f0;background:#fff;transition:all .2s ease;font-family:Inter,monospace}
+        .prognosis-input:focus{border-color:#f43f5e;box-shadow:0 0 0 3px rgba(244,63,94,.1);outline:none}
+        .prognosis-input.valid{border-color:#10b981;background:linear-gradient(90deg,#ffffff 95%,#10b98120 100%)}
+        .feature-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;font-size:11px;font-weight:500;background:#fdf2f8;border:1px solid #e2e8f0;transition:all .2s ease}
+        .feature-chip:hover{border-color:#db2777;transform:translateY(-1px)}
+        .feature-chip.low{border-left:3px solid #10b981}
+        .prognosis-progress{position:relative;height:4px;background:#e2e8f0;border-radius:2px;overflow:hidden}
+        .prognosis-progress-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,#f43f5e 0%,#db2777 100%);border-radius:2px;transition:width .5s cubic-bezier(.34,1.56,.64,1)}
+        .prognosis-stats-card{border-radius:14px;padding:20px;background:linear-gradient(135deg,#ffffff 0%,#fdf2f8 100%);border:1px solid #e2e8f0;position:relative;overflow:hidden}
+        .prognosis-stats-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#f43f5e 0%,#db2777 100%)}
+        .prognosis-meter{height:8px;border-radius:4px;background:#e2e8f0;overflow:hidden;position:relative}
+        .prognosis-meter-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.34,1.56,.64,1);position:relative}
+        .prognosis-tab{padding:12px 20px;border-radius:12px 12px 0 0;font-weight:600;transition:all .3s ease;position:relative;overflow:hidden;background:#fdf2f8;color:#64748b;border:none;cursor:pointer}
+        .prognosis-tab:hover{background:#fce7f3;color:#db2777}
+        .prognosis-tab.active{background:#ffffff;color:#db2777;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+        .prognosis-tab.active::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f43f5e 0%,#db2777 100%);border-radius:2px 2px 0 0}
+        .analysis-panel{width:300px;position:sticky;top:96px}
+        .metric-label{font-size:12px;font-weight:700;color:#334155}
+        .metric-value{font-size:18px;font-weight:800;color:#0f172a}
+        .metric-sep{border-top:1px solid #e2e8f0;margin:12px 0}
+        .metric-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:9999px;font-size:11px;font-weight:700;border:1px solid #e2e8f0}
+        .metric-badge.green{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+        .metric-badge.yellow{background:#fef9c3;color:#854d0e;border-color:#fde68a}
+        .metric-badge.red{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+        @media (max-width: 1024px){ .analysis-panel{position:relative;top:auto;width:100%} }
+        .predictions-panel{width:100%;position:sticky;top:96px}
+        @media (max-width: 1024px){ .predictions-panel{position:relative;top:auto;width:100%} }
+        .prognosis-sidebar{position:sticky; top:96px; width:100%}
+        .prognosis-sidebar .prognosis-card{width:100%}
+        @media (max-width: 1024px){ .prognosis-sidebar{position:relative; top:auto; width:100%} }
         
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #fce7f3; }
@@ -53,14 +206,35 @@
         @media (prefers-reduced-motion: reduce){
           .disclose-content{transition:none}
         }
+        .theme-dark body { background: #0f172a; color: #e2e8f0; }
+        .theme-dark .bg-white { background-color: #0b1220 !important; }
+        .theme-dark .bg-pink-50 { background-color: #0b1220 !important; }
+        .theme-dark .bg-rose-50 { background-color: #0b1220 !important; }
+        .theme-dark .text-slate-900 { color: #f1f5f9 !important; }
+        .theme-dark .text-slate-800 { color: #e2e8f0 !important; }
+        .theme-dark .text-slate-700 { color: #cbd5e1 !important; }
+        .theme-dark .text-slate-600 { color: #94a3b8 !important; }
+        .theme-dark .text-slate-500 { color: #64748b !important; }
+        .theme-dark .border-pink-100 { border-color: #1f2937 !important; }
+        .theme-dark .border-rose-200 { border-color: #334155 !important; }
+        .theme-dark .border-rose-100 { border-color: #334155 !important; }
+        .theme-dark .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,.6) !important; }
+        .theme-toggle { position: relative; width: 54px; height: 28px; border-radius: 999px; display: inline-flex; align-items: center; padding: 3px; }
+        .theme-toggle-knob { width: 22px; height: 22px; border-radius: 999px; display: grid; place-items: center; transform: translateX(0); transition: transform .25s ease; }
+        .theme-dark .theme-toggle-knob { transform: translateX(26px); }
+        @keyframes introFade { 0%{opacity:0; transform:translateY(10px)} 100%{opacity:1; transform:translateY(0)} }
+        @keyframes introOut { 0%{opacity:1; transform:translateY(0)} 100%{opacity:0; transform:translateY(-20px)} }
+        .animate-fadein { animation: introFade 600ms ease both; }
+        .animate-slideup { animation: introFade 800ms ease both; }
+        .intro-leave { animation: introOut 600ms ease forwards; }
     </style>
 </head>
 
-<body class="h-full text-slate-800 antialiased overflow-hidden bg-pink-50">
+<body class="h-full antialiased overflow-hidden app-bg">
 
 <div class="flex h-screen w-full relative">
 
-    <aside class="w-20 lg:w-64 flex flex-col bg-white border-r border-pink-100 z-50 shadow-sm">
+    <aside class="hidden">
         <div class="h-20 flex items-center gap-3 px-0 lg:px-6 justify-center lg:justify-start border-b border-pink-100">
             <svg class="h-10 w-10 drop-shadow-sm flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#db2777" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
@@ -72,20 +246,20 @@
         </div>
 
         <nav class="flex-1 py-6 px-3 space-y-1">
-            <button onclick="router('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
+            <button onclick="router('dashboard')" id="nav-dashboard" data-view="dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
                 <i class="ph ph-squares-four text-xl"></i><span class="hidden lg:block text-sm">Dashboard</span>
             </button>
             
             <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Modèles IA</div>
             
-            <button onclick="router('model1')" id="nav-model1" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
+            <button onclick="router('model1')" id="nav-model1" data-view="model1" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
                 <i class="ph ph-microscope text-xl"></i><span class="hidden lg:block text-sm">Cellular Analysis</span>
             </button>
-            <button onclick="router('model2')" id="nav-model2" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition group font-medium">
+            <button onclick="router('model2')" id="nav-model2" data-view="model2" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition group font-medium">
                 <i class="ph ph-chart-line-up text-xl"></i><span class="hidden lg:block text-sm">Clinical Prognosis</span>
             </button>
             <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Documentation</div>
-            <button onclick="router('docs')" id="nav-docs" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
+            <button onclick="router('docs')" id="nav-docs" data-view="docs" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
                 <i class="ph ph-book-open text-xl"></i><span class="hidden lg:block text-sm">Docs & Resources</span>
             </button>
         </nav>
@@ -102,25 +276,58 @@
     </aside>
 
 
-    <main class="flex-1 flex flex-col min-w-0 relative h-full bg-pink-50">
+    <main class="flex-1 flex flex-col min-w-0 relative h-full app-bg theme-apply">
         
-        <header class="h-20 border-b border-pink-100 bg-white/90 backdrop-blur-md flex items-center justify-between px-6 z-30 flex-shrink-0 shadow-sm">
+        <header class="h-20 border-b nav-skin backdrop-blur-md flex items-center justify-between px-6 z-30 flex-shrink-0 shadow-sm" role="navigation" aria-label="Primary">
             <div class="flex items-center gap-3">
-                <h1 id="page-title" class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-snug text-slate-900">OncoCare Dashboard</h1>
-                <span class="px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-[10px] font-bold text-pink-600 uppercase tracking-wide flex items-center space-x-2">
+                <h1 id="page-title" class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-snug" style="color: var(--text)">OncoCare Dashboard</h1>
+                <span class="px-3 py-1 rounded-full btn-skin text-[10px] font-bold uppercase tracking-wide flex items-center space-x-2">
                     <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" aria-hidden="true">
-                        <path fill="#db2777" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
+                        <path fill="var(--brand-primary)" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
                     </svg>
-                    <span>Octobre Rose</span>
+                    <span class="text-primary">Octobre Rose</span>
                 </span>
             </div>
             <div class="flex items-center gap-4">
-                <button class="relative text-slate-400 hover:text-pink-600 transition">
-                    <i class="ph ph-bell text-xl"></i>
-                    <span class="absolute top-0 right-0 h-2 w-2 bg-pink-500 rounded-full ring-2 ring-white"></span>
+                <nav class="hidden md:flex items-center gap-1">
+                    <button onclick="router('dashboard')" id="top-nav-dashboard" data-view="dashboard" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-squares-four"></i> <span class="ml-1">Dashboard</span></button>
+                    <button onclick="router('model1')" id="top-nav-model1" data-view="model1" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-microscope"></i> <span class="ml-1">Cellular</span></button>
+                    <button onclick="router('model2')" id="top-nav-model2" data-view="model2" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-chart-line-up"></i> <span class="ml-1">Prognosis</span></button>
+                    <button onclick="router('docs')" id="top-nav-docs" data-view="docs" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-book-open"></i> <span class="ml-1">Docs</span></button>
+                </nav>
+                <button id="themeToggle" class="theme-toggle transition" aria-label="Toggle theme" role="switch" aria-checked="false" onclick="toggleTheme()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTheme();}">
+                    <div class="theme-toggle-knob bg-white shadow">
+                        <i id="themeIcon" class="ph ph-sun text-yellow-500"></i>
+                    </div>
+                </button>
+                <button class="nav-link px-2 py-2 rounded-lg transition opacity-50 cursor-not-allowed" aria-label="Sign out (coming soon)" aria-disabled="true" tabindex="-1" title="Coming soon">
+                    <i class="ph ph-sign-out text-xl icon-skin"></i>
+                </button>
+                <button id="btnMobileMenu" class="md:hidden h-10 w-10 rounded-lg border border-pink-200 text-slate-600 hover:bg-pink-50 transition grid place-items-center" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">
+                    <i class="ph ph-list"></i>
                 </button>
             </div>
         </header>
+        <div class="theme-switch-overlay"></div>
+        <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-pink-500 to-rose-600 hidden" role="dialog" aria-label="Welcome">
+            <div class="text-center px-6 animate-fadein">
+                <blockquote class="font-serif text-3xl md:text-5xl text-white mb-6 leading-tight">
+                    "Hope is stronger than fear.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-white">Early detection saves lives.</span>"
+                </blockquote>
+                <button id="intro-enter" class="mt-2 px-6 py-3 rounded-xl bg-white text-pink-600 font-bold shadow-lg shadow-pink-300 hover:scale-105 focus:ring-2 focus:ring-white transition inline-flex items-center gap-2 animate-slideup" aria-label="Enter dashboard">
+                    <i class="ph ph-arrow-up"></i> Enter Dashboard
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden absolute top-20 left-0 right-0 surface nav-divider border-b shadow-sm hidden z-40">
+            <div class="px-4 py-3 grid grid-cols-1 gap-2">
+                <button onclick="router('dashboard');toggleMobileMenu(false)" data-view="dashboard" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-squares-four"></i> Dashboard</button>
+                <button onclick="router('model1');toggleMobileMenu(false)" data-view="model1" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-microscope"></i> Cellular Analysis</button>
+                <button onclick="router('model2');toggleMobileMenu(false)" data-view="model2" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-chart-line-up"></i> Clinical Prognosis</button>
+                <button onclick="router('docs');toggleMobileMenu(false)" data-view="docs" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-book-open"></i> Docs & Resources</button>
+            </div>
+        </div>
 
         <div class="flex-1 overflow-y-auto p-6 scroll-smooth relative">
 
@@ -243,31 +450,58 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-2xl border border-pink-200 shadow-sm overflow-hidden">
-                        <div class="p-6 border-b border-pink-100">
-                            <h3 class="font-display text-lg font-bold text-slate-900">Clinical Outcomes (Under Construction)</h3>
+                        <div class="p-6 border-b border-pink-100 flex items-center justify-between">
+                            <h3 class="font-display text-lg font-bold text-slate-900">Saved Prognosis Predictions</h3>
                         </div>
-                        <div class="p-6">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-slate-500">5 per page</span>
+                                <button id="prg-prev" class="px-2 py-1 text-[10px] rounded border border-pink-200 bg-white text-slate-700">Prev</button>
+                                <button id="prg-next" class="px-2 py-1 text-[10px] rounded border border-pink-200 bg-white text-slate-700">Next</button>
+                                <span class="text-[10px] text-slate-500">Page <span id="prg-page">1</span>/<span id="prg-pages">1</span></span>
+                            </div>
                             <div class="overflow-auto border border-pink-100 rounded-xl">
                                 <table class="w-full text-xs text-left table-xs">
                                     <thead class="bg-pink-50 text-pink-900 font-semibold border-b border-pink-100">
                                         <tr>
-                                            <th class="px-3 py-2">ID</th>
-                                            <th class="px-3 py-2">Metric</th>
-                                            <th class="px-3 py-2">Value</th>
+                                            <th class="px-3 py-2">Patient</th>
+                                            <th class="px-3 py-2">Aggressiveness</th>
+                                            <th class="px-3 py-2">Growth Rate</th>
+                                            <th class="px-3 py-2">Evolution (6m)</th>
+                                            <th class="px-3 py-2">Time</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-pink-100 bg-white text-xs">
-                                        <tr><td class="px-3 py-2" colspan="3" class="text-slate-500">No data yet</td></tr>
-                                    </tbody>
+                                    <tbody id="prg-table-body" class="divide-y divide-pink-100 bg-white"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <footer class="surface nav-divider border-t mt-10" aria-label="Development Team">
+                    <div class="px-6 py-6 text-center">
+                        <p class="font-display text-sm" style="color: var(--text)">Development Team</p>
+                        <p class="text-xs" style="color: var(--text-muted)">Yasmine Chebbi • Marwen Jnen • Malek Kammoun • Maram Chebbi</p>
+                    </div>
+                </footer>
+        </div>
 
-            <div id="view-model1" class="page-view">
-                
+        <div id="view-model1" class="page-view">
+                <div class="rounded-2xl overflow-hidden border border-pink-200 shadow-sm mb-6">
+                    <div class="p-8 bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white relative">
+                        <div class="absolute right-4 top-4 opacity-30">
+                            <i class="ph ph-microscope text-6xl"></i>
+                        </div>
+                        <div class="relative z-10 grid grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-6">
+                            <div class="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 grid place-items-center hover:scale-105 transition">
+                                <i class="ph ph-microscope text-2xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-display text-2xl md:text-3xl font-bold">Cellular Analysis</h2>
+                                <p class="text-pink-100 text-sm">Cytology-based diagnostic model with explainability</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="flex gap-4 border-b border-pink-200 mb-6">
                     <button onclick="switchSubTab('tab-single')" id="btn-tab-single" class="tab-btn pb-3 px-1 text-sm font-semibold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition">
                         <i class="ph ph-user mr-1"></i> Single Patient
@@ -366,7 +600,7 @@
 
                         <div id="batch-results-container" class="hidden flex flex-col gap-4">
                             
-                            <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl border border-pink-200 shadow-sm sticky top-0 z-10">
+                            <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl border border-pink-200 shadow-sm sticky top-0 z-10" aria-label="Batch controls">
                                 <div class="flex items-center gap-3">
                                     <div class="flex items-center gap-2 px-3 py-2 bg-pink-50 rounded-lg border border-pink-200">
                                         <i class="ph ph-funnel text-pink-400"></i>
@@ -421,47 +655,315 @@
             </div>
 
             <div id="view-model2" class="page-view">
-                <div class="h-full min-h-[400px] flex items-center justify-center">
-                    <div class="text-center p-8 bg-white rounded-2xl border border-rose-200 shadow-sm max-w-md">
-                        <i class="ph ph-cone text-6xl text-rose-500 mb-4 inline-block"></i>
-                        <h2 class="text-xl font-bold text-slate-800">Under Construction</h2>
-                        <p class="text-sm text-slate-500 mt-2">The clinical prognosis model is currently being developed.</p>
+                <div class="space-y-6">
+                    <div class="rounded-2xl overflow-hidden border border-rose-200 shadow-sm">
+                        <div class="p-8 bg-gradient-to-r from-rose-500 to-pink-600 text-white relative">
+                            <div class="absolute right-4 top-4 opacity-30">
+                                <i class="ph ph-brain text-6xl"></i>
+                            </div>
+                            <div class="relative z-10 grid grid-cols-1 md:grid-cols-[auto,1fr,auto] items-center gap-6">
+                                <div class="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 grid place-items-center hover:scale-105 transition">
+                                    <i class="ph ph-dna text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="font-display text-2xl md:text-3xl font-bold">Clinical Prognosis</h2>
+                                    <p class="text-rose-100 text-sm">Modern analysis of clinical and genomic factors with guided flow</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button id="btnPrognosisHelp" class="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition" aria-controls="mb-help-popover" aria-expanded="false" aria-label="Help">
+                                        <i class="ph ph-question"></i>
+                                    </button>
+                                    <div class="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-xs">A/B: <span id="abVariantLabel">A</span></div>
+                                </div>
+                            </div>
+                            <div class="mt-6 grid grid-cols-3 gap-3">
+                                <div class="px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-center">
+                                    <div class="text-[10px] uppercase font-bold text-rose-100">Step 1</div>
+                                    <div class="text-sm font-bold">Inputs</div>
+                                </div>
+                                <div class="px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-center">
+                                    <div class="text-[10px] uppercase font-bold text-rose-100">Step 2</div>
+                                    <div class="text-sm font-bold">Analyze</div>
+                                </div>
+                                <div class="px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-center">
+                                    <div class="text-[10px] uppercase font-bold text-rose-100">Step 3</div>
+                                    <div class="text-sm font-bold">Results</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="mb-help-popover" class="hidden p-4 surface border-t border-rose-100">
+                            <div class="flex items-start gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-rose-50 text-rose-600 grid place-items-center"><i class="ph ph-info"></i></div>
+                                <div class="text-sm text-slate-700">
+                                    Use Batch for CSV analysis or Single for focused prognosis. Hover controls for tips. Buttons provide exports, save options, and layout variants.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 border-b border-rose-200 mb-6 bg-rose-50/30 rounded-t-xl p-1">
+                        <button onclick="switchSubTab('mb-tab-single')" id="btn-mb-tab-single" class="prognosis-tab active flex-1 flex items-center justify-center gap-2">
+                            <i class="ph ph-user-circle"></i>
+                            <span class="font-semibold">Single Prognosis</span>
+                        </button>
+                        <button onclick="switchSubTab('mb-tab-batch')" id="btn-mb-tab-batch" class="prognosis-tab flex-1 flex items-center justify-center gap-2">
+                            <i class="ph ph-users-three"></i>
+                            <span class="font-semibold">Batch Analysis</span>
+                        </button>
+                    </div>
+                    
+                    <div id="mb-tab-single" class="tab-content space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)] gap-0">
+                            <div class="space-y-6">
+                                <div class="prognosis-card p-6">
+                                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                                        <div class="flex items-center gap-3">
+                                            <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center">
+                                                <i class="ph ph-user text-rose-600 text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-slate-800 text-lg">Patient Profile</h3>
+                                                <div class="flex items-center gap-3 mt-1">
+                                                    <input id="mb-patient-id" type="text" class="prognosis-input px-4 py-2 text-sm w-48" placeholder="Enter Patient ID">
+                                                    <span class="feature-chip low"><i class="ph ph-clock"></i> New Patient</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="loadMetabricInfo()" class="px-4 py-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 transition flex items-center gap-2">
+                                                <i class="ph ph-dna"></i> Load Sample
+                                            </button>
+                                            <button onclick="mbClearInputs()" class="px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition flex items-center gap-2">
+                                                <i class="ph ph-eraser"></i> Clear
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-6">
+                                        <div class="relative">
+                                            <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                                            <input id="mb-input-search" type="text" class="prognosis-input w-full pl-10 pr-4 py-3" placeholder="Search clinical features...">
+                                        </div>
+                                    </div>
+                                    <div id="mb-error" class="hidden p-4 rounded-xl border border-red-200 bg-red-50 text-sm font-medium text-red-700 mb-4"></div>
+                                    <div class="mb-4 flex items-center justify-between">
+                                        <h4 class="font-semibold text-slate-700 flex items-center gap-2">
+                                            <i class="ph ph-list-checks text-rose-600"></i>
+                                            Clinical Features
+                                            <span id="mb-feature-count" class="bg-rose-100 text-rose-700 text-xs px-2 py-1 rounded-full">--</span>
+                                        </h4>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs text-slate-500">Essential</span>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" id="mb-toggle-advanced" class="sr-only peer">
+                                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500"></div>
+                                            </label>
+                                            <span class="text-xs text-slate-500">Advanced</span>
+                                        </div>
+                                    </div>
+                                    <div id="mb-inputs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-h-96 overflow-y-auto p-2 prognosis-scroll"></div>
+                                    <div class="mb-6">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-slate-700">Form Completion</span>
+                                            <span id="mb-completion-percent" class="text-sm font-bold text-rose-600">0%</span>
+                                        </div>
+                                        <div class="prognosis-progress">
+                                            <div id="mb-completion-bar" class="prognosis-progress-fill" style="width:0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="space-y-6 lg:flex lg:justify-end">
+                                <div class="prognosis-sidebar space-y-3">
+                                    <div class="prognosis-card p-4">
+                                        <button id="btnRunMetabricPredict" onclick="runMetabricPredict()" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-rose-200 transition-all flex items-center justify-center gap-3">
+                                            <i class="ph ph-play-circle text-xl"></i> Run Prediction Analysis
+                                        </button>
+                                    </div>
+                                <div id="mb-results" class="hidden prognosis-card p-5">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-graph"></i>Prediction Summary</h4>
+                                        <button onclick="mbResetResults()" class="px-3 py-1 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><i class="ph ph-arrow-counter-clockwise"></i></button>
+                                    </div>
+                                    <div class="metric-block">
+                                        <div class="metric-label">Aggressiveness Score</div>
+                                        <div class="flex items-center justify-between mt-1">
+                                            <div id="pr-aggr-val" class="metric-value">--/10</div>
+                                            <span id="pr-aggr-badge" class="metric-badge"><i class="ph ph-circle"></i><span id="pr-aggr-label">—</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-sep"></div>
+                                    <div class="metric-block">
+                                        <div class="metric-label">Growth Rate</div>
+                                        <div class="flex items-center justify-between mt-1">
+                                            <div id="pr-growth-val" class="metric-value">--%/month</div>
+                                            <span id="pr-growth-dir" class="metric-badge"><i class="ph ph-arrow-right"></i><span>Neutral</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-sep"></div>
+                                    <div class="metric-block">
+                                        <div class="metric-label">Evaluation</div>
+                                        <div class="flex items-center justify-between mt-1">
+                                            <div id="pr-eval-val" class="metric-value">—</div>
+                                            <span id="pr-eval-badge" class="metric-badge"><i class="ph ph-megaphone"></i><span id="pr-eval-label">—</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-sep"></div>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-slate-600">Risk Class</span>
+                                            <span id="pr-risk-class" class="text-xs font-mono text-slate-800">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="prognosis-card p-6">
+                                        <h4 class="font-bold text-slate-800 mb-4">Quick Actions</h4>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <button onclick="exportPrognosisPDF()" class="p-3 rounded-lg border border-slate-200 hover:border-rose-300 hover:bg-rose-50 transition flex flex-col items-center gap-2"><i class="ph ph-file-pdf text-rose-600 text-xl"></i><span class="text-xs font-medium">Export PDF</span></button>
+                                            <button onclick="exportPrognosisExcel()" class="p-3 rounded-lg border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 transition flex flex-col items-center gap-2"><i class="ph ph-file-xls text-emerald-600 text-xl"></i><span class="text-xs font-medium">Export Excel</span></button>
+                                            <button onclick="savePrognosisToDB(this)" class="p-3 rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition flex flex-col items-center gap-2"><i class="ph ph-database text-blue-600 text-xl"></i><span class="text-xs font-medium">Save to DB</span></button>
+                                            <button onclick="toggleLayoutVariant()" class="p-3 rounded-lg border border-slate-200 hover:border-purple-300 hover:bg-purple-50 transition flex flex-col items-center gap-2"><i class="ph ph-squares-four text-purple-600 text-xl"></i><span class="text-xs font-medium">Layout</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div id="mb-tab-batch" class="tab-content active">
+                        <div class="grid grid-cols-1 gap-4">
+                            <div id="mb-upload-box" class="bg-white rounded-xl border-2 border-dashed border-rose-200 p-12 text-center hover:border-rose-400 hover:bg-rose-50/30 transition cursor-pointer" onclick="metabricTriggerUpload()">
+                                <div class="h-20 w-20 rounded-full bg-rose-50 text-rose-400 mx-auto flex items-center justify-center mb-4">
+                                    <i class="ph ph-file-csv text-3xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Upload METABRIC CSV Batch</h3>
+                                <p class="text-sm text-slate-500 mt-2">Click to upload and analyze clinical records</p>
+                            </div>
+                            <input type="file" id="mbCsvInput" accept=".csv" class="hidden">
+                            
+                            <div id="mb-batch-results" class="hidden bg-white rounded-xl border border-rose-200 shadow-sm overflow-hidden">
+                                <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 border-b border-rose-100">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex items-center gap-2 px-3 py-2 bg-rose-50 rounded-lg border border-rose-200">
+                                            <i class="ph ph-funnel text-rose-400"></i>
+                                            <span class="text-xs font-bold text-rose-600 uppercase">Filters</span>
+                                        </div>
+                                        <select id="mb-filter-class" onchange="mbFilterTable()" class="bg-white border border-rose-200 text-slate-700 text-sm rounded-lg focus:ring-rose-500 focus:border-rose-500 p-2 outline-none">
+                                            <option value="all">Class: All</option>
+                                            <option value="0">Class 0</option>
+                                            <option value="1">Class 1</option>
+                                            <option value="2">Class 2</option>
+                                        </select>
+                                        <div class="flex items-center gap-2">
+                                            <input id="mb-min-aggr" type="number" step="0.1" placeholder="Min Agg" class="bg-white border border-rose-200 text-slate-700 text-sm rounded-lg p-2 w-28" oninput="mbFilterTable()" title="Min aggressiveness" />
+                                            <input id="mb-max-aggr" type="number" step="0.1" placeholder="Max Agg" class="bg-white border border-rose-200 text-slate-700 text-sm rounded-lg p-2 w-28" oninput="mbFilterTable()" title="Max aggressiveness" />
+                                            <div class="flex items-center gap-1">
+                                                <button onclick="mbSetAggRange('low')" class="px-2 py-1 text-[10px] rounded border border-rose-200 bg-rose-50 text-rose-600">Low</button>
+                                                <button onclick="mbSetAggRange('med')" class="px-2 py-1 text-[10px] rounded border border-rose-200 bg-amber-50 text-amber-700">Med</button>
+                                                <button onclick="mbSetAggRange('high')" class="px-2 py-1 text-[10px] rounded border border-rose-200 bg-rose-100 text-rose-700">High</button>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <input id="mb-min-growth" type="number" step="0.1" placeholder="Min Growth (%)" class="bg-white border border-rose-200 text-slate-700 text-sm rounded-lg p-2 w-36" oninput="mbFilterTable()" title="Min growth rate (%)" />
+                                            <input id="mb-max-growth" type="number" step="0.1" placeholder="Max Growth (%)" class="bg-white border border-rose-200 text-slate-700 text-sm rounded-lg p-2 w-36" oninput="mbFilterTable()" title="Max growth rate (%)" />
+                                            <div class="flex items-center gap-1">
+                                                <button onclick="mbSetGrowthRange('low')" class="px-2 py-1 text-[10px] rounded border border-rose-200 bg-rose-50 text-rose-600">Low</button>
+                                                <button onclick="mbSetGrowthRange('med')" class="px-2 py-1 text-[10px] rounded border border-rose-200 bg-amber-50 text-amber-700">Med</button>
+                                                <button onclick="mbSetGrowthRange('high')" class="px-2 py-1 text-[10px] rounded border border-rose-200 bg-rose-100 text-rose-700">High</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="mbResetFilters()" class="text-xs font-bold text-slate-700 bg-white px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><i class="ph ph-arrow-counter-clockwise"></i> Reset</button>
+                                        <button onclick="mbShowMore()" class="text-xs font-bold text-rose-600 bg-white px-3 py-1.5 rounded-lg border border-rose-200 hover:bg-rose-50 transition"><i class="ph ph-list-magnifying-glass"></i> Show more</button>
+                                        <button onclick="mbSaveToDB(this)" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded-lg shadow-lg shadow-rose-200 transition flex items-center gap-2">
+                                            <i class="ph ph-database"></i> Add to Database
+                                        </button>
+                                        <button onclick="metabricTriggerUpload()" class="text-xs font-bold text-slate-700 bg-white px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><i class="ph ph-upload-simple"></i> Upload New Batch</button>
+                                        <div class="flex items-center gap-1">
+                                            <button id="mb-prev" onclick="mbPrevPage()" class="px-2 py-1 text-[10px] rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" aria-label="Previous page"><i class="ph ph-caret-left"></i></button>
+                                            <span id="mb-page-ind" class="text-xs font-mono text-slate-600 px-2 py-1 border border-slate-200 rounded">Page 1 / 1</span>
+                                            <button id="mb-next" onclick="mbNextPage()" class="px-2 py-1 text-[10px] rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" aria-label="Next page"><i class="ph ph-caret-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead class="bg-rose-50 text-rose-900 text-xs font-bold uppercase border-b border-rose-200">
+                                            <tr>
+                                                <th class="px-6 py-4">Row</th>
+                                                <th class="px-6 py-4">Aggressiveness</th>
+                                                <th class="px-6 py-4">Growth Rate</th>
+                                                <th class="px-6 py-4">Evolution (6m)</th>
+                                                <th class="px-6 py-4 text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mb-batch-table-body" class="text-sm text-slate-600 divide-y divide-rose-100"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="mb-batch-skeleton" class="hidden border border-rose-200 rounded-xl overflow-hidden">
+                                <div class="p-4 bg-white border-b border-rose-100"></div>
+                                <div class="p-4 space-y-3 bg-white">
+                                    <div class="h-6 w-full shimmer rounded"></div>
+                                    <div class="h-6 w-full shimmer rounded"></div>
+                                    <div class="h-6 w-3/4 shimmer rounded"></div>
+                                    <div class="h-6 w-1/2 shimmer rounded"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="view-docs" class="page-view">
                 <div class="space-y-6">
-                    <div class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
-                        <div class="p-6 border-b border-pink-100 flex items-center justify-between">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
                             <h2 class="font-display text-xl font-bold text-slate-900">Documentation & Resources</h2>
-                            <span class="px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-[10px] font-bold text-pink-600 uppercase tracking-wide">WBCD Model</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-[10px] font-bold text-slate-700 uppercase tracking-wide">WBCD Model</span>
                         </div>
                         <div class="p-6">
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 <div class="lg:col-span-2">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div class="bg-pink-50 rounded-xl p-6 border border-pink-100">
-                                            <div class="text-xs font-bold text-pink-500 uppercase">Accuracy</div>
+                                        <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                                            <div class="text-xs font-bold text-slate-600 uppercase">Accuracy</div>
                                             <div id="doc-acc" class="text-3xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
                                         </div>
-                                        <div class="bg-pink-50 rounded-xl p-6 border border-pink-100">
-                                            <div class="text-xs font-bold text-pink-500 uppercase">Error Rate</div>
-                                            <div id="doc-error" class="text-3xl font-mono numeric font-bold text-rose-600 mt-1">--%</div>
+                                        <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                                            <div class="text-xs font-bold text-slate-600 uppercase">Error Rate</div>
+                                            <div id="doc-error" class="text-3xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                                        <div class="text-xs font-bold text-slate-600 uppercase">Aggressiveness R2</div>
+                                        <div id="doc-mb-aggr-r2" class="text-2xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
+                                    </div>
+                                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                                        <div class="text-xs font-bold text-slate-600 uppercase">Growth Rate R2</div>
+                                        <div id="doc-mb-grow-r2" class="text-2xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
+                                    </div>
+                                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                                        <div class="text-xs font-bold text-slate-600 uppercase">Evolution 6m Accuracy</div>
+                                        <div id="doc-mb-evol-acc" class="text-2xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
-                        <div class="p-6 border-b border-pink-100">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-200">
                             <h3 class="font-display text-lg font-bold text-slate-900">Actions & References</h3>
                         </div>
                         <div class="p-6">
                             <ul id="doc-actions" class="list-disc list-inside text-sm text-slate-700 space-y-1"></ul>
                             <div class="mt-6">
-                                <div class="text-xs font-bold text-pink-500 uppercase mb-3">Clinical Sources</div>
+                                <div class="text-xs font-bold text-slate-600 uppercase mb-3">Clinical Sources</div>
                                 <ul id="doc-sources" class="list-disc list-inside text-sm text-slate-700 space-y-1"></ul>
                             </div>
                         </div>
@@ -472,15 +974,15 @@
     </main>
 
 
-    <div id="slide-overlay" class="overlay fixed inset-0 bg-slate-900/50 z-40 backdrop-blur-sm" onclick="closeDetails()"></div>
+    <div id="slide-overlay" class="overlay fixed inset-0 bg-slate-900/50 z-40 backdrop-blur-sm" aria-hidden="true" onclick="closeDetails()"></div>
     
-    <div id="patient-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-pink-200 flex flex-col">
+    <div id="patient-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-pink-200 flex flex-col" role="dialog" aria-modal="true" aria-labelledby="patient-slideover-title">
         <div class="px-6 py-4 border-b border-pink-100 flex justify-between items-center bg-pink-50/50 sticky top-0 z-10">
             <div>
-                <h3 class="font-display font-bold text-lg text-slate-800">Patient Details</h3>
+                <h3 id="patient-slideover-title" class="font-display font-bold text-lg text-slate-800">Patient Details</h3>
                 <p id="detail-id" class="text-xs font-mono text-slate-500">#---</p>
             </div>
-            <button onclick="closeDetails()" class="h-8 w-8 rounded-full bg-white border border-pink-200 text-slate-500 hover:text-pink-600 hover:border-pink-300 flex items-center justify-center transition">
+            <button onclick="closeDetails()" aria-label="Close patient details" class="h-8 w-8 rounded-full bg-white border border-pink-200 text-slate-500 hover:text-pink-600 hover:border-pink-300 flex items-center justify-center transition">
                 <i class="ph ph-x"></i>
             </button>
         </div>
@@ -514,16 +1016,55 @@
             </div>
 
             <div>
-                <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
-                    <i class="ph ph-list-magnifying-glass text-pink-600"></i> Feature Analysis (Top 5)
-                </h4>
-                <div class="border border-pink-200 rounded-xl overflow-hidden">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-pink-50 text-pink-900 text-xs font-semibold">
-                            <tr><th class="px-4 py-2">Metric</th><th class="px-4 py-2">Value</th><th class="px-4 py-2">Impact</th></tr>
-                        </thead>
-                        <tbody id="detail-features-body" class="divide-y divide-pink-100 bg-white"></tbody>
-                    </table>
+                <div class="flex gap-1 border-b border-pink-200 mb-3 bg-pink-50/30 rounded-t-xl p-1">
+                    <button onclick="patientSwitchTab('pt-tab-summary')" id="pt-btn-summary" class="prognosis-tab active flex-1 flex items-center justify-center gap-2">
+                        <i class="ph ph-identification-badge"></i>
+                        <span class="font-semibold">Summary</span>
+                    </button>
+                    <button onclick="patientSwitchTab('pt-tab-features')" id="pt-btn-features" class="prognosis-tab flex-1 flex items-center justify-center gap-2">
+                        <i class="ph ph-list-magnifying-glass"></i>
+                        <span class="font-semibold">Features</span>
+                    </button>
+                    <button onclick="patientSwitchTab('pt-tab-actions')" id="pt-btn-actions" class="prognosis-tab flex-1 flex items-center justify-center gap-2">
+                        <i class="ph ph-clipboard-text"></i>
+                        <span class="font-semibold">Actions</span>
+                    </button>
+                </div>
+                <div id="pt-tab-summary" class="tab-content active space-y-3">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-3 rounded-xl border border-pink-200 bg-white">
+                            <div class="text-[10px] font-bold text-pink-600 uppercase">Risk</div>
+                            <div id="detail-risk-badge" class="mt-1 text-xs font-bold"></div>
+                        </div>
+                        <div class="p-3 rounded-xl border border-pink-200 bg-white">
+                            <div class="text-[10px] font-bold text-pink-600 uppercase">Probability</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span id="detail-prob-label" class="font-mono text-xs text-slate-700">--%</span>
+                                <div class="h-1.5 w-24 bg-pink-100 rounded-full overflow-hidden">
+                                    <div id="detail-prob-bar" class="h-full bg-pink-500" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="pt-tab-features" class="tab-content hidden">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                        <i class="ph ph-list-magnifying-glass text-pink-600"></i> Feature Analysis (Top 6)
+                    </h4>
+                    <div class="border border-pink-200 rounded-xl overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-pink-50 text-pink-900 text-xs font-semibold">
+                                <tr><th class="px-4 py-2">Metric</th><th class="px-4 py-2">Value</th><th class="px-4 py-2">Impact</th></tr>
+                            </thead>
+                            <tbody id="detail-features-body" class="divide-y divide-pink-100 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pt-tab-actions" class="tab-content hidden">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                        <i class="ph ph-clipboard-text text-pink-600"></i> Recommended Actions
+                    </h4>
+                    <ul id="detail-actions-list" class="list-disc pl-5 text-sm text-slate-700 space-y-1"></ul>
                 </div>
             </div>
         </div>
@@ -541,16 +1082,54 @@
         </div>
     </div>
 
-    <div id="dbp-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-pink-200 flex flex-col">
+    <div id="prognosis-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-rose-200 flex flex-col" role="dialog" aria-modal="true" aria-labelledby="prognosis-slideover-title">
+        <div class="px-6 py-4 border-b border-rose-100 flex justify-between items-center bg-rose-50/50 sticky top-0 z-10">
+            <div>
+                <h3 id="prognosis-slideover-title" class="font-display font-bold text-lg text-slate-800">Prognosis Details</h3>
+                <p id="prog-id" class="text-xs font-mono text-slate-500">#---</p>
+            </div>
+            <button onclick="closePrognosisDetails()" aria-label="Close prognosis details" class="h-8 w-8 rounded-full bg-white border border-rose-200 text-slate-500 hover:text-rose-600 hover:border-rose-300 flex items-center justify-center transition" title="Close">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+        <div class="p-6 space-y-6">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl border border-rose-200 bg-rose-50">
+                    <p class="text-xs font-bold text-rose-600 uppercase">Aggressiveness</p>
+                    <p id="prog-aggr" class="font-mono text-slate-700 mt-1">--</p>
+                </div>
+                <div class="p-4 rounded-xl border border-rose-200 bg-rose-50">
+                    <p class="text-xs font-bold text-rose-600 uppercase">Growth Rate</p>
+                    <p id="prog-growth" class="font-mono text-slate-700 mt-1">--</p>
+                </div>
+                <div class="p-4 rounded-xl border border-rose-200 bg-rose-50">
+                    <p class="text-xs font-bold text-rose-600 uppercase">Evolution (6m)</p>
+                    <p id="prog-evol" class="font-mono text-slate-700 mt-1">--</p>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-rose-100 mt-auto bg-rose-50/30 grid grid-cols-3 gap-3">
+            <button onclick="exportPrognosisPDF()" class="py-2.5 rounded-lg border border-rose-200 bg-white text-slate-700 font-bold text-sm hover:border-rose-500 hover:text-rose-600 transition flex items-center justify-center gap-2" title="Export PDF">
+                <i class="ph ph-file-pdf text-lg"></i> PDF
+            </button>
+            <button onclick="exportPrognosisExcel()" class="py-2.5 rounded-lg border border-rose-200 bg-white text-slate-700 font-bold text-sm hover:border-emerald-500 hover:text-emerald-600 transition flex items-center justify-center gap-2" title="Export Excel">
+                <i class="ph ph-file-xls text-lg"></i> Excel
+            </button>
+            <button onclick="closePrognosisDetails()" class="py-2.5 rounded-lg border border-rose-200 bg-white text-slate-700 font-bold text-sm hover:border-rose-500 hover:text-rose-600 transition flex items-center justify-center gap-2" title="Close">
+                <i class="ph ph-x-circle text-lg"></i> Close
+            </button>
+        </div>
+    </div>
+    <div id="dbp-slideover" class="slide-over fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto border-l border-pink-200 flex flex-col" role="dialog" aria-modal="true" aria-labelledby="dbp-slideover-title">
         <div class="px-6 py-4 border-b border-pink-100 flex justify-between items-center bg-pink-50/50 sticky top-0 z-10">
             <div>
-                <h3 class="font-display font-bold text-lg text-slate-800">Saved Patient Details</h3>
+                <h3 id="dbp-slideover-title" class="font-display font-bold text-lg text-slate-800">Saved Patient Details</h3>
                 <p id="dbp-detail-id" class="text-xs font-mono text-slate-500">#---</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="dbpExportCSV()" class="h-8 px-3 rounded bg-white border border-pink-200 text-slate-700 text-xs">CSV</button>
                 <button onclick="dbpExportPDF()" class="h-8 px-3 rounded bg-white border border-pink-200 text-slate-700 text-xs">PDF</button>
-                <button onclick="closeDbpDetails()" class="h-8 w-8 rounded-full bg-white border border-pink-200 text-slate-500 hover:text-pink-600 hover:border-pink-300 flex items-center justify-center transition">
+                <button onclick="closeDbpDetails()" aria-label="Close saved patient details" class="h-8 w-8 rounded-full bg-white border border-pink-200 text-slate-500 hover:text-pink-600 hover:border-pink-300 flex items-center justify-center transition">
                     <i class="ph ph-x"></i>
                 </button>
             </div>
@@ -596,52 +1175,263 @@
 
 
 <script>
-    // --- ROUTER SYSTEM ---
     function router(viewId) {
         document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
-        
         const target = document.getElementById('view-' + viewId);
         if(target) target.classList.add('active');
-
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('.nav-btn,.nav-link').forEach(btn => {
             btn.classList.remove('bg-pink-50', 'text-pink-600', 'bg-rose-50', 'text-rose-600');
-            btn.classList.add('text-slate-500');
-        });
-        
-        const activeNav = document.getElementById('nav-' + viewId);
-        if(activeNav) {
-            activeNav.classList.remove('text-slate-500');
-            if(viewId === 'model2') {
-                activeNav.classList.add('bg-rose-50', 'text-rose-600');
-            } else {
-                activeNav.classList.add('bg-pink-50', 'text-pink-600');
+            btn.classList.remove('active');
+            btn.removeAttribute('aria-current');
+            const v = btn.getAttribute('data-view');
+            if (v === viewId) {
+                btn.classList.add('active');
+                btn.setAttribute('aria-current', 'page');
             }
-        }
-
-        const titles = { 
-            'dashboard': "OncoCare Dashboard", 
-            'model1': "Cellular Analysis", 
-            'model2': "Clinical Prognosis",
-            'docs': "Documentation & Resources"
-        };
+        });
+        const titles = { 'dashboard': "OncoCare Dashboard", 'model1': "Cellular Analysis", 'model2': "Clinical Prognosis", 'docs': "Documentation & Resources" };
         document.getElementById('page-title').innerText = titles[viewId] || "OncoCare";
         if(viewId === 'docs') loadDocs();
-        if(viewId === 'dashboard') loadSavedBatchSimple();
+        if(viewId === 'dashboard') { loadSavedBatchSimple(); loadSavedPrognosisSimple(); }
+        if(viewId === 'model1') { try { switchSubTab('tab-batch'); } catch (_) {} }
+        if(viewId === 'model2') { try { ensureMetabricInitialized(); loadMetabricEvaluate(); switchSubTab('mb-tab-batch'); } catch (_) {} }
+        toggleMobileMenu(false);
     }
 
     // --- TAB MANAGEMENT ---
     function switchSubTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('text-pink-600', 'border-pink-600');
-            btn.classList.add('text-slate-500', 'border-transparent');
-        });
-        
+        document.getElementById('mb-tab-single')?.classList.add('hidden');
+        document.getElementById('mb-tab-batch')?.classList.add('hidden');
+        document.getElementById(tabId)?.classList.remove('hidden');
+        document.querySelectorAll('.prognosis-tab').forEach(b => b.classList.remove('active'));
         const btn = document.getElementById('btn-' + tabId);
-        btn.classList.remove('text-slate-500', 'border-transparent');
-        btn.classList.add('text-pink-600', 'border-pink-600');
+        if (btn) btn.classList.add('active');
+    }
+    function toggleTheme() {
+        const html = document.documentElement;
+        const cur = html.getAttribute('data-theme') || 'auto';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (_) {}
+        const icon = document.getElementById('themeIcon');
+        if (icon) { icon.className = next === 'dark' ? 'ph ph-moon icon-skin' : 'ph ph-sun text-yellow-500'; }
+        const toggle = document.getElementById('themeToggle');
+        if (toggle) { toggle.setAttribute('aria-checked', String(next === 'dark')); }
+        document.body.classList.add('theme-switching');
+        setTimeout(() => { document.body.classList.remove('theme-switching'); }, 300);
+    }
+    function initTheme() {
+        let pref = null;
+        try { pref = localStorage.getItem('theme'); } catch (_) {}
+        if (!pref) {
+            const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            pref = mq ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', pref);
+        const icon = document.getElementById('themeIcon');
+        if (icon) { icon.className = pref === 'dark' ? 'ph ph-moon icon-skin' : 'ph ph-sun text-yellow-500'; }
+        const toggle = document.getElementById('themeToggle');
+        if (toggle) { toggle.setAttribute('aria-checked', String(pref === 'dark')); }
+    }
+    function getVariant() {
+        try { return localStorage.getItem('mbVariant') || 'A'; } catch (_) { return 'A'; }
+    }
+    function setVariant(v) {
+        try { localStorage.setItem('mbVariant', v); } catch (_) {}
+        applyVariant(v);
+    }
+    function applyVariant(v) {
+        const label = document.getElementById('abVariantLabel');
+        if (label) label.textContent = v;
+        const res = document.getElementById('mb-results');
+        if (res) {
+            if (v === 'B') {
+                res.classList.remove('shadow-xl');
+                res.classList.add('hover-lift');
+            } else {
+                res.classList.add('shadow-xl');
+                res.classList.remove('hover-lift');
+            }
+        }
+    }
+    function toggleLayoutVariant() {
+        const v = getVariant();
+        setVariant(v === 'A' ? 'B' : 'A');
+    }
+    function toggleHelpPopover() {
+        const pop = document.getElementById('mb-help-popover');
+        const btn = document.getElementById('btnPrognosisHelp');
+        if (!pop || !btn) return;
+        const open = pop.classList.contains('hidden');
+        if (open) {
+            pop.classList.remove('hidden');
+            btn.setAttribute('aria-expanded', 'true');
+        } else {
+            pop.classList.add('hidden');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    }
+    function mbShowSkeleton() {
+        const s = document.getElementById('mb-batch-skeleton');
+        const r = document.getElementById('mb-batch-results');
+        if (s && r) { s.classList.remove('hidden'); r.classList.add('hidden'); }
+    }
+    function mbHideSkeleton() {
+        const s = document.getElementById('mb-batch-skeleton');
+        const r = document.getElementById('mb-batch-results');
+        if (s && r) { s.classList.add('hidden'); r.classList.remove('hidden'); }
+    }
+    function initPrognosisUX() {
+        applyVariant(getVariant());
+        const btn = document.getElementById('btnPrognosisHelp');
+        if (btn) btn.addEventListener('click', toggleHelpPopover);
+    }
+    function toggleMobileMenu(force) {
+        const menu = document.getElementById('mobile-menu');
+        const btn = document.getElementById('btnMobileMenu');
+        if (!menu || !btn) return;
+        const open = typeof force === 'boolean' ? force : menu.classList.contains('hidden');
+        if (open) {
+            menu.classList.remove('hidden');
+            btn.setAttribute('aria-expanded', 'true');
+        } else {
+            menu.classList.add('hidden');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    }
+    function debounce(fn, ms) {
+        let t = null;
+        return function() {
+            const args = arguments;
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), ms);
+        };
+    }
+    window.addEventListener('resize', debounce(() => {
+        if (window.innerWidth >= 768) toggleMobileMenu(false);
+    }, 150));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') toggleMobileMenu(false);
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        initTheme();
+        runThemeTests();
+        renderStyleGuide();
+        initIntro();
+        initPrognosisUX();
+    });
+    /* VISUAL REGRESSION TESTS
+       Validates color consistency and contrast ratios for navbar components.
+       Results shown in console and minimal overlay.
+    */
+    function luminance(hex) {
+        hex = hex.replace('#','');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        const r = parseInt(hex.substr(0,2),16)/255;
+        const g = parseInt(hex.substr(2,2),16)/255;
+        const b = parseInt(hex.substr(4,2),16)/255;
+        const f = (c)=> c<=0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055,2.4);
+        return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b);
+    }
+    function contrast(hex1, hex2) {
+        const L1 = luminance(hex1), L2 = luminance(hex2);
+        const lighter = Math.max(L1,L2), darker = Math.min(L1,L2);
+        return (lighter + 0.05) / (darker + 0.05);
+    }
+    function cssVar(name) {
+        const cs = getComputedStyle(document.documentElement);
+        return cs.getPropertyValue(name).trim();
+    }
+    function normalizeColor(c) {
+        if (!c) return '#000000';
+        if (c.startsWith('rgb')) {
+            const m = c.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            if (!m) return '#000000';
+            const toHex = (n)=> ('0' + parseInt(n,10).toString(16)).slice(-2);
+            return '#' + toHex(m[1]) + toHex(m[2]) + toHex(m[3]);
+        }
+        return c;
+    }
+    function runThemeTests() {
+        const states = ['light','dark'];
+        const results = [];
+        states.forEach(state => {
+            document.documentElement.setAttribute('data-theme', state);
+            const navBg = normalizeColor(cssVar('--nav-bg'));
+            const navText = normalizeColor(cssVar('--nav-text'));
+            const navHoverBg = normalizeColor(cssVar('--nav-hover-bg'));
+            const navHoverText = normalizeColor(cssVar('--nav-hover-text'));
+            const navActiveBg = normalizeColor(cssVar('--nav-active-bg'));
+            const navActiveText = normalizeColor(cssVar('--nav-active-text'));
+            const btnBg = normalizeColor(cssVar('--btn-bg'));
+            const btnText = normalizeColor(cssVar('--btn-text'));
+            const inputBg = normalizeColor(cssVar('--input-bg'));
+            const inputText = normalizeColor(cssVar('--input-text'));
+            const ratios = {
+                default: contrast(navText, navBg),
+                hover: contrast(navHoverText, navHoverBg),
+                active: contrast(navActiveText, navActiveBg),
+                button: contrast(btnText, btnBg),
+                input: contrast(inputText, inputBg)
+            };
+            results.push({ state, ratios });
+        });
+        console.table(results);
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed'; overlay.style.bottom = '10px'; overlay.style.right = '10px';
+        overlay.style.padding = '6px 10px'; overlay.style.borderRadius = '8px'; overlay.style.fontSize = '11px';
+        overlay.style.zIndex = '9999'; overlay.className = 'surface';
+        const ok = results.every(r => r.ratios.default >= 4.5 && r.ratios.hover >= 4.5 && r.ratios.active >= 4.5 && r.ratios.button >= 4.5 && r.ratios.input >= 4.5);
+        overlay.textContent = 'Theme contrast AA: ' + (ok ? 'PASS' : 'CHECK');
+        document.body.appendChild(overlay);
+        // restore preference
+        const pref = localStorage.getItem('theme');
+        if (pref) document.documentElement.setAttribute('data-theme', pref);
+    }
+    function renderStyleGuide() {
+        const vars = [
+          '--brand-primary','--brand-secondary','--brand-accent',
+          '--bg','--bg-muted','--surface','--surface-muted',
+          '--text','--text-muted','--border','--shadow',
+          '--nav-bg','--nav-text','--nav-border','--nav-hover-bg','--nav-hover-text','--nav-active-bg','--nav-active-text',
+          '--btn-bg','--btn-text','--btn-border',
+          '--input-bg','--input-text','--input-border',
+          '--icon'
+        ];
+        const styleGuide = document.getElementById('style-guide-body');
+        if (!styleGuide) return;
+        styleGuide.innerHTML = '';
+        vars.forEach(name => {
+            const val = cssVar(name);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="px-3 py-2 font-mono text-xs">${name}</td>
+                <td class="px-3 py-2 font-mono text-xs">${val}</td>
+                <td class="px-3 py-2"><span style="display:inline-block;width:24px;height:24px;border-radius:6px;background:${val};border:1px solid var(--border)"></span></td>
+            `;
+            styleGuide.appendChild(tr);
+        });
+    }
+    function initIntro() {
+        const el = document.getElementById('intro-screen');
+        if (!el) return;
+        let seen = null;
+        try { seen = localStorage.getItem('introSeen'); } catch (_) {}
+        if (seen) { el.classList.add('hidden'); return; }
+        el.classList.remove('hidden');
+        const btn = document.getElementById('intro-enter');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                el.classList.add('intro-leave');
+                setTimeout(() => {
+                    el.classList.add('hidden');
+                    try { localStorage.setItem('introSeen','1'); } catch (_) {}
+                    router('dashboard');
+                }, 600);
+            });
+        }
     }
 
     // --- SINGLE PATIENT LOGIC ---
@@ -677,6 +1467,769 @@
             grid.appendChild(div);
         });
     }
+
+    let metabricFeatures = [];
+    function ensureMetabricInitialized() {
+        const grid = document.getElementById('mb-inputs-grid');
+        if (!grid) return;
+        const alreadyPopulated = grid.children && grid.children.length > 0;
+        if (alreadyPopulated && metabricFeatures.length > 0) return;
+        grid.innerHTML = '<div class="col-span-full text-center text-xs text-slate-500">Loading clinical features...</div>';
+        loadMetabricInfo();
+    }
+    async function loadMetabricInfo() {
+        try {
+            const r = await fetch(API_BASE + "/api/v1/metabric/model/info");
+            if (!r.ok) { return; }
+            const j = await r.json();
+            metabricFeatures = Array.isArray(j.features) ? j.features : [];
+            const cntEl = document.getElementById("mb-feature-count");
+            if (cntEl) { cntEl.innerText = String(j.feature_count || metabricFeatures.length || 0); }
+            initMetabricInputs();
+            try {
+                const rs = await fetch(API_BASE + "/api/v1/metabric/sample");
+                if (rs && rs.ok) {
+                    const sj = await rs.json();
+                    const feat = sj.features || {};
+                    metabricFeatures.forEach((name, i) => {
+                        const el = document.getElementById(`mb_inp_${i}`);
+                        if (el && typeof feat[name] !== "undefined") {
+                            if (el.type === 'checkbox') {
+                                el.checked = Number(feat[name]) === 1;
+                            } else {
+                                el.value = typeof feat[name] === "number" ? Number(feat[name]) : feat[name];
+                            }
+                        }
+                    });
+                    renderMetabricSections(sj.categories || {});
+                }
+            } catch (_) {}
+        } catch (_) {}
+    }
+    function initMetabricInputs() {
+        const grid = document.getElementById('mb-inputs-grid');
+        if (!grid) return;
+        grid.innerHTML = "";
+        window.mbFormStart = Date.now();
+        const numericConstraints = {
+            "age_at_diagnosis": {min: 0, max: 120, step: 0.1, hint: "years"},
+            "tumor_size": {min: 0, max: 300, step: 0.1, hint: "mm"},
+            "lymph_nodes_examined_positive": {min: 0, max: 50, step: 1, hint: "count"},
+            "nottingham_prognostic_index": {min: 0, max: 10, step: 0.001, hint: "score"},
+            "neoplasm_histologic_grade_encoded": {min: 1, max: 3, step: 1, hint: "grade"},
+            "tumor_stage_encoded": {min: 0, max: 4, step: 1, hint: "stage"},
+            "cellularity_encoded": {min: 0, max: 3, step: 1, hint: "level"},
+            "mutation_count": {min: 0, max: 10000, step: 1, hint: "count"}
+        };
+        const prettyLabel = (name) => {
+            const map = {
+                "er_status_binary": "Estrogen Receptor (ER) Status",
+                "pr_status_binary": "Progesterone Receptor (PR) Status",
+                "her2_status_binary": "HER2 Status",
+                "overall_survival_binary": "Overall Survival (Event)",
+                "death_from_cancer_binary": "Death from Cancer (Event)",
+                "age_at_diagnosis": "Age at Diagnosis",
+                "tumor_size": "Tumor Size (mm)",
+                "lymph_nodes_examined_positive": "Positive Lymph Nodes",
+                "nottingham_prognostic_index": "Nottingham Prognostic Index",
+                "neoplasm_histologic_grade_encoded": "Histologic Grade",
+                "tumor_stage_encoded": "Tumor Stage",
+                "cellularity_encoded": "Cellularity",
+                "mutation_count": "Mutation Count",
+                "pik3ca_mut": "PIK3CA Mutation",
+                "tp53_mut": "TP53 Mutation",
+                "gata3_mut": "GATA3 Mutation",
+                "map3k1_mut": "MAP3K1 Mutation",
+                "cdh1_mut": "CDH1 Mutation",
+                "integrative_cluster_encoded": "Integrative Cluster",
+                "pam50_+_claudin-low_subtype_encoded": "PAM50/Claudin-Low Subtype",
+                "3-gene_classifier_subtype_encoded": "3-Gene Classifier Subtype",
+                "triple_negative": "Triple Negative",
+                "size_category": "Size Category",
+                "grade_stage_interaction": "Grade-Stage Interaction",
+                "high_risk": "High Risk Score",
+                "hormone_receptor_score": "Hormone Receptor Score",
+            };
+            if (map[name]) return map[name];
+            const cleaned = name.replace(/_encoded$/i, "").replace(/_binary$/i, "");
+            return cleaned.split("_").map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(" ");
+        };
+        const isBinaryFeature = (name) => {
+            const known = new Set([
+                "er_status_binary","pr_status_binary","her2_status_binary",
+                "overall_survival_binary","death_from_cancer_binary","triple_negative"
+            ]);
+            return known.has(name) || /_binary$/i.test(name);
+        };
+        const essentialSet = new Set([
+            "age_at_diagnosis","tumor_size","lymph_nodes_examined_positive",
+            "neoplasm_histologic_grade_encoded","tumor_stage_encoded","nottingham_prognostic_index",
+            "er_status_binary","pr_status_binary","her2_status_binary","triple_negative"
+        ]);
+        const orderByLabel = (a, b) => prettyLabel(a).localeCompare(prettyLabel(b));
+        const layoutVariant = (localStorage.getItem("mbLayoutVariant") || "A").toUpperCase();
+        const essential = metabricFeatures.filter(n => essentialSet.has(n)).sort(orderByLabel);
+        const advanced = metabricFeatures.filter(n => !essentialSet.has(n)).sort(orderByLabel);
+        const sectionTitle = (text) => {
+            const h = document.createElement('div');
+            h.className = "col-span-full flex items-center justify-between";
+            h.innerHTML = `<div class="text-[11px] font-bold text-slate-800">${text}</div>`;
+            return h;
+        };
+        grid.appendChild(sectionTitle("Essential Clinical Fields"));
+        essential.forEach((name, index) => {
+            const i = metabricFeatures.indexOf(name);
+            const div = document.createElement('div');
+            if (isBinaryFeature(name)) {
+                div.innerHTML = `
+                    <label for="mb_inp_${i}" class="block text-[11px] font-bold text-slate-700 truncate mb-1" title="${name}">${prettyLabel(name)}</label>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="mb_inp_${i}" class="h-5 w-5 border border-rose-300 rounded focus:ring-rose-500" aria-label="${prettyLabel(name)}" tabindex="0">
+                        <span class="text-[10px] text-slate-600">On=1 • Off=0</span>
+                    </div>`;
+            } else {
+                const nc = numericConstraints[name] || {};
+                div.innerHTML = `
+                    <label for="mb_inp_${i}" class="block text-[11px] font-bold text-slate-700 truncate mb-1" title="${name}">${prettyLabel(name)}</label>
+                    <input type="number" id="mb_inp_${i}" class="w-full bg-rose-50 border border-rose-300 rounded px-3 py-2 text-xs font-mono focus:border-rose-500 focus:ring-rose-500 outline-none transition" placeholder="0.00" ${typeof nc.min!=='undefined' ? `min="${nc.min}"` : ""} ${typeof nc.max!=='undefined' ? `max="${nc.max}"` : ""} ${typeof nc.step!=='undefined' ? `step="${nc.step}"` : `step="0.01"`} value="0" aria-label="${prettyLabel(name)}" tabindex="0">
+                    ${nc.hint ? `<div class="mt-1 text-[10px] text-slate-500">${nc.hint}</div>` : ""}`;
+            }
+            grid.appendChild(div);
+        });
+        const advHeader = document.createElement('div');
+        advHeader.className = "col-span-full flex items-center justify-between mt-2";
+        advHeader.innerHTML = `
+            <div class="text-[11px] font-bold text-slate-800">Advanced & Genetic Fields</div>
+            <button id="btnToggleAdvanced" class="text-[11px] px-2 py-1 rounded bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition">Show</button>`;
+        grid.appendChild(advHeader);
+        const advCont = document.createElement('div');
+        advCont.id = "mb-advanced-grid";
+        advCont.className = "col-span-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4";
+        if (layoutVariant === "A") {
+            advCont.hidden = true;
+        } else {
+            advCont.hidden = false;
+        }
+        grid.appendChild(advCont);
+        advanced.forEach((name) => {
+            const i = metabricFeatures.indexOf(name);
+            const div = document.createElement('div');
+            if (isBinaryFeature(name)) {
+                div.innerHTML = `
+                    <label for="mb_inp_${i}" class="block text-[10px] font-bold text-slate-700 truncate mb-1" title="${name}">${prettyLabel(name)}</label>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="mb_inp_${i}" class="h-4 w-4 border border-rose-300 rounded focus:ring-rose-500" aria-label="${prettyLabel(name)}" tabindex="0">
+                        <span class="text-[10px] text-slate-600">On=1 • Off=0</span>
+                    </div>`;
+            } else {
+                const nc = numericConstraints[name] || {};
+                div.innerHTML = `
+                    <label for="mb_inp_${i}" class="block text-[10px] font-bold text-slate-700 truncate mb-1" title="${name}">${prettyLabel(name)}</label>
+                    <input type="number" id="mb_inp_${i}" class="w-full bg-rose-50 border border-rose-200 rounded px-2 py-1.5 text-xs font-mono focus:border-rose-500 outline-none transition" placeholder="0.00" ${typeof nc.min!=='undefined' ? `min="${nc.min}"` : ""} ${typeof nc.max!=='undefined' ? `max="${nc.max}"` : ""} ${typeof nc.step!=='undefined' ? `step="${nc.step}"` : `step="0.01"`} value="0" aria-label="${prettyLabel(name)}" tabindex="0">
+                    ${nc.hint ? `<div class="mt-1 text-[10px] text-slate-500">${nc.hint}</div>` : ""}`;
+            }
+            advCont.appendChild(div);
+        });
+        const btn = document.getElementById("btnToggleAdvanced");
+        if (btn) {
+            btn.onclick = () => {
+                const hidden = advCont.hidden;
+                advCont.hidden = !hidden;
+                btn.innerText = hidden ? "Hide" : "Show";
+            };
+        }
+        enhanceInputsInteractions();
+        const search = document.getElementById("mb-input-search");
+        if (search) {
+            search.oninput = () => {
+                const q = String(search.value || "").toLowerCase();
+                const items = grid.querySelectorAll("label[for^='mb_inp_']");
+                items.forEach(l => {
+                    const text = String(l.textContent || "").toLowerCase();
+                    const wrap = l.parentElement;
+                    if (!wrap) return;
+                    wrap.style.display = q && !text.includes(q) ? "none" : "";
+                });
+            };
+        }
+    }
+    function renderMetabricSections(categories) {
+        const fmt = (obj) => Object.keys(obj).map(k => `<div class="flex items-center justify-between"><span class="text-[10px] text-slate-500">${k}</span><span class="font-mono text-[10px]">${typeof obj[k] === 'number' ? obj[k].toFixed(2) : obj[k]}</span></div>`).join('');
+        const gen = document.getElementById('mb-genetic');
+        const his = document.getElementById('mb-historical');
+        const pro = document.getElementById('mb-prognostic');
+        if (gen) gen.innerHTML = fmt(categories.genetic || {});
+        if (his) his.innerHTML = fmt(categories.historical || {});
+        if (pro) pro.innerHTML = fmt(categories.prognostic || {});
+        const alert = document.getElementById('mb-alert');
+        if (alert) {
+            const triNeg = (categories.prognostic || {}).triple_negative;
+            const highRisk = (categories.prognostic || {}).high_risk;
+            if (Number(highRisk) >= 5 || Number(triNeg) === 1) {
+                alert.innerText = "CRITICAL FLAGS DETECTED";
+                alert.className = "px-3 py-1 rounded-lg bg-red-50 border border-red-200 text-[10px] font-bold text-red-700 uppercase tracking-wide";
+            } else {
+                alert.innerText = "No alerts";
+                alert.className = "px-3 py-1 rounded-lg bg-rose-50 border border-rose-200 text-[10px] font-bold text-rose-700 uppercase tracking-wide";
+            }
+        }
+    }
+    async function runMetabricPredict() {
+        const btn = document.getElementById('btnRunMetabricPredict');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i> Predicting...'; }
+        mbClearError();
+        const features = {};
+        for (let i = 0; i < metabricFeatures.length; i++) {
+            const key = metabricFeatures[i];
+            const el = document.getElementById(`mb_inp_${i}`);
+            let v = 0;
+            if (el) {
+                if (el.type === 'checkbox') {
+                    v = el.checked ? 1 : 0;
+                } else {
+                    const raw = el.value;
+                    const num = parseFloat(raw);
+                    v = Number.isFinite(num) ? num : 0;
+                }
+            }
+            features[key] = v;
+        }
+        try {
+            const r = await fetch(API_BASE + "/api/v1/metabric/predict", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ features, patient_id: (document.getElementById('mb-patient-id')?.value || null) })
+            });
+            if (!r.ok) {
+                const t = await r.text();
+                throw new Error(String(r.status) + " " + t);
+            }
+            const j = await r.json();
+            const res = document.getElementById('mb-results');
+            if (res) { res.classList.remove('hidden'); }
+            const ag = document.getElementById('mb-aggr');
+            const gr = document.getElementById('mb-growth');
+            const ev = document.getElementById('mb-evol');
+            if (ag) { ag.innerText = (typeof j.aggressiveness_score === 'number' ? j.aggressiveness_score.toFixed(3) : String(j.aggressiveness_score || '--')); }
+            if (gr) { gr.innerText = (typeof j.growth_rate === 'number' ? j.growth_rate.toFixed(3) : String(j.growth_rate || '--')); }
+            if (ev) { ev.innerText = "class " + String(j.evolution_6m_class ?? '--'); }
+            updateAnalysisPanel(j);
+            window.metabricLast = { result: j, features };
+            const elapsed = window.mbFormStart ? (Date.now() - window.mbFormStart) : null;
+            const metrics = { elapsed_ms: elapsed, errors: 0, layout: (localStorage.getItem("mbLayoutVariant") || "A") };
+            try { localStorage.setItem("mbFormMetrics", JSON.stringify(metrics)); } catch (_) {}
+        } catch (e) {
+            mbShowError('Prediction failed. Please try again.');
+        } finally {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="ph ph-lightning"></i> Predict'; }
+        }
+    }
+    function enhanceInputsInteractions() {
+        const ids = metabricFeatures.map((_, i) => `mb_inp_${i}`);
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('focus', () => { el.classList.add('ring-1','ring-rose-500'); });
+            el.addEventListener('blur', () => { el.classList.remove('ring-1','ring-rose-500'); });
+            el.addEventListener('input', () => {
+                if (el.type === 'number') {
+                    const v = parseFloat(el.value);
+                    if (Number.isFinite(v)) {
+                        el.classList.add('border-emerald-400');
+                    } else {
+                        el.classList.remove('border-emerald-400');
+                    }
+                }
+            });
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    runMetabricPredict();
+                }
+            });
+        });
+    }
+    function mbClearInputs() {
+        for (let i = 0; i < metabricFeatures.length; i++) {
+            const el = document.getElementById(`mb_inp_${i}`);
+            if (!el) continue;
+            if (el.type === 'checkbox') {
+                el.checked = false;
+            } else {
+                el.value = "0";
+                el.classList.remove('border-emerald-400');
+            }
+        }
+    }
+    function mbResetResults() {
+        const res = document.getElementById('mb-results');
+        if (res) { res.classList.remove('hidden'); }
+        const ag = document.getElementById('mb-aggr');
+        const gr = document.getElementById('mb-growth');
+        const ev = document.getElementById('mb-evol');
+        if (ag) ag.innerText = '--';
+        if (gr) gr.innerText = '--';
+        if (ev) ev.innerText = 'class --';
+        mbClearError();
+        updateAnalysisPanel({});
+    }
+    function updateAnalysisPanel(j) {
+        const safeNum = (v) => Number.isFinite(v) ? v : null;
+        // Aggressiveness Score out of 10
+        let aRaw = safeNum(Number(j.aggressiveness_score));
+        let a10 = aRaw == null ? null : (aRaw > 1 ? Math.min(aRaw, 10) : aRaw * 10);
+        const aVal = document.getElementById('ap-aggr-val');
+        const aBadge = document.getElementById('ap-aggr-badge');
+        const aLabel = document.getElementById('ap-aggr-label');
+        if (aVal) aVal.textContent = a10 == null ? '--/10' : `${a10.toFixed(1)}/10`;
+        if (aBadge && aLabel) {
+            aBadge.classList.remove('green','yellow','red');
+            let cat = 'yellow', text = 'Medium';
+            if (a10 == null) { cat = ''; text = '—'; }
+            else if (a10 >= 7) { cat = 'red'; text = 'High'; }
+            else if (a10 >= 4) { cat = 'yellow'; text = 'Medium'; }
+            else { cat = 'green'; text = 'Low'; }
+            if (cat) aBadge.classList.add(cat);
+            aLabel.textContent = text;
+        }
+        const prAVal = document.getElementById('pr-aggr-val');
+        const prABadge = document.getElementById('pr-aggr-badge');
+        const prALabel = document.getElementById('pr-aggr-label');
+        if (prAVal) prAVal.textContent = a10 == null ? '--/10' : `${a10.toFixed(1)}/10`;
+        if (prABadge && prALabel) {
+            prABadge.classList.remove('green','yellow','red');
+            let cat = 'yellow', text = 'Medium';
+            if (a10 == null) { cat = ''; text = '—'; }
+            else if (a10 >= 7) { cat = 'red'; text = 'High'; }
+            else if (a10 >= 4) { cat = 'yellow'; text = 'Medium'; }
+            else { cat = 'green'; text = 'Low'; }
+            if (cat) prABadge.classList.add(cat);
+            prALabel.textContent = text;
+        }
+        // Growth Rate monthly % with direction
+        const gRaw = safeNum(Number(j.growth_rate));
+        const gVal = document.getElementById('ap-growth-val');
+        const gDir = document.getElementById('ap-growth-dir');
+        if (gVal) gVal.textContent = gRaw == null ? '--%/month' : `${gRaw.toFixed(1)}%/month`;
+        if (gDir) {
+            gDir.classList.remove('green','yellow','red');
+            const icon = gDir.querySelector('i');
+            const label = gDir.querySelector('span');
+            if (icon && label) {
+                if (gRaw == null || Math.abs(gRaw) < 0.001) { icon.className = 'ph ph-arrow-right'; label.textContent = 'Neutral'; gDir.classList.add('yellow'); }
+                else if (gRaw > 0) { icon.className = 'ph ph-trend-up'; label.textContent = 'Increasing'; gDir.classList.add('red'); }
+                else { icon.className = 'ph ph-trend-down'; label.textContent = 'Decreasing'; gDir.classList.add('green'); }
+            }
+        }
+        const prGVal = document.getElementById('pr-growth-val');
+        const prGDir = document.getElementById('pr-growth-dir');
+        if (prGVal) prGVal.textContent = gRaw == null ? '--%/month' : `${gRaw.toFixed(1)}%/month`;
+        if (prGDir) {
+            prGDir.classList.remove('green','yellow','red');
+            const icon = prGDir.querySelector('i');
+            const label = prGDir.querySelector('span');
+            if (icon && label) {
+                if (gRaw == null || Math.abs(gRaw) < 0.001) { icon.className = 'ph ph-arrow-right'; label.textContent = 'Neutral'; prGDir.classList.add('yellow'); }
+                else if (gRaw > 0) { icon.className = 'ph ph-trend-up'; label.textContent = 'Increasing'; prGDir.classList.add('red'); }
+                else { icon.className = 'ph ph-trend-down'; label.textContent = 'Decreasing'; prGDir.classList.add('green'); }
+            }
+        }
+        // Evaluation displays class value
+        const c = j.evolution_6m_class;
+        const evalVal = document.getElementById('ap-eval-val');
+        const evalBadge = document.getElementById('ap-eval-badge');
+        const evalLabel = document.getElementById('ap-eval-label');
+        if (evalVal) evalVal.textContent = c == null ? '—' : `class ${c}`;
+        if (evalBadge && evalLabel) {
+            evalBadge.classList.remove('green','yellow','red');
+            const icon = evalBadge.querySelector('i');
+            let cls = 'yellow', text = c == null ? '—' : `class ${c}`, ic = 'ph ph-megaphone';
+            if (c == null) { cls = ''; ic = 'ph ph-megaphone'; }
+            else if (c === 0) { cls = 'green'; ic = 'ph ph-smiley'; }
+            else if (c === 1) { cls = 'yellow'; ic = 'ph ph-meh'; }
+            else { cls = 'red'; ic = 'ph ph-frown'; }
+            if (icon) icon.className = ic;
+            if (cls) evalBadge.classList.add(cls);
+            evalLabel.textContent = text;
+        }
+        const prEvalVal = document.getElementById('pr-eval-val');
+        const prEvalBadge = document.getElementById('pr-eval-badge');
+        const prEvalLabel = document.getElementById('pr-eval-label');
+        if (prEvalVal) prEvalVal.textContent = c == null ? '—' : `class ${c}`;
+        if (prEvalBadge && prEvalLabel) {
+            prEvalBadge.classList.remove('green','yellow','red');
+            const icon2 = prEvalBadge.querySelector('i');
+            let cls2 = 'yellow', text2 = c == null ? '—' : `class ${c}`, ic2 = 'ph ph-megaphone';
+            if (c == null) { cls2 = ''; ic2 = 'ph ph-megaphone'; }
+            else if (c === 0) { cls2 = 'green'; ic2 = 'ph ph-smiley'; }
+            else if (c === 1) { cls2 = 'yellow'; ic2 = 'ph ph-meh'; }
+            else { cls2 = 'red'; ic2 = 'ph ph-frown'; }
+            if (icon2) icon2.className = ic2;
+            if (cls2) prEvalBadge.classList.add(cls2);
+            prEvalLabel.textContent = text2;
+        }
+        const risk = document.getElementById('ap-risk-class');
+        if (risk) risk.textContent = c == null ? '--' : String(c);
+        const dq = document.getElementById('ap-data-quality');
+        if (dq) dq.textContent = (j.data_quality ?? '--');
+        const prRisk = document.getElementById('pr-risk-class');
+        if (prRisk) prRisk.textContent = c == null ? '--' : String(c);
+        // pr-data-quality removed from UI
+    }
+    function mbShowError(msg) {
+        const box = document.getElementById('mb-error');
+        if (!box) return;
+        box.innerText = String(msg || 'Error');
+        box.classList.remove('hidden');
+    }
+    function mbClearError() {
+        const box = document.getElementById('mb-error');
+        if (!box) return;
+        box.classList.add('hidden');
+        box.innerText = '';
+    }
+    function toggleLayoutVariant() {
+        const cur = (localStorage.getItem("mbLayoutVariant") || "A").toUpperCase();
+        const next = cur === "A" ? "B" : "A";
+        localStorage.setItem("mbLayoutVariant", next);
+        initMetabricInputs();
+    }
+    function metabricTriggerUpload() {
+        const box = document.getElementById('mb-upload-box');
+        const input = document.getElementById('mbCsvInput');
+        if (!input) return;
+        input.value = '';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (box) { box.innerHTML = '<i class="ph ph-spinner ph-spin text-3xl text-rose-500"></i><p class="text-slate-500 mt-2">Processing batch...</p>'; }
+            try {
+                const fd = new FormData();
+                fd.append('file', file, file.name);
+                const r = await fetch(API_BASE + "/api/v1/metabric/batch", { method:"POST", body: fd });
+                if (!r.ok) {
+                    const t = await r.text();
+                    throw new Error(String(r.status) + " " + t);
+                }
+                const j = await r.json();
+                const rows = Array.isArray(j.rows) ? j.rows : [];
+                const cont = document.getElementById('mb-batch-results');
+                if (cont) { cont.classList.remove('hidden'); }
+                if (box) { box.style.display = 'none'; }
+                renderMetabricBatchTable(rows);
+            } catch (_) {
+                if (box) {
+                    box.innerHTML = `
+                        <div class="h-20 w-20 rounded-full bg-rose-50 text-rose-400 mx-auto flex items-center justify-center mb-4">
+                            <i class="ph ph-file-csv text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Upload METABRIC CSV Batch</h3>
+                        <p class="text-sm text-slate-500 mt-2">Click to upload and analyze clinical records</p>`;
+                }
+            }
+        };
+        input.click();
+    }
+    function renderMetabricBatchTable(rows) {
+        const tbody = document.getElementById('mb-batch-table-body');
+        if (!tbody) return;
+        window.mbAllRows = Array.isArray(rows) ? rows : [];
+        window.mbBatchRows = window.mbAllRows.slice();
+        window.mbFilteredRows = window.mbBatchRows.slice();
+        window.mbPageState = window.mbPageState || { page: 1, page_size: 6 };
+        window.mbPageState.page = 1;
+        renderMbPage(window.mbFilteredRows);
+    }
+    function renderMbPage(rows) {
+        const tbody = document.getElementById('mb-batch-table-body');
+        if (!tbody) return;
+        const state = window.mbPageState || { page: 1, page_size: 6 };
+        const totalPages = Math.max(1, Math.ceil((rows || []).length / state.page_size));
+        if (state.page > totalPages) state.page = totalPages;
+        const start = (state.page - 1) * state.page_size;
+        const slice = (rows || []).slice(start, start + state.page_size);
+        tbody.innerHTML = "";
+        slice.forEach((r, i) => {
+            const aNum = typeof r.aggressiveness_score === 'number' ? r.aggressiveness_score : NaN;
+            const gNum = typeof r.growth_rate === 'number' ? r.growth_rate : NaN;
+            const aFmt = Number.isFinite(aNum) ? aNum.toFixed(1) : String(r.aggressiveness_score || '');
+            const gPct = Number.isFinite(gNum) ? gNum.toFixed(1) : String(r.growth_rate || '');
+            const c = typeof r.evolution_6m_class === 'number' ? r.evolution_6m_class : (r.evolution_6m_class ?? '');
+            const aColor = Number.isFinite(aNum) ? (aNum > 7 ? 'text-rose-700 bg-rose-100' : (aNum >= 3 ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100')) : 'text-slate-700 bg-slate-100';
+            const gColor = Number.isFinite(gNum) ? (gNum > 5 ? 'text-rose-700 bg-rose-100' : (gNum >= 2 ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100')) : 'text-slate-700 bg-slate-100';
+            const aBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${aColor}">${aFmt}/10</span>`;
+            const gBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${gColor}">${gPct}% / month</span>`;
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-rose-50 transition border-b border-rose-50";
+            tr.innerHTML = `
+                <td class="px-6 py-4 font-mono font-medium text-slate-700">${String(r.row_index ?? (start + i))}</td>
+                <td class="px-6 py-4">${aBadge}</td>
+                <td class="px-6 py-4">${gBadge}</td>
+                <td class="px-6 py-4">Class ${c}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="mbOpen('${String(r.row_index ?? (start + i))}')" class="text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-transparent hover:border-rose-100 transition" title="Details"><i class="ph ph-eye"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        mbUpdatePageUI(totalPages);
+    }
+    function mbUpdatePageUI(totalPages){
+        const ind = document.getElementById('mb-page-ind');
+        const prev = document.getElementById('mb-prev');
+        const next = document.getElementById('mb-next');
+        const state = window.mbPageState || { page: 1, page_size: 6 };
+        if (ind) ind.innerText = "Page " + String(state.page) + " / " + String(totalPages);
+        if (prev) prev.disabled = state.page <= 1;
+        if (next) next.disabled = state.page >= totalPages;
+    }
+    function mbPrevPage(){
+        const state = window.mbPageState || { page: 1, page_size: 6 };
+        const rows = window.mbFilteredRows || [];
+        const total = Math.max(1, Math.ceil(rows.length / state.page_size));
+        if (state.page > 1) { state.page -= 1; renderMbPage(rows); }
+        else { mbUpdatePageUI(total); }
+    }
+    function mbNextPage(){
+        const state = window.mbPageState || { page: 1, page_size: 6 };
+        const rows = window.mbFilteredRows || [];
+        const total = Math.max(1, Math.ceil(rows.length / state.page_size));
+        if (state.page < total) { state.page += 1; renderMbPage(rows); }
+        else { mbUpdatePageUI(total); }
+    }
+    async function loadMetabricEvaluate() {
+        try {
+            const r = await fetch(API_BASE + "/api/v1/metabric/evaluate");
+            if (!r.ok) return;
+            const j = await r.json();
+            // KPIs removed from UI per requirement; use internally if needed
+            window.mbEval = j;
+        } catch (_) {}
+    }
+    function mbFilterTable() {
+        const rows = window.mbBatchRows || [];
+        const cls = document.getElementById('mb-filter-class')?.value || 'all';
+        const minA = parseFloat(document.getElementById('mb-min-aggr')?.value || '');
+        const maxA = parseFloat(document.getElementById('mb-max-aggr')?.value || '');
+        const minG = parseFloat(document.getElementById('mb-min-growth')?.value || '');
+        const maxG = parseFloat(document.getElementById('mb-max-growth')?.value || '');
+        const okNum = (v) => typeof v === 'number' && !isNaN(v);
+        const filtered = rows.filter(r => {
+            const c = (typeof r.evolution_6m_class === 'number') ? String(r.evolution_6m_class) : String(r.evolution_6m_class || '');
+            if (cls !== 'all' && c !== cls) return false;
+            const a = r.aggressiveness_score;
+            const g = r.growth_rate;
+            if (!isNaN(minA) && okNum(a) && a < minA) return false;
+            if (!isNaN(maxA) && okNum(a) && a > maxA) return false;
+            if (!isNaN(minG) && okNum(g) && g < minG) return false;
+            if (!isNaN(maxG) && okNum(g) && g > maxG) return false;
+            return true;
+        });
+        window.mbFilteredRows = filtered.slice();
+        window.mbPageState = window.mbPageState || { page: 1, page_size: 6 };
+        window.mbPageState.page = 1;
+        renderMbPage(window.mbFilteredRows);
+    }
+    function mbSetAggRange(level){
+        const minA = document.getElementById('mb-min-aggr');
+        const maxA = document.getElementById('mb-max-aggr');
+        if(!minA || !maxA) return;
+        if(level === 'low'){ minA.value = ''; maxA.value = '3'; }
+        else if(level === 'med'){ minA.value = '3'; maxA.value = '7'; }
+        else { minA.value = '7.1'; maxA.value = ''; }
+        mbFilterTable();
+    }
+    function mbSetGrowthRange(level){
+        const minG = document.getElementById('mb-min-growth');
+        const maxG = document.getElementById('mb-max-growth');
+        if(!minG || !maxG) return;
+        if(level === 'low'){ minG.value = ''; maxG.value = '2'; }
+        else if(level === 'med'){ minG.value = '2'; maxG.value = '5'; }
+        else { minG.value = '5.1'; maxG.value = ''; }
+        mbFilterTable();
+    }
+    function mbResetFilters(){
+        const ids = ['mb-filter-class','mb-min-aggr','mb-max-aggr','mb-min-growth','mb-max-growth'];
+        ids.forEach(id => { const el = document.getElementById(id); if(el){ if(el.tagName==='SELECT'){ el.value='all'; } else { el.value=''; } } });
+        mbFilterTable();
+    }
+    function mbShowMore() {
+        alert('Detailed exploration coming soon. Use Filters and Details for now.');
+    }
+    function mbOpen(rowId) {
+        const rows = window.mbBatchRows || [];
+        const r = rows.find(x => String(x.row_index) === String(rowId)) || null;
+        if (!r) { alert('Row not found'); return; }
+        window.currentPrognosis = r;
+        document.getElementById('slide-overlay').classList.add('open');
+        const el = document.getElementById('prognosis-slideover');
+        if (el) el.classList.add('open');
+        document.getElementById('prog-id').innerText = String(r.row_index);
+        const aNum = typeof r.aggressiveness_score === 'number' ? r.aggressiveness_score : NaN;
+        const gNum = typeof r.growth_rate === 'number' ? r.growth_rate : NaN;
+        const aFmt = Number.isFinite(aNum) ? aNum.toFixed(1) : String(r.aggressiveness_score || '');
+        const gPct = Number.isFinite(gNum) ? gNum.toFixed(1) : String(r.growth_rate || '');
+        const aColor = Number.isFinite(aNum) ? (aNum > 7 ? 'text-rose-700 bg-rose-100' : (aNum >= 3 ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100')) : 'text-slate-700 bg-slate-100';
+        const gColor = Number.isFinite(gNum) ? (gNum > 5 ? 'text-rose-700 bg-rose-100' : (gNum >= 2 ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100')) : 'text-slate-700 bg-slate-100';
+        document.getElementById('prog-aggr').innerHTML = `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${aColor}">${aFmt}/10</span>`;
+        document.getElementById('prog-growth').innerHTML = `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${gColor}">${gPct}% / month</span>`;
+        document.getElementById('prog-evol').innerText = String(r.evolution_6m_class ?? '');
+    }
+    function closePrognosisDetails() {
+        document.getElementById('slide-overlay').classList.remove('open');
+        const el = document.getElementById('prognosis-slideover');
+        if (el) el.classList.remove('open');
+    }
+    async function mbSaveToDB(btn){
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i class="ph ph-spinner ph-spin text-lg"></i> Saving...`;
+        try {
+            const rows = (window.mbBatchRows || []).map(r => ({
+                patient_id: String(r.patient_identifier || `CELL-${String(r.row_index ?? 0).padStart(4,'0')}`),
+                aggressiveness_score: typeof r.aggressiveness_score === 'number' ? r.aggressiveness_score : null,
+                growth_rate: typeof r.growth_rate === 'number' ? r.growth_rate : null,
+                evolution_6m_class: typeof r.evolution_6m_class === 'number' ? r.evolution_6m_class : null,
+                timestamp: new Date().toISOString()
+            }));
+            const resp = await fetch(API_BASE + "/api/v1/metabric/prognosis/save", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ rows })
+            });
+            if(!resp.ok){
+                const text = await resp.text();
+                throw new Error('Save error ' + resp.status + ': ' + text);
+            }
+            const j = await resp.json();
+            console.log('Prognosis saved', j);
+            btn.innerHTML = `<i class="ph ph-check-circle"></i> Saved`;
+            setTimeout(() => { btn.disabled = false; btn.innerHTML = original; }, 1200);
+        } catch(e){
+            console.error('Save prognosis error', e);
+            alert('Failed to save prognosis batch. Please try again.');
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    }
+    function exportPrognosisPDF() {
+        const meta = window.metabricLast || {};
+        const res = meta.result || {};
+        const feats = meta.features || {};
+        if (!res.aggressiveness_score && !res.growth_rate) { alert('Run a prediction first.'); return; }
+        const today = new Date().toLocaleString();
+        const rows = Object.keys(feats).map(k => `<tr><td class="cell">${k}</td><td class="cell value">${typeof feats[k] === 'number' ? feats[k].toFixed(2) : feats[k]}</td></tr>`).join('');
+        const doc = `
+        <html><head><title>Prognosis Report</title>
+        <meta charset="utf-8">
+        <style>
+        body{font-family:system-ui,Segoe UI,Arial,sans-serif;color:#111827}
+        .letter{max-width:900px;margin:0 auto}
+        .header{padding:20px;color:white;background:linear-gradient(90deg,#f43f5e,#9f1239)}
+        .header h1{margin:0;font-size:22px;letter-spacing:.5px}
+        .header p{margin:4px 0 0 0;font-size:12px;opacity:.9}
+        .section{padding:16px 20px}
+        .title{font-weight:700;color:#111827;margin:0 0 8px 0}
+        .card{border:1px solid #e5e7eb;border-radius:12px;margin:12px 0;padding:16px}
+        table{width:100%;border-collapse:collapse;margin-top:8px}
+        .cell{padding:8px 10px;border:1px solid #e5e7eb;font-size:12px}
+        .value{font-family:ui-monospace,Menlo,Consolas,monospace;color:#374151}
+        .footer{padding:16px 20px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280}
+        .sign{margin-top:24px}
+        .sign .line{width:200px;height:1px;background:#e5e7eb;margin:8px 0}
+        @media print {.no-print{display:none}}
+        </style></head><body>
+        <div class="letter">
+            <div class="header">
+                <h1>OncoAI • Clinical Prognosis</h1>
+                <p>Report Date: ${today}</p>
+            </div>
+            <div class="section">
+                <h2 class="title">Summary</h2>
+                <div class="card">
+                    <div><strong>Aggressiveness Score:</strong> ${(typeof res.aggressiveness_score === 'number' ? res.aggressiveness_score.toFixed(3) : String(res.aggressiveness_score||''))}</div>
+                    <div><strong>Growth Rate:</strong> ${(typeof res.growth_rate === 'number' ? res.growth_rate.toFixed(3) : String(res.growth_rate||''))}</div>
+                    <div><strong>Evolution (6m) Class:</strong> ${String(res.evolution_6m_class ?? '')}</div>
+                </div>
+            </div>
+            <div class="section">
+                <h2 class="title">Clinical Features</h2>
+                <div class="card">
+                    <table><thead><tr><th class="cell">Feature</th><th class="cell">Value</th></tr></thead><tbody>${rows}</tbody></table>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="sign">
+                    <div>Physician Signature</div>
+                    <div class="line"></div>
+                    <div>Date: ${today}</div>
+                </div>
+            </div>
+        </div>
+        </body></html>`;
+        const w = window.open('', '_blank');
+        if(!w){ alert('Popup blocked. Allow popups to export PDF.'); return; }
+        w.document.open(); w.document.write(doc); w.document.close();
+        setTimeout(()=>{ try{ w.print(); }catch(e){} }, 500);
+    }
+    function exportPrognosisExcel() {
+        const meta = window.metabricLast || {};
+        const res = meta.result || {};
+        const feats = meta.features || {};
+        if (!res.aggressiveness_score && !res.growth_rate) { alert('Run a prediction first.'); return; }
+        const header = ['patient_id'].concat(Object.keys(feats)).concat(['aggressiveness_score','growth_rate','evolution_6m_class']);
+        const row = ['S-PROG'].concat(Object.keys(feats).map(k => {
+            const v = feats[k];
+            return (typeof v === 'number') ? v : '';
+        })).concat([
+            (typeof res.aggressiveness_score === 'number' ? res.aggressiveness_score.toFixed(3) : String(res.aggressiveness_score||'')),
+            (typeof res.growth_rate === 'number' ? res.growth_rate.toFixed(3) : String(res.growth_rate||'')),
+            String(res.evolution_6m_class ?? '')
+        ]);
+        const csv = header.join(',') + '\\n' + row.join(',') + '\\n';
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `prognosis_report.csv`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+    function savePrognosisToDB(btn) {
+        const meta = window.metabricLast || {};
+        const res = meta.result || {};
+        if (!res.aggressiveness_score && !res.growth_rate) { alert('Run a prediction first.'); return; }
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i class="ph ph-spinner ph-spin text-lg"></i> Saving...`;
+        const rows = [{
+            patient_id: 'S-PROG',
+            aggressiveness_score: res.aggressiveness_score,
+            growth_rate: res.growth_rate,
+            evolution_6m_class: res.evolution_6m_class,
+            timestamp: new Date().toISOString()
+        }];
+        fetch(API_BASE + "/api/v1/metabric/prognosis/save", {
+            method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ rows })
+        }).then(async r => {
+            if(!r.ok){ const t = await r.text(); throw new Error('Save error ' + r.status + ': ' + t); }
+            return r.json();
+        }).then(j => {
+            btn.innerHTML = `<i class="ph ph-check text-lg"></i> Saved (${Number(j.rows_saved||0)})`;
+            setTimeout(() => { btn.disabled = false; btn.innerHTML = original; }, 2000);
+        }).catch(err => {
+            alert('Failed to save'); btn.disabled = false; btn.innerHTML = original;
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        const isModel2 = document.getElementById('view-model2')?.classList.contains('active');
+        if (!isModel2) return;
+        if (e.key.toLowerCase() === 'l') { loadMetabricInfo(); }
+        if (e.key.toLowerCase() === 'p') { runMetabricPredict(); }
+        if (e.key.toLowerCase() === 'e') { exportPrognosisPDF(); }
+        if (e.key.toLowerCase() === 'x') { exportPrognosisExcel(); }
+        if (e.key.toLowerCase() === 's') {
+            const btn = document.querySelector('#btnRunMetabricPredict + button + button + button');
+            if (btn) savePrognosisToDB(btn);
+        }
+    });
 
     async function fillRandomData() {
         const btn = document.getElementById('btnGenerateData');
@@ -882,7 +2435,7 @@
                 crit: (typeof tf.importance === 'number') ? (tf.importance > (top.reduce((s,f)=>s+(f.importance||0),0)/top.length)) : false
             }));
             return {
-                id: r.patient_identifier || `PT-${2500+i}`,
+                id: r.patient_identifier || `CELL-${String(1000 + i).padStart(4,'0')}`,
                 isMal,
                 prob,
                 tier: (tierText.includes('critical') ? 'Critical' : tierText.includes('high') ? 'High' : tierText.includes('medium') ? 'Medium' : 'Low'),
@@ -928,8 +2481,8 @@
                 <td class="px-6 py-4 font-medium text-xs text-slate-700">${p.action}</td>
                 <td class="px-6 py-4">${features}</td>
                 <td class="px-6 py-4 text-right">
-                    <button onclick="openDetails(this.dataset.pid)" data-pid="${p.id}" class="text-xs font-bold text-pink-600 hover:bg-pink-50 px-3 py-1.5 rounded-lg border border-transparent hover:border-pink-100 transition">
-                        View Details
+                    <button onclick="openDetails(this.dataset.pid)" data-pid="${p.id}" aria-controls="patient-slideover" aria-expanded="false" class="text-xs font-bold text-pink-600 hover:bg-pink-50 px-3 py-1.5 rounded-lg border border-transparent hover:border-pink-100 transition">
+                        View More
                     </button>
                 </td>
             `;
@@ -1091,12 +2644,32 @@
         }
         icon.className = p.isMal ? "ph ph-warning-octagon text-3xl" : "ph ph-shield-check text-3xl";
         
+        const riskBadge = document.getElementById('detail-risk-badge');
+        if (riskBadge) {
+            const tierColor = p.tierCode === 'high' ? 'text-rose-700 bg-rose-100' : (p.tierCode === 'mod' ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100');
+            riskBadge.innerHTML = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${tierColor}">${p.tier}</span>`;
+        }
+        const probLabel = document.getElementById('detail-prob-label');
+        const probBar = document.getElementById('detail-prob-bar');
+        if (probLabel) probLabel.innerText = p.prob + '%';
+        if (probBar) probBar.style.width = p.prob + '%';
+        patientSwitchTab('pt-tab-summary');
+        const actionsUl = document.getElementById('detail-actions-list');
+        if (actionsUl) {
+            const actionItems = [
+                `Primary recommendation: ${p.action}`,
+                p.isMal ? 'Schedule diagnostic imaging and tissue biopsy' : 'Routine screening and follow-up per guidelines',
+                p.tierCode === 'high' ? 'Urgent multidisciplinary review' : (p.tierCode === 'mod' ? 'Short-interval follow-up (3–6 months)' : 'Annual screening'),
+            ];
+            actionsUl.innerHTML = actionItems.map(t => `<li>${t}</li>`).join('');
+        }
+        
         const tbody = document.getElementById('detail-features-body');
         tbody.innerHTML = '';
         const raw = (p.raw && p.raw.explainability) ? p.raw.explainability.original_features : {};
         const top = (p.raw && p.raw.explainability) ? (p.raw.explainability.top_features || []) : [];
         const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0);
-        (top.length ? top : p.features.map(f => ({ feature: f.name, importance: 0 })) ).slice(0,5).forEach(tf => {
+        (top.length ? top : p.features.map(f => ({ feature: f.name, importance: 0 })) ).slice(0,6).forEach(tf => {
             const key = typeof tf.feature === 'string' ? tf.feature : tf.name;
             const label = labelOf(key);
             const rawVal = raw[key];
@@ -1109,11 +2682,35 @@
         
         document.getElementById('slide-overlay').classList.add('open');
         document.getElementById('patient-slideover').classList.add('open');
+        try {
+            const btn = document.querySelector(`button[data-pid="${p.id}"][aria-controls="patient-slideover"]`);
+            if (btn) btn.setAttribute('aria-expanded','true');
+            const closeBtn = document.querySelector('#patient-slideover button[onclick="closeDetails()"]');
+            if (closeBtn) closeBtn.focus();
+        } catch(_) {}
     }
 
     function closeDetails() {
         document.getElementById('slide-overlay').classList.remove('open');
         document.getElementById('patient-slideover').classList.remove('open');
+        try {
+            document.querySelectorAll('button[aria-controls="patient-slideover"]').forEach(b => b.setAttribute('aria-expanded','false'));
+        } catch(_) {}
+    }
+    function patientSwitchTab(id){
+        const ids = ['pt-tab-summary','pt-tab-features','pt-tab-actions'];
+        ids.forEach(x => {
+            const el = document.getElementById(x);
+            const btn = document.getElementById('pt-btn-' + x.split('-')[2]);
+            if(!el || !btn) return;
+            if(x === id){
+                el.classList.add('active'); el.classList.remove('hidden');
+                btn.classList.add('active');
+            } else {
+                el.classList.remove('active'); el.classList.add('hidden');
+                btn.classList.remove('active');
+            }
+        });
     }
 
     function exportPDF() { 
@@ -1452,6 +3049,72 @@
             tbody.appendChild(tr);
         });
     }
+    async function loadSavedPrognosisSimple(){
+        const tbody = document.getElementById('prg-table-body');
+        if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="5">Loading...</td></tr>`;
+        try{
+            const useRelative = location.origin.includes(':8000');
+            const url = useRelative
+                ? "/api/v1/metabric/prognosis/saved?page=1&page_size=200&order_by=timestamp_desc"
+                : "http://127.0.0.1:8000/api/v1/metabric/prognosis/saved?page=1&page_size=200&order_by=timestamp_desc";
+            const r = await fetch(url);
+            if(!r || !r.ok){
+                if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="5">Failed to load (HTTP ${r ? r.status : 'no response'})</td></tr>`;
+                return;
+            }
+            const txt = await r.text();
+            let j;
+            try{ j = JSON.parse(txt); }catch(parseErr){
+                console.error('JSON parse error:', parseErr, txt.slice(0, 200));
+                if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="5">Invalid JSON</td></tr>`;
+                return;
+            }
+            window.prgRows = Array.isArray(j.rows) ? j.rows : [];
+            window.prgState = window.prgState || { page: 1, page_size: 5 };
+            if(window.prgRows.length === 0){
+                if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="5">No data</td></tr>`;
+                return;
+            }
+            renderPrognosisSavedPage();
+        } catch(e){
+            console.error('Saved prognosis load error:', e);
+            if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="5">Failed to load</td></tr>`;
+        }
+    }
+    function renderPrognosisSavedPage(){
+        const tbody = document.getElementById('prg-table-body');
+        const pageSpan = document.getElementById('prg-page');
+        const pagesSpan = document.getElementById('prg-pages');
+        const s = window.prgState || { page: 1, page_size: 5 };
+        const rows = window.prgRows || [];
+        const totalPages = Math.max(1, Math.ceil(rows.length / s.page_size));
+        if(s.page > totalPages) s.page = totalPages;
+        const start = (s.page - 1) * s.page_size;
+        const pageRows = rows.slice(start, start + s.page_size);
+        if(pageSpan) pageSpan.innerText = String(s.page);
+        if(pagesSpan) pagesSpan.innerText = String(totalPages);
+        if(tbody){ tbody.innerHTML = ""; }
+        pageRows.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-pink-50 transition";
+            const aNum = typeof row.aggressiveness_score === 'number' ? row.aggressiveness_score : NaN;
+            const aFmt = isNaN(aNum) ? String(row.aggressiveness_score || '') : aNum.toFixed(1) + " / 10";
+            const gNum = typeof row.growth_rate === 'number' ? row.growth_rate : NaN;
+            const gFmt = isNaN(gNum) ? String(row.growth_rate || '') : gNum.toFixed(1) + "% / month";
+            const cls = row.evolution_6m_class;
+            const ts = String(row.timestamp || '');
+            const tpos = ts.indexOf('T');
+            const dateOnly = tpos > 0 ? ts.slice(0, tpos) : (function(s){ try{ return new Date(s).toISOString().slice(0,10); } catch(_){ return s; } })(ts);
+            tr.innerHTML = `
+                <td class="px-2 py-1"><span class="px-1.5 py-0.5 rounded bg-pink-50 border border-pink-100 font-mono text-[10px]">${String(row.patient_id || '')}</span></td>
+                <td class="px-2 py-1"><span class="badge">${aFmt}</span></td>
+                <td class="px-2 py-1"><span class="badge">${gFmt}</span></td>
+                <td class="px-2 py-1">Class ${String(cls ?? '')}</td>
+                <td class="px-2 py-1 font-mono text-slate-500 text-[10px]">${dateOnly}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
     async function loadDashboardSavedBatch(page=1){
         try{
             const state = window.savedBatchState || { page: 1, page_size: 10, order_by: 'timestamp_desc', search: '' };
@@ -1513,7 +3176,7 @@
                     <td class="px-3 py-2">${String(row.action || '')}</td>
                     <td class="px-3 py-2 font-mono text-slate-500">${String(row.timestamp || '')}</td>
                     <td class="px-3 py-2 text-right">
-                        <button class="px-2 py-1 text-xs rounded border border-pink-200 bg-white text-pink-600" onclick="dbpOpen('${String(row.patient_id || '')}')">View</button>
+                        <button class="px-2 py-1 text-xs rounded border border-pink-200 bg-white text-pink-600" onclick="dbpOpen('${String(row.patient_id || '')}')" data-pid="${String(row.patient_id || '')}" aria-controls="dbp-slideover" aria-expanded="false">View More</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1575,10 +3238,19 @@
         });
         document.getElementById('slide-overlay').classList.add('open');
         document.getElementById('dbp-slideover').classList.add('open');
+        try {
+            const btn = document.querySelector(`button[data-pid="${String(pid)}"][aria-controls="dbp-slideover"]`);
+            if (btn) btn.setAttribute('aria-expanded','true');
+            const closeBtn = document.querySelector('#dbp-slideover button[onclick="closeDbpDetails()"]');
+            if (closeBtn) closeBtn.focus();
+        } catch(_) {}
     }
     function closeDbpDetails(){
         document.getElementById('slide-overlay').classList.remove('open');
         document.getElementById('dbp-slideover').classList.remove('open');
+        try {
+            document.querySelectorAll('button[aria-controls="dbp-slideover"]').forEach(b => b.setAttribute('aria-expanded','false'));
+        } catch(_) {}
     }
     function dbpExportCSV(){
         const r = window.currentSavedRow || {};
@@ -1738,6 +3410,22 @@
             document.getElementById('doc-error').innerText = errorRate.toFixed(1) + "%";
         } catch(e) {}
         try{
+            const r = await fetch(API_BASE + "/api/v1/metabric/evaluate");
+            if (r && r.ok) {
+                const j = await r.json();
+                const pct = v => (Number(v)*100).toFixed(1) + "%";
+                const aggr = Number(j.r2_aggressiveness || j.r2_aggressiveness_test || j.r2_aggressiveness_train || 0);
+                const grow = Number(j.r2_growth_rate || j.r2_growth_rate_test || j.r2_growth_rate_train || 0);
+                const evol = Number(j.accuracy_evolution_6m || 0);
+                const elA = document.getElementById('doc-mb-aggr-r2');
+                const elG = document.getElementById('doc-mb-grow-r2');
+                const elE = document.getElementById('doc-mb-evol-acc');
+                if (elA) elA.innerText = pct(aggr);
+                if (elG) elG.innerText = pct(grow);
+                if (elE) elE.innerText = pct(evol);
+            }
+        } catch(e) {}
+        try{
             const gres = await fetch(API_BASE + "/api/guidelines");
             const g = await gres.json();
             const src = g.clinical_references || [];
@@ -1836,6 +3524,12 @@
     window.savedState = { page: 1, page_size: 5 };
     if(btnPrev){ btnPrev.addEventListener('click', ()=>{ const s=window.savedState; if(s.page>1){ s.page-=1; renderSavedPage(); }}); }
     if(btnNext){ btnNext.addEventListener('click', ()=>{ const s=window.savedState; const total = Math.max(1, Math.ceil((window.savedRows||[]).length / s.page_size)); if(s.page<total){ s.page+=1; renderSavedPage(); }}); }
+    const pPrev = document.getElementById('prg-prev');
+    const pNext = document.getElementById('prg-next');
+    window.prgState = { page: 1, page_size: 5 };
+    if(pPrev){ pPrev.addEventListener('click', ()=>{ const s=window.prgState; if(s.page>1){ s.page-=1; renderPrognosisSavedPage(); }}); }
+    if(pNext){ pNext.addEventListener('click', ()=>{ const s=window.prgState; const total = Math.max(1, Math.ceil((window.prgRows||[]).length / s.page_size)); if(s.page<total){ s.page+=1; renderPrognosisSavedPage(); }}); }
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ try{ closeDetails(); }catch(_){} try{ closeDbpDetails(); }catch(_){} try{ closePrognosisDetails(); }catch(_){} try{ document.getElementById('slide-overlay').classList.remove('open'); }catch(_){} } });
 </script>
 </body>
 </html>
