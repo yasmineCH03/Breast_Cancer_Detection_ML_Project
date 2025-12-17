@@ -234,52 +234,7 @@
 
 <div class="flex h-screen w-full relative">
 
-    <aside class="hidden">
-        <div class="h-20 flex items-center gap-3 px-0 lg:px-6 justify-center lg:justify-start border-b border-pink-100">
-            <svg class="h-10 w-10 drop-shadow-sm flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#db2777" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
-            </svg>
-            <div class="hidden lg:block">
-                <span class="font-bold text-2xl tracking-tight text-slate-900">Onco<span class="text-pink-600">Care</span></span>
-                <p class="text-[10px] text-pink-500 font-medium uppercase tracking-widest">Octobre Rose Edition</p>
-            </div>
-        </div>
 
-        <nav class="flex-1 py-6 px-3 space-y-1">
-            <button onclick="router('dashboard')" id="nav-dashboard" data-view="dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
-                <i class="ph ph-squares-four text-xl"></i><span class="hidden lg:block text-sm">Dashboard</span>
-            </button>
-            
-            <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Modèles IA</div>
-            
-            <button onclick="router('model1')" id="nav-model1" data-view="model1" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
-                <i class="ph ph-microscope text-xl"></i><span class="hidden lg:block text-sm">Cellular Analysis</span>
-            </button>
-            <button onclick="router('model2')" id="nav-model2" data-view="model2" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition group font-medium">
-                <i class="ph ph-chart-line-up text-xl"></i><span class="hidden lg:block text-sm">Clinical Prognosis</span>
-            </button>
-
-            <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Documentation</div>
-            <button onclick="router('docs')" id="nav-docs" data-view="docs" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
-                <i class="ph ph-book-open text-xl"></i><span class="hidden lg:block text-sm">Docs & Resources</span>
-            </button>
-        </nav>
-
-        <div class="p-4 border-t border-pink-100 text-center lg:text-left">
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-3 justify-center lg:justify-start">
-                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-md">SJ</div>
-                    <div class="hidden lg:block text-xs">
-                        <p class="text-slate-900 font-bold">Dr. Sarah Jenkins</p>
-                        <p class="text-pink-500">Oncology Dept.</p>
-                    </div>
-                </div>
-                <button onclick="openSignOutModal()" class="hidden lg:flex h-8 w-8 items-center justify-center rounded-full hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition" title="Sign Out">
-                    <i class="ph ph-sign-out text-lg"></i>
-                </button>
-            </div>
-        </div>
-    </aside>
 
 
     <main class="flex-1 flex flex-col min-w-0 relative h-full app-bg theme-apply">
@@ -307,7 +262,7 @@
                         <i id="themeIcon" class="ph ph-sun text-yellow-500"></i>
                     </div>
                 </button>
-                <button onclick="document.getElementById('signout-modal').classList.remove('hidden')" class="nav-link px-2 py-2 rounded-lg transition hover:bg-pink-100 dark:hover:bg-gray-700" aria-label="Sign out" title="Sign out">
+                <button onclick="openSignOutModal()" class="nav-link px-2 py-2 rounded-lg transition hover:bg-pink-100 dark:hover:bg-gray-700" aria-label="Sign out" title="Sign out">
                     <i class="ph ph-sign-out text-xl icon-skin"></i>
                 </button>
                 <button id="btnMobileMenu" class="md:hidden h-10 w-10 rounded-lg border border-pink-200 text-slate-600 hover:bg-pink-50 transition grid place-items-center" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">
@@ -332,7 +287,7 @@
                 <button onclick="router('dashboard');toggleMobileMenu(false)" data-view="dashboard" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-squares-four"></i> Dashboard</button>
                 <button onclick="router('model1');toggleMobileMenu(false)" data-view="model1" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-microscope"></i> Cellular Analysis</button>
                 <button onclick="router('model2');toggleMobileMenu(false)" data-view="model2" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-chart-line-up"></i> Clinical Prognosis</button>
-                <button onclick="router('docs');toggleMobileMenu(false)" data-view="docs" class="nav-link w-full flex items-center gap-2 px-3 py-2 rounded-lg transition"><i class="ph ph-book-open"></i> Docs & Resources</button>
+
             </div>
         </div>
 
@@ -1474,7 +1429,7 @@
         // Authentication Check
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = 'signin.html';
+            window.location.href = 'oncoai_signin.html';
         }
 
         initTheme();
@@ -4565,7 +4520,7 @@
             
             // Simulate network delay
             setTimeout(() => {
-                window.location.href = 'signin.html';
+                window.location.href = 'oncoai_signin.html';
             }, 800);
         }
 

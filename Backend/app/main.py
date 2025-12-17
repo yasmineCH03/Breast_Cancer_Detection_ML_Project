@@ -113,7 +113,7 @@ if os.path.isdir(FRONTEND_DIR):
 @app.get("/")
 async def root():
     if os.path.isdir(FRONTEND_DIR):
-        return RedirectResponse(url="/ui/signin.html")
+        return RedirectResponse(url="/ui/oncoai_signin.html")
     return {"status": "ok", "message": "API running"}
 
 # ============================================================================

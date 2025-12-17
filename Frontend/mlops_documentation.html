@@ -64,6 +64,7 @@
                     <a href="#overview" class="hover:text-brand-600 transition-colors">Overview</a>
                     <a href="#architecture" class="hover:text-brand-600 transition-colors">Architecture</a>
                     <a href="#workflow" class="hover:text-brand-600 transition-colors">Workflow</a>
+                    <a href="#webapp" class="hover:text-brand-600 transition-colors">Web App</a>
                     <a href="#commands" class="hover:text-brand-600 transition-colors">Quick Start</a>
                 </div>
             </div>
@@ -226,6 +227,80 @@ git commit -m "Update dataset"
                     </div>
                 </div>
 
+            </div>
+        </section>
+
+        <!-- Web App Section -->
+        <section id="webapp">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Web Application Features</h2>
+                <p class="text-slate-600">A modern, responsive interface for breast cancer diagnosis and prognosis.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Cellular Analysis -->
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center text-2xl">
+                            <i class="ph ph-microscope"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Cellular Analysis</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Powered by the SGD-SVM model trained on the WBCD dataset.
+                    </p>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Real-time diagnosis prediction</li>
+                        <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Probability estimation</li>
+                        <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Feature contribution visualization</li>
+                    </ul>
+                </div>
+
+                <!-- Clinical Prognosis -->
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-2xl">
+                            <i class="ph ph-chart-line-up"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Clinical Prognosis</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Powered by the Metabric Gradient Boosting model.
+                    </p>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Multi-output regression</li>
+                        <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Aggressiveness score prediction</li>
+                        <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Growth rate & 6-month evolution</li>
+                    </ul>
+                </div>
+
+                <!-- UI/UX -->
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 md:col-span-2">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl">
+                            <i class="ph ph-paint-brush-broad"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Octobre Rose Edition UI</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                A completely redesigned interface focusing on user experience and accessibility.
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Glassmorphism & Responsive Design</li>
+                                <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Animated Inspirational Quotes</li>
+                                <li class="flex items-center gap-2"><i class="ph ph-check text-green-500"></i> Dark/Light Mode Support</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="ph ph-ribbon text-4xl text-pink-500 animate-bounce mb-2"></i>
+                                <p class="text-xs text-slate-500 font-medium">"Hope is stronger than fear."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
