@@ -258,6 +258,7 @@
             <button onclick="router('model2')" id="nav-model2" data-view="model2" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition group font-medium">
                 <i class="ph ph-chart-line-up text-xl"></i><span class="hidden lg:block text-sm">Clinical Prognosis</span>
             </button>
+
             <div class="hidden lg:block px-3 mt-6 mb-2 text-[10px] font-bold uppercase text-slate-400 tracking-wider">Documentation</div>
             <button onclick="router('docs')" id="nav-docs" data-view="docs" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition group font-medium">
                 <i class="ph ph-book-open text-xl"></i><span class="hidden lg:block text-sm">Docs & Resources</span>
@@ -297,6 +298,7 @@
                 <nav class="hidden md:flex items-center gap-1">
                     <button onclick="router('dashboard')" id="top-nav-dashboard" data-view="dashboard" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-squares-four"></i> <span class="ml-1">Dashboard</span></button>
                     <button onclick="router('model1')" id="top-nav-model1" data-view="model1" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-microscope"></i> <span class="ml-1">Cellular</span></button>
+                    <!-- Triage link removed as it is now integrated into dashboard -->
                     <button onclick="router('model2')" id="top-nav-model2" data-view="model2" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-chart-line-up"></i> <span class="ml-1">Prognosis</span></button>
                     <button onclick="router('docs')" id="top-nav-docs" data-view="docs" class="nav-link px-3 py-2 rounded-lg transition text-sm"><i class="ph ph-book-open"></i> <span class="ml-1">Docs</span></button>
                 </nav>
@@ -373,10 +375,11 @@
                                 </div>
                                 <p class="text-[12px] text-slate-600 truncate">FNA biopsy (WBCD) • Benign/Malignant • Risk tiers</p>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <!-- Buttons removed as requested -->
+                            <!-- <div class="flex items-center gap-2">
                                 <button class="text-[11px] px-2 py-1 rounded bg-pink-50 border border-pink-200 text-pink-700 hover:bg-pink-600 hover:text-white transition" onclick="router('model1')">Open</button>
                                 <button class="text-[11px] px-2 py-1 rounded bg-white border border-pink-200 text-slate-700 hover:bg-pink-50 transition" aria-controls="cellular-details" aria-expanded="false" onclick="toggleCardDetails('cellular-details', this)">Details</button>
-                            </div>
+                            </div> -->
                         </div>
                         <div id="cellular-details" class="disclose-content px-4 pb-3" hidden>
                             <div class="grid grid-cols-2 gap-2">
@@ -403,10 +406,11 @@
                                 </div>
                                 <p class="text-[12px] text-slate-600 truncate">History & genomics • Aggressiveness • Timeline</p>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <!-- Buttons removed as requested -->
+                            <!-- <div class="flex items-center gap-2">
                                 <button class="text-[11px] px-2 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white transition" onclick="router('model2')">Open</button>
                                 <button class="text-[11px] px-2 py-1 rounded bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 transition" aria-controls="prognosis-details" aria-expanded="false" onclick="toggleCardDetails('prognosis-details', this)">Details</button>
-                            </div>
+                            </div> -->
                         </div>
                         <div id="prognosis-details" class="disclose-content px-4 pb-3" hidden>
                             <div class="grid grid-cols-2 gap-2">
@@ -428,7 +432,11 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white rounded-2xl border border-pink-200 shadow-sm overflow-hidden">
                         <div class="p-6 border-b border-pink-100 flex items-center justify-between">
-                            <h3 class="font-display text-lg font-bold text-slate-900">Saved Batch Predictions</h3>
+                            <h3 class="font-display text-lg font-bold text-slate-900">Cellular analysis patients</h3>
+                            <div class="relative">
+                                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input type="text" id="dbp-search-input" oninput="renderSavedPage()" placeholder="Search ID..." class="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-200 outline-none w-40">
+                            </div>
                         </div>
                         <div class="p-6 space-y-4">
                             <div class="flex items-center gap-2">
@@ -447,6 +455,7 @@
                                             <th class="px-3 py-2">Risk</th>
                                             <th class="px-3 py-2">Action</th>
                                             <th class="px-3 py-2">Time</th>
+                                            <th class="px-3 py-2 text-right">Details</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dbp-table-body" class="divide-y divide-pink-100 bg-white"></tbody>
@@ -456,7 +465,7 @@
                     </div>
                     <div class="bg-white rounded-2xl border border-pink-200 shadow-sm overflow-hidden">
                         <div class="p-6 border-b border-pink-100 flex items-center justify-between">
-                            <h3 class="font-display text-lg font-bold text-slate-900">Saved Prognosis Predictions</h3>
+                            <h3 class="font-display text-lg font-bold text-slate-900">Prognosis Analysis Patients</h3>
                         </div>
                         <div class="p-6 space-y-4">
                             <div class="flex items-center gap-2">
@@ -479,6 +488,81 @@
                                     <tbody id="prg-table-body" class="divide-y divide-pink-100 bg-white"></tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinical Planning Calendar -->
+                <div class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden flex flex-col mt-4">
+                    <!-- Calendar Header -->
+                    <div class="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                <i class="ph ph-calendar text-pink-600"></i> Planning Clinique
+                            </h2>
+                            <div class="flex bg-gray-100 p-1 rounded-lg">
+                                <button onclick="setCalendarView('day')" id="btnViewDay" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-500 hover:text-gray-900">Jour</button>
+                                <button onclick="setCalendarView('week')" id="btnViewWeek" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all bg-white text-pink-600 shadow-sm">Semaine</button>
+                                <button onclick="setCalendarView('month')" id="btnViewMonth" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-500 hover:text-gray-900">Mois</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <div class="relative hidden sm:block">
+                                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="calendar-search" oninput="renderCalendar()" placeholder="Search..." class="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-gray-200 focus:ring-2 focus:ring-pink-200 outline-none w-32">
+                            </div>
+                            <button onclick="navCalendar(-1)" class="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors"><i class="ph ph-caret-left text-lg"></i></button>
+                            <span id="currentDateLabel" class="text-sm font-semibold text-gray-900 min-w-[140px] text-center">--</span>
+                            <button onclick="navCalendar(1)" class="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors"><i class="ph ph-caret-right text-lg"></i></button>
+                            <button onclick="navToday()" class="ml-2 px-3 py-1.5 text-xs font-medium bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition-colors">Aujourd'hui</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendar Body -->
+                    <div id="calendar-container" class="flex-1 overflow-auto bg-gray-50/50 relative min-h-[300px]">
+                        
+                        <!-- Loading State -->
+                        <div id="calendar-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 z-20 hidden">
+                             <i class="ph ph-spinner ph-spin text-4xl text-pink-500 mb-3"></i>
+                             <p class="text-gray-500 font-medium">Chargement du planning...</p>
+                        </div>
+                        <!-- Error State -->
+                        <div id="calendar-error" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-20 hidden">
+                             <i class="ph ph-warning-circle text-4xl text-red-500 mb-3"></i>
+                             <p class="text-gray-800 font-medium mb-2">Erreur de chargement</p>
+                             <button onclick="loadTriagePlan()" class="px-4 py-2 bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition">Réessayer</button>
+                        </div>
+
+                        <!-- Day View -->
+                        <div id="viewDay" class="hidden p-3 max-w-2xl mx-auto space-y-2">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Week View -->
+                        <div id="viewWeek" class="p-2 grid grid-cols-1 sm:grid-cols-7 gap-1 h-full">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Month View -->
+                        <div id="viewMonth" class="hidden p-2 h-full">
+                            <div class="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden border border-gray-200">
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Lun</div>
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Mar</div>
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Mer</div>
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Jeu</div>
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Ven</div>
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Sam</div>
+                                <div class="bg-gray-50 p-2 text-center text-xs font-semibold text-gray-500">Dim</div>
+                                <!-- Days populated by JS -->
+                                <div id="monthGrid" class="contents"></div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="calendarEmptyState" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 bg-white z-0 hidden">
+                            <i class="ph ph-calendar-blank text-6xl mb-4 opacity-20"></i>
+                            <p>Aucune planification chargée</p>
                         </div>
                     </div>
                 </div>
@@ -552,21 +636,30 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="relative z-10 text-right">
+                                <div class="relative z-10 text-right flex flex-col items-end gap-2">
                                     <div class="inline-block px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/10">
                                         <p class="text-[10px] text-pink-100 uppercase font-bold">Risk Level</p>
                                         <p id="result-tier" class="text-xl font-bold text-white">---</p>
+                                    </div>
+                                    <div id="result-danger-badge" class="hidden inline-block px-4 py-1 rounded-full bg-red-500/80 backdrop-blur-md border border-red-400/50 text-white text-xs font-bold animate-pulse">
+                                        <i class="ph ph-warning"></i> <span id="result-danger-count">0</span> Danger Flags
                                     </div>
                                 </div>
                             </div>
 
                             <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
                                 <div class="lg:col-span-2">
-                                    <h4 class="font-bold text-slate-800 text-sm mb-4">Top 5 Critical Features</h4>
-                                    <div class="overflow-hidden rounded-lg border border-pink-200">
+                                    <h4 class="font-bold text-slate-800 text-sm mb-4">Clinical Interpretation (Top 10)</h4>
+                                    <div class="overflow-hidden rounded-lg border border-pink-200 overflow-x-auto">
                                         <table class="w-full text-sm text-left">
                                             <thead class="bg-pink-50 text-pink-900 font-semibold border-b border-pink-200">
-                                                <tr><th class="px-4 py-3">Feature</th><th class="px-4 py-3">Value</th><th class="px-4 py-3">Impact</th></tr>
+                                                <tr>
+                                                    <th class="px-4 py-3">Feature</th>
+                                                    <th class="px-4 py-3">Valeur</th>
+                                                    <th class="px-4 py-3">Seuil</th>
+                                                    <th class="px-4 py-3">Position</th>
+                                                    <th class="px-4 py-3">Interprétation</th>
+                                                </tr>
                                             </thead>
                                             <tbody id="top-features-body" class="divide-y divide-pink-100 bg-white"></tbody>
                                         </table>
@@ -622,6 +715,10 @@
                                         <option value="mod">Medium</option>
                                         <option value="low">Low</option>
                                     </select>
+                                    <div class="relative">
+                                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                        <input type="text" id="filter-search" oninput="filterTable()" placeholder="Search ID..." class="pl-9 pr-3 py-2 text-sm rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-200 focus:border-pink-300 outline-none w-40">
+                                    </div>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <span class="text-xs text-slate-400 font-mono"><span id="row-count" class="font-bold text-slate-700">0</span> rows</span>
@@ -1051,15 +1148,31 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Danger Flags Badge -->
+                    <div id="detail-danger-container" class="hidden p-3 rounded-xl border border-red-200 bg-red-50 flex items-center gap-3">
+                         <div class="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                             <i class="ph ph-warning text-lg"></i>
+                         </div>
+                         <div>
+                             <div class="text-[10px] font-bold text-red-600 uppercase">Danger Flags</div>
+                             <div id="detail-danger-count" class="text-sm font-bold text-red-800">0 detected</div>
+                         </div>
+                    </div>
                 </div>
                 <div id="pt-tab-features" class="tab-content hidden">
                     <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
-                        <i class="ph ph-list-magnifying-glass text-pink-600"></i> Feature Analysis (Top 6)
+                        <i class="ph ph-list-magnifying-glass text-pink-600"></i> Clinical Interpretation (Top 10)
                     </h4>
-                    <div class="border border-pink-200 rounded-xl overflow-hidden">
+                    <div class="border border-pink-200 rounded-xl overflow-hidden overflow-x-auto">
                         <table class="w-full text-sm text-left">
                             <thead class="bg-pink-50 text-pink-900 text-xs font-semibold">
-                                <tr><th class="px-4 py-2">Metric</th><th class="px-4 py-2">Value</th><th class="px-4 py-2">Impact</th></tr>
+                                <tr>
+                                    <th class="px-4 py-2">Feature</th>
+                                    <th class="px-4 py-2">Valeur</th>
+                                    <th class="px-4 py-2">Seuil</th>
+                                    <th class="px-4 py-2">Position</th>
+                                    <th class="px-4 py-2">Interprétation</th>
+                                </tr>
                             </thead>
                             <tbody id="detail-features-body" class="divide-y divide-pink-100 bg-white"></tbody>
                         </table>
@@ -1070,6 +1183,24 @@
                         <i class="ph ph-clipboard-text text-pink-600"></i> Recommended Actions
                     </h4>
                     <ul id="detail-actions-list" class="list-disc pl-5 text-sm text-slate-700 space-y-1"></ul>
+                </div>
+                
+                <div id="detail-admin-actions" class="hidden pt-6 border-t border-pink-100">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3">Triage Actions</h4>
+                    <div class="bg-pink-50/50 rounded-xl p-4 border border-pink-200 space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Update Appointment</label>
+                            <div class="flex gap-2">
+                                <input type="date" id="detail-action-date" class="flex-1 px-3 py-2 text-sm border border-pink-200 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-slate-700">
+                                <button onclick="updatePatientDate()" id="btn-update-date" class="px-4 py-2 bg-pink-600 text-white rounded-lg text-xs font-bold hover:bg-pink-700 transition shadow-sm hover:shadow">Update</button>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-pink-200/50">
+                            <button onclick="deletePatient()" id="btn-delete-patient" class="w-full py-2.5 bg-white text-red-600 border border-red-200 rounded-lg text-xs font-bold hover:bg-red-50 hover:border-red-300 transition flex items-center justify-center gap-2">
+                                <i class="ph ph-trash text-lg"></i> Delete Patient
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1154,6 +1285,10 @@
                     <div id="dbp-detail-tier" class="mt-1"></div>
                 </div>
                 <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
+                    <p class="text-xs font-bold text-pink-400 uppercase">Danger Flags</p>
+                    <div id="dbp-detail-flags" class="font-bold text-slate-700 mt-1">--</div>
+                </div>
+                <div class="p-4 rounded-xl border border-pink-200 bg-pink-50">
                     <p class="text-xs font-bold text-pink-400 uppercase">Action</p>
                     <p id="dbp-detail-action" class="font-bold text-slate-700 mt-1">---</p>
                 </div>
@@ -1167,10 +1302,34 @@
                 <div class="border border-pink-200 rounded-xl overflow-hidden">
                     <table class="w-full text-xs table-xs">
                         <thead class="bg-pink-50 text-pink-900 text-xs font-semibold">
-                            <tr><th class="px-3 py-2">Feature</th><th class="px-3 py-2">Value</th></tr>
+                            <tr>
+                                <th class="px-3 py-2">Feature</th>
+                                <th class="px-3 py-2">Value</th>
+                                <th class="px-3 py-2">Threshold</th>
+                                <th class="px-3 py-2">Position</th>
+                                <th class="px-3 py-2">Interpretation</th>
+                            </tr>
                         </thead>
                         <tbody id="dbp-detail-features" class="divide-y divide-pink-100 bg-white"></tbody>
                     </table>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-pink-100">
+                <h4 class="font-bold text-slate-800 text-sm mb-3">Triage Actions</h4>
+                <div class="bg-pink-50/50 rounded-xl p-4 border border-pink-200 space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Update Appointment</label>
+                        <div class="flex gap-2">
+                            <input type="date" id="dbp-action-date" class="flex-1 px-3 py-2 text-sm border border-pink-200 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-slate-700">
+                            <button onclick="updatePatientDate()" class="px-4 py-2 bg-pink-600 text-white rounded-lg text-xs font-bold hover:bg-pink-700 transition shadow-sm hover:shadow">Update</button>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-pink-200/50">
+                        <button onclick="deletePatient()" class="w-full py-2.5 bg-white text-red-600 border border-red-200 rounded-lg text-xs font-bold hover:bg-red-50 hover:border-red-300 transition flex items-center justify-center gap-2">
+                            <i class="ph ph-trash text-lg"></i> Delete Patient
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1321,6 +1480,12 @@
         if (e.key === 'Escape') toggleMobileMenu(false);
     });
     document.addEventListener('DOMContentLoaded', () => {
+        // Authentication Check
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            window.location.href = 'signin.html';
+        }
+
         initTheme();
         runThemeTests();
         renderStyleGuide();
@@ -1441,12 +1606,23 @@
 
     // --- SINGLE PATIENT LOGIC ---
     const originGuess = (location.protocol.startsWith('http') ? location.origin : 'http://localhost:8000');
-    const API_BASE = ((originGuess.includes(':8080') || originGuess.includes(':8081')) || originGuess.startsWith('file')) ? 'http://127.0.0.1:8000' : originGuess;
+    // Allow port 3000 (React/Vite/Python http.server) and 5500 (Live Server) to access backend at 8000
+    const API_BASE = (
+        originGuess.includes(':8080') || 
+        originGuess.includes(':8081') || 
+        originGuess.includes(':3000') || 
+        originGuess.includes(':5500') || 
+        originGuess.startsWith('file')
+    ) ? 'http://127.0.0.1:8000' : originGuess;
+    
+    // Auto-redirect removed to allow development on port 3000
+    /*
     if(!location.origin.includes(':8000')){
         try {
             window.location.href = 'http://localhost:8000/ui/oncoai_merged.html';
         } catch (_) {}
     }
+    */
     const featureNames = [
         "Radius Mean", "Texture Mean", "Perimeter Mean", "Area Mean", "Smoothness Mean",
         "Compactness Mean", "Concavity Mean", "Concave Points Mean", "Symmetry Mean", "Fractal Dim Mean",
@@ -2263,6 +2439,52 @@
         }
     }
 
+    // --- Full Analysis Modal ---
+    const modalHTML = `
+    <div id="full-analysis-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-lg bg-pink-100 text-pink-600 grid place-items-center">
+                        <i class="ph ph-chart-bar text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Analyse Détaillée (30 Features)</h3>
+                        <p class="text-xs text-slate-500">Toutes les caractéristiques mesurées</p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('full-analysis-modal').classList.add('hidden')" class="h-8 w-8 rounded-full hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-0">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Feature</th>
+                            <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Valeur Patient</th>
+                            <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Seuil Danger</th>
+                            <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Position</th>
+                            <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Interprétation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="full-analysis-body" class="divide-y divide-slate-100">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="document.getElementById('full-analysis-modal').classList.add('hidden')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition shadow-sm">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
     async function runExtendedPrediction() {
         const btn = document.getElementById('btnRunPrediction');
         const original = btn.innerHTML;
@@ -2307,22 +2529,60 @@
             document.getElementById('result-score').innerText = prob.toFixed(1) + "% (" + conf + ")";
             const tierLower = (tier || '').toString().toLowerCase();
             const card = document.getElementById('result-card-bg');
+            // User requested specific colors: Critical=Red, High=Orange, Medium=Yellow, Low=Green
             if (tierLower.includes('critical')) {
-                card.className = "p-8 bg-gradient-to-r from-red-700 to-red-900 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
-                elIconContainer.className = "h-20 w-20 rounded-2xl bg-red-900/20 flex items-center justify-center border border-white/30";
+                card.className = "p-8 bg-gradient-to-r from-red-600 to-red-700 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-white/20 flex items-center justify-center border border-white/30";
             } else if (tierLower.includes('high')) {
-                card.className = "p-8 bg-gradient-to-r from-rose-600 to-rose-800 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
-                elIconContainer.className = "h-20 w-20 rounded-2xl bg-rose-900/20 flex items-center justify-center border border-white/30";
+                card.className = "p-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-white/20 flex items-center justify-center border border-white/30";
             } else if (tierLower.includes('medium') || tierLower === 'mod') {
-                card.className = "p-8 bg-gradient-to-r from-amber-500 to-orange-600 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
-                elIconContainer.className = "h-20 w-20 rounded-2xl bg-amber-900/20 flex items-center justify-center border border-white/30";
-            } else if (tierLower.includes('very')) {
-                card.className = "p-8 bg-gradient-to-r from-emerald-300 to-emerald-500 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
-                elIconContainer.className = "h-20 w-20 rounded-2xl bg-emerald-900/20 flex items-center justify-center border border-white/30";
+                card.className = "p-8 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-white/20 flex items-center justify-center border border-white/30";
+                // Yellow might need darker text if too bright, but white text usually works with dark yellow/orange
             } else {
-                card.className = "p-8 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
-                elIconContainer.className = "h-20 w-20 rounded-2xl bg-emerald-900/20 flex items-center justify-center border border-white/30";
+                card.className = "p-8 bg-gradient-to-r from-green-500 to-green-600 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden";
+                elIconContainer.className = "h-20 w-20 rounded-2xl bg-white/20 flex items-center justify-center border border-white/30";
             }
+
+            // Clinical Interpretation Table (Priority: Abnormal Features)
+            const tbody = document.getElementById('top-features-body');
+            tbody.innerHTML = '';
+
+            const getUnit = (feat) => {
+                const f = (feat || '').toLowerCase();
+                if(f.includes('area')) return ' µm²';
+                if(f.includes('radius') || f.includes('perimeter') || f.includes('smoothness')) return ' µm';
+                // if(f.includes('texture')) return ' ';
+                return '';
+            };
+            
+            // Full interpretations list (now contains all features sorted by importance)
+            const interpretations = j.risk_analysis?.interpretation_table || [];
+            
+            // Filter for flags/abnormal features
+            const flags = interpretations.filter(item => {
+                const text = (item.clinical_interpretation || '').toLowerCase();
+                if (text.includes('normal')) return false; // Explicitly exclude "Normal" from flags
+                
+                const isHighRisk = (item.clinical_interpretation || '').includes('Élevé') || 
+                                 (item.clinical_interpretation || '').includes('atypique') ||
+                                 (item.clinical_interpretation || '').includes('suspect');
+                return isHighRisk || (item.position === 'Au-dessus' && item.danger_threshold > 0);
+            });
+
+            const dangerCount = flags.length;
+            const dangerBadge = document.getElementById('result-danger-badge');
+            const dangerCountSpan = document.getElementById('result-danger-count');
+            if (dangerBadge && dangerCountSpan) {
+                dangerCountSpan.innerText = dangerCount;
+                if (dangerCount > 0) {
+                    dangerBadge.classList.remove('hidden');
+                } else {
+                    dangerBadge.classList.add('hidden');
+                }
+            }
+
             if (diag === "MALIGNANT") {
                 elDiag.innerText = "MALIGNANT";
                 elIcon.className = "ph ph-warning-octagon text-4xl text-white";
@@ -2337,24 +2597,93 @@
                              t.includes('very') ? 'VERY LOW RISK' :
                              'LOW RISK';
             elTier.innerText = friendly;
-            const tbody = document.getElementById('top-features-body');
-            tbody.innerHTML = '';
-            const all = j.explainability?.all_features || [];
-            const totalImp = all.reduce((sum, f) => sum + (typeof f.importance === 'number' ? f.importance : 0), 0) || (j.explainability?.top_features || []).reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0);
-            const originals = j.explainability?.original_features || {};
+            
             const labelOf = (k) => {
                 const idx = apiFeatureKeys.indexOf(k);
                 return idx >= 0 ? featureNames[idx] : k;
             };
-            (j.explainability?.top_features || []).forEach(tf => {
-                const key = tf.feature;
-                const raw = originals[key];
-                const rawStr = typeof raw === 'number' ? raw.toFixed(2) : (raw ?? '');
-                const pct = totalImp ? ((tf.importance || 0) / totalImp) * 100 : 0;
-                const pctStr = pct.toFixed(1) + '%';
-                const impact = `<span class="text-pink-600 font-bold flex items-center gap-1"><i class="ph ph-trend-up"></i> ${pctStr}</span>`;
-                tbody.innerHTML += `<tr class="hover:bg-pink-50 transition"><td class="px-4 py-3 font-medium text-slate-700">${labelOf(key)}</td><td class="px-4 py-3 font-mono text-slate-500">${rawStr}</td><td class="px-4 py-3 text-xs">${impact}</td></tr>`;
-            });
+
+            // 1. Render Main Table (Top 10 Features)
+            const topFeatures = interpretations.slice(0, 10);
+            
+            if (topFeatures.length > 0) {
+                topFeatures.forEach(item => {
+                    const isFlag = flags.includes(item);
+                    const trClass = isFlag ? "bg-red-50 hover:bg-red-100 transition border-l-4 border-red-500" : "hover:bg-slate-50 border-l-4 border-transparent";
+                    const posClass = isFlag ? "text-red-600 font-bold" : "text-emerald-600 font-bold";
+                    const interpClass = isFlag ? "text-red-700 font-bold" : "text-slate-500";
+                    
+                    // Calculate position (+/- diff)
+                    const diff = item.patient_value - item.danger_threshold;
+                    const sign = diff >= 0 ? '+' : '';
+                    const posText = (item.danger_threshold > 0) ? `${sign}${diff.toFixed(2)}` : '--';
+                    const unit = getUnit(item.feature);
+
+                    tbody.innerHTML += `
+                        <tr class="${trClass}">
+                            <td class="px-4 py-3 font-medium text-slate-700">${labelOf(item.feature)}</td>
+                            <td class="px-4 py-3 font-mono text-slate-600">${Number(item.patient_value).toFixed(2)}<span class="text-xs text-slate-400 ml-1">${unit}</span></td>
+                            <td class="px-4 py-3 font-mono text-slate-500">${Number(item.danger_threshold).toFixed(2)}<span class="text-xs text-slate-300 ml-1">${unit}</span></td>
+                            <td class="px-4 py-3 font-mono text-xs ${posClass}">${posText}</td>
+                            <td class="px-4 py-3 text-xs ${interpClass}">${item.clinical_interpretation}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-4 py-6 text-center text-emerald-600 font-medium bg-emerald-50 rounded-lg">
+                            <div class="flex flex-col items-center gap-2">
+                                <i class="ph ph-check-circle text-2xl"></i>
+                                <span>Aucune caractéristique anormale détectée. Toutes les valeurs sont dans les plages attendues.</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            // 2. Add "View All" Button and Modal Logic
+            const viewAllContainer = document.getElementById('view-all-container');
+            if(viewAllContainer) viewAllContainer.remove(); // Cleanup previous if any
+            
+            const btnDiv = document.createElement('div');
+            btnDiv.id = 'view-all-container';
+            btnDiv.className = "mt-4 text-center";
+            btnDiv.innerHTML = `
+                <button onclick="document.getElementById('full-analysis-modal').classList.remove('hidden')" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:text-pink-600 transition flex items-center justify-center gap-2 mx-auto text-sm font-medium shadow-sm">
+                    <i class="ph ph-eye"></i> Voir les 30 caractéristiques
+                </button>
+            `;
+            tbody.parentElement.parentElement.after(btnDiv);
+
+            // 3. Render Full Table in Modal (Hidden by default)
+            const modalBody = document.getElementById('full-analysis-body');
+            if(modalBody) {
+                modalBody.innerHTML = '';
+                interpretations.forEach(item => {
+                    const isFlag = flags.includes(item);
+                    const trClass = isFlag ? "bg-red-50 border-l-4 border-red-500" : "hover:bg-slate-50 border-l-4 border-transparent";
+                    const posClass = isFlag ? "text-red-600 font-bold" : "text-emerald-600 font-bold";
+                    const interpClass = isFlag ? "text-red-700 font-bold" : "text-slate-500";
+
+                    // Calculate position (+/- diff)
+                    const diff = item.patient_value - item.danger_threshold;
+                    const sign = diff >= 0 ? '+' : '';
+                    const posText = (item.danger_threshold > 0) ? `${sign}${diff.toFixed(2)}` : '--';
+                    const unit = getUnit(item.feature);
+
+                    modalBody.innerHTML += `
+                        <tr class="${trClass} border-b border-slate-100 last:border-0">
+                            <td class="px-4 py-2 font-medium text-slate-700 text-sm">${labelOf(item.feature)}</td>
+                            <td class="px-4 py-2 font-mono text-slate-600 text-sm">${Number(item.patient_value).toFixed(2)}<span class="text-xs text-slate-400 ml-1">${unit}</span></td>
+                            <td class="px-4 py-2 font-mono text-slate-400 text-sm">${Number(item.danger_threshold).toFixed(2)}<span class="text-xs text-slate-300 ml-1">${unit}</span></td>
+                            <td class="px-4 py-2 font-mono text-sm ${posClass}">${posText}</td>
+                            <td class="px-4 py-2 text-xs ${interpClass}">${item.clinical_interpretation}</td>
+                        </tr>
+                    `;
+                });
+            }
+
             console.log('Prediction result', j);
             window.singleResult = j;
             window.singleOriginal = j.explainability?.original_features || apiFeatureKeys.reduce((acc,k,i)=>{ acc[k] = parseFloat(document.getElementById(`inp_${i}`).value||''); return acc; }, {});
@@ -2447,7 +2776,10 @@
                 tierCode,
                 action,
                 features,
-                raw: r
+                raw: r,
+                danger_count: r.risk_analysis?.danger_flag_count || 0,
+                danger_flags: r.risk_analysis?.danger_flags_list || [],
+                clinical_interpretation: r.risk_analysis?.interpretation_table || []
             };
         });
     }
@@ -2498,11 +2830,13 @@
     function filterTable() {
         const pVal = document.getElementById('filter-pred').value;
         const tVal = document.getElementById('filter-tier').value;
+        const sVal = document.getElementById('filter-search')?.value.toLowerCase() || '';
         
         const filtered = allPatients.filter(p => {
             const mPred = pVal === 'all' ? true : (pVal === 'malin' ? p.isMal : !p.isMal);
             const mTier = tVal === 'all' ? true : (p.tierCode === tVal);
-            return mPred && mTier;
+            const mSearch = sVal === '' ? true : String(p.id).toLowerCase().includes(sVal);
+            return mPred && mTier && mSearch;
         });
         
         renderBatchTable(filtered);
@@ -2561,7 +2895,8 @@
                     probability: Number(p.prob) / 100,
                     risk_tier: p.tier,
                     action: p.action,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    danger_flag_count: p.dangerCount || 0
                 };
                 for(let i=0;i<5;i++){
                     const tf = top[i];
@@ -2598,6 +2933,8 @@
                         btn.className = btn.className.replace('from-emerald-500 to-emerald-600', 'from-pink-500 to-fuchsia-600');
                         btn.disabled = false;
                     }, 2000);
+                    // Refresh triage plan after saving new data
+                    loadTriagePlan();
                 } else {
                     alert('No rows saved. Verify batch results and try again.');
                     btn.disabled = false;
@@ -2618,72 +2955,248 @@
     }
 
     // --- DETAILS SLIDE-OVER ---
-    function openDetails(pid) {
-        console.log('View Details clicked for PID:', pid);
-        const p = allPatients.find(x => String(x.id) === String(pid));
-        if(!p){
-            console.warn('Patient not found in current batch', pid, allPatients.map(x=>x.id));
-            alert('Patient details unavailable. Please re-upload batch and try again.');
-            return;
+
+    function adaptSavedRowToPatient(row) {
+        const isMal = (row.predicted_class || row.prediction || '').toString().toUpperCase() === 'MALIGNANT';
+        let probVal = typeof row.probability === 'number' ? row.probability : 0;
+        let prob = probVal;
+        if (probVal <= 1 && probVal > 0) prob = (probVal * 100).toFixed(1);
+        else prob = Number(probVal).toFixed(1);
+
+        let interpretations = [];
+        if (row.clinical_interpretation) {
+            let feats = row.clinical_interpretation;
+            if (typeof feats === 'string') {
+                 try { feats = JSON.parse(feats); } catch(e) { feats = []; }
+            }
+            if (Array.isArray(feats)) interpretations = feats;
         }
-        window.currentPatient = p;
         
+        if (interpretations.length === 0 && row.top1_name) {
+            for(let i=1; i<=5; i++) {
+                if(row[`top${i}_name`]) {
+                    interpretations.push({
+                        feature: row[`top${i}_name`],
+                        patient_value: row[`top${i}_value`],
+                        danger_threshold: 0,
+                        clinical_interpretation: 'Top Feature',
+                        position: '' 
+                    });
+                }
+            }
+        }
+        
+        const tLower = (row.risk_tier || row.priority_category || '').toLowerCase();
+        let tierCode = 'low';
+        if(tLower.includes('critical')) tierCode = 'high';
+        else if(tLower.includes('high')) tierCode = 'high';
+        else if(tLower.includes('mod') || tLower.includes('medium')) tierCode = 'mod';
+
+        return {
+            id: row.patient_id,
+            isMal: isMal,
+            prob: prob,
+            tier: row.risk_tier || row.priority_category || 'Low Risk',
+            tierCode: tierCode,
+            action: row.action || row.planning_status || '',
+            danger_count: row.danger_flag_count || 0,
+            clinical_interpretation: interpretations,
+            appointment_date: row.appointment_date || row.timestamp,
+            isSavedRow: true,
+            originalRow: row,
+            raw: { explainability: { original_features: {}, top_features: [] } }
+        };
+    }
+
+    function renderUnifiedDetails(p) {
+        window.currentPatient = p;
+        if (p.isSavedRow) {
+            window.currentSavedRow = p.originalRow;
+        } else {
+            window.currentSavedRow = null;
+        }
+
         document.getElementById('detail-id').innerText = p.id;
         document.getElementById('detail-pred').innerText = p.isMal ? "MALIGNANT" : "BENIGN";
         document.getElementById('detail-score').innerText = p.prob + "%";
-        document.getElementById('detail-tier').innerText = p.tier + " Risk";
+        document.getElementById('detail-tier').innerText = p.tier;
         document.getElementById('detail-action').innerText = p.action;
         
         const card = document.getElementById('detail-card-bg');
         const box = document.getElementById('detail-icon-box');
         const icon = document.getElementById('detail-icon');
-        if (p.tierCode === 'high') {
-            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-rose-600 to-red-800";
-            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-rose-700";
-        } else if (p.tierCode === 'mod') {
-            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-amber-500 to-orange-600";
-            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-amber-700";
+        const tLower = (p.tier || '').toLowerCase();
+        
+        if (tLower.includes('critical')) {
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-red-600 to-red-700";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-white/20";
+        } else if (tLower.includes('high')) {
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-white/20";
+        } else if (tLower.includes('medium') || tLower.includes('mod')) {
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-yellow-400 to-yellow-500";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-white/20";
         } else {
-            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-emerald-400 to-emerald-600";
-            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-emerald-700";
+            card.className = "rounded-2xl p-6 text-white relative overflow-hidden bg-gradient-to-r from-green-500 to-green-600";
+            box.className = "h-16 w-16 rounded-xl flex items-center justify-center border border-white/20 bg-white/20";
         }
         icon.className = p.isMal ? "ph ph-warning-octagon text-3xl" : "ph ph-shield-check text-3xl";
         
+        const dangerContainer = document.getElementById('detail-danger-container');
+        const dangerCountEl = document.getElementById('detail-danger-count');
+        if (dangerContainer && dangerCountEl) {
+            dangerCountEl.innerText = (p.danger_count || 0) + " detected";
+            if ((p.danger_count || 0) > 0) {
+                dangerContainer.classList.remove('hidden');
+            } else {
+                dangerContainer.classList.add('hidden');
+            }
+        }
+        
         const riskBadge = document.getElementById('detail-risk-badge');
         if (riskBadge) {
-            const tierColor = p.tierCode === 'high' ? 'text-rose-700 bg-rose-100' : (p.tierCode === 'mod' ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100');
+            const tierColor = (p.tierCode === 'high' || tLower.includes('critical')) ? 'text-rose-700 bg-rose-100' : (p.tierCode === 'mod' ? 'text-amber-700 bg-amber-100' : 'text-emerald-700 bg-emerald-100');
             riskBadge.innerHTML = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${tierColor}">${p.tier}</span>`;
         }
+        
         const probLabel = document.getElementById('detail-prob-label');
         const probBar = document.getElementById('detail-prob-bar');
         if (probLabel) probLabel.innerText = p.prob + '%';
         if (probBar) probBar.style.width = p.prob + '%';
-        patientSwitchTab('pt-tab-summary');
+        
+        if(typeof patientSwitchTab === 'function') patientSwitchTab('pt-tab-summary');
+        
         const actionsUl = document.getElementById('detail-actions-list');
         if (actionsUl) {
             const actionItems = [
                 `Primary recommendation: ${p.action}`,
                 p.isMal ? 'Schedule diagnostic imaging and tissue biopsy' : 'Routine screening and follow-up per guidelines',
-                p.tierCode === 'high' ? 'Urgent multidisciplinary review' : (p.tierCode === 'mod' ? 'Short-interval follow-up (3–6 months)' : 'Annual screening'),
+                (p.tierCode === 'high' || tLower.includes('critical')) ? 'Urgent multidisciplinary review' : (p.tierCode === 'mod' ? 'Short-interval follow-up (3–6 months)' : 'Annual screening'),
             ];
             actionsUl.innerHTML = actionItems.map(t => `<li>${t}</li>`).join('');
         }
         
+        const adminActions = document.getElementById('detail-admin-actions');
+        if(adminActions) {
+            if (p.isSavedRow) {
+                const dateInput = document.getElementById('detail-action-date');
+                if(dateInput) {
+                    let val = '';
+                    if (p.appointment_date) {
+                        if (p.appointment_date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                            val = p.appointment_date;
+                        } else {
+                            const d = new Date(p.appointment_date);
+                            if(!isNaN(d.getTime())) val = d.toISOString().split('T')[0];
+                        }
+                    }
+                    dateInput.value = val;
+                }
+                adminActions.classList.remove('hidden');
+            } else {
+                adminActions.classList.add('hidden');
+            }
+        }
+
         const tbody = document.getElementById('detail-features-body');
-        tbody.innerHTML = '';
-        const raw = (p.raw && p.raw.explainability) ? p.raw.explainability.original_features : {};
-        const top = (p.raw && p.raw.explainability) ? (p.raw.explainability.top_features || []) : [];
-        const totalImp = top.reduce((s, f) => s + (typeof f.importance === 'number' ? f.importance : 0), 0);
-        (top.length ? top : p.features.map(f => ({ feature: f.name, importance: 0 })) ).slice(0,6).forEach(tf => {
-            const key = typeof tf.feature === 'string' ? tf.feature : tf.name;
-            const label = labelOf(key);
-            const rawVal = raw[key];
-            const valStr = (typeof rawVal === 'number') ? rawVal.toFixed(2) : (p.features.find(f => f.name === label)?.val || '');
-            const pct = totalImp ? ((tf.importance || 0) / totalImp) * 100 : 0;
-            const pctStr = pct.toFixed(1) + '%';
-            const impact = `<span class="text-pink-600 font-bold flex items-center gap-1"><i class="ph ph-trend-up"></i> ${pctStr}</span>`;
-            tbody.innerHTML += `<tr class="hover:bg-pink-50"><td class="px-4 py-2 font-medium text-slate-700">${label}</td><td class="px-4 py-2 font-mono text-slate-500">${valStr}</td><td class="px-4 py-2 text-xs">${impact}</td></tr>`;
-        });
+        if(tbody) {
+            tbody.innerHTML = '';
+            const interpretations = p.clinical_interpretation || [];
+            
+            const flags = interpretations.filter(item => {
+                const text = (item.clinical_interpretation || '').toLowerCase();
+                if (text.includes('normal')) return false;
+                const isHighRisk = text.includes('élevé') || text.includes('atypique') || text.includes('suspect');
+                return isHighRisk || (item.position === 'Au-dessus' && item.danger_threshold > 0);
+            });
+
+            const topFeatures = interpretations.slice(0, 10);
+            const getUnit = (feat) => {
+                const f = (feat || '').toLowerCase();
+                if(f.includes('area')) return ' µm²';
+                if(f.includes('radius') || f.includes('perimeter') || f.includes('smoothness')) return ' µm';
+                return '';
+            };
+
+            if (topFeatures.length > 0) {
+                topFeatures.forEach(item => {
+                    const isFlag = flags.includes(item);
+                    const diff = (item.patient_value || 0) - (item.danger_threshold || 0);
+                    const isThreshold = Math.abs(diff) < 0.01 && item.danger_threshold > 0;
+                    
+                    let trClass = "hover:bg-slate-50 border-l-4 border-transparent";
+                    let posClass = "text-emerald-600 font-bold";
+                    let interpClass = "text-slate-500";
+                    
+                    if (isFlag) {
+                        trClass = "bg-red-50 hover:bg-red-100 transition border-l-4 border-red-500";
+                        posClass = "text-red-600 font-bold";
+                        interpClass = "text-red-700 font-bold";
+                    } else if (isThreshold) {
+                        trClass = "bg-amber-50 hover:bg-amber-100 transition border-l-4 border-amber-500";
+                        posClass = "text-amber-600 font-bold";
+                        interpClass = "text-amber-700 font-bold";
+                    }
+
+                    const sign = diff >= 0 ? '+' : '';
+                    const posText = (item.danger_threshold > 0) ? `${sign}${diff.toFixed(2)}` : '--';
+                    const unit = getUnit(item.feature);
+                    
+                    tbody.innerHTML += `
+                        <tr class="${trClass}">
+                            <td class="px-4 py-2 font-medium text-slate-700 text-sm">${labelOf(item.feature)}</td>
+                            <td class="px-4 py-2 font-mono text-slate-600 text-sm">${Number(item.patient_value).toFixed(2)}<span class="text-xs text-slate-400 ml-1">${unit}</span></td>
+                            <td class="px-4 py-2 font-mono text-slate-500 text-sm">${Number(item.danger_threshold || 0).toFixed(2)}<span class="text-xs text-slate-300 ml-1">${unit}</span></td>
+                            <td class="px-4 py-2 font-mono text-xs ${posClass}">${posText}</td>
+                            <td class="px-4 py-2 text-xs ${interpClass}">${item.clinical_interpretation}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                 tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">No detailed feature data available</td></tr>`;
+            }
+            
+            const viewAllContainer = document.getElementById('detail-view-all-container');
+            if(viewAllContainer) viewAllContainer.remove();
+            
+            if (interpretations.length > 10) {
+                 const btnDiv = document.createElement('div');
+                btnDiv.id = 'detail-view-all-container';
+                btnDiv.className = "mt-4 text-center";
+                btnDiv.innerHTML = `
+                    <button onclick="document.getElementById('full-analysis-modal').classList.remove('hidden'); populateModalFromDetails()" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:text-pink-600 transition flex items-center justify-center gap-2 mx-auto text-sm font-medium shadow-sm">
+                        <i class="ph ph-eye"></i> Voir les ${interpretations.length} caractéristiques
+                    </button>
+                `;
+                tbody.parentElement.parentElement.after(btnDiv);
+                
+                window.populateModalFromDetails = () => {
+                    const modalBody = document.getElementById('full-analysis-body');
+                    if(modalBody) {
+                        modalBody.innerHTML = '';
+                        interpretations.forEach(item => {
+                            const isFlag = flags.includes(item);
+                            const trClass = isFlag ? "bg-red-50 border-l-4 border-red-500" : "hover:bg-slate-50 border-l-4 border-transparent";
+                            const posClass = isFlag ? "text-red-600 font-bold" : "text-emerald-600 font-bold";
+                            const interpClass = isFlag ? "text-red-700 font-bold" : "text-slate-500";
+                            const diff = item.patient_value - item.danger_threshold;
+                            const sign = diff >= 0 ? '+' : '';
+                            const posText = (item.danger_threshold > 0) ? `${sign}${diff.toFixed(2)}` : '--';
+                            
+                            modalBody.innerHTML += `
+                                <tr class="${trClass} border-b border-slate-100 last:border-0">
+                                    <td class="px-4 py-2 font-medium text-slate-700 text-sm">${labelOf(item.feature)}</td>
+                                    <td class="px-4 py-2 font-mono text-slate-600 text-sm">${Number(item.patient_value).toFixed(2)}</td>
+                                    <td class="px-4 py-2 font-mono text-slate-400 text-sm">${Number(item.danger_threshold).toFixed(2)}</td>
+                                    <td class="px-4 py-2 font-mono text-sm ${posClass}">${posText}</td>
+                                    <td class="px-4 py-2 text-xs ${interpClass}">${item.clinical_interpretation}</td>
+                                </tr>
+                            `;
+                        });
+                    }
+                };
+            }
+        }
         
         document.getElementById('slide-overlay').classList.add('open');
         document.getElementById('patient-slideover').classList.add('open');
@@ -2694,6 +3207,17 @@
             if (closeBtn) closeBtn.focus();
         } catch(_) {}
     }
+
+    function openDetails(pid) {
+        console.log('View Details clicked for PID:', pid);
+        const p = allPatients.find(x => String(x.id) === String(pid));
+        if(!p){
+            console.warn('Patient not found in current batch', pid);
+            return;
+        }
+        renderUnifiedDetails(p);
+    }
+
 
     function closeDetails() {
         document.getElementById('slide-overlay').classList.remove('open');
@@ -2973,10 +3497,24 @@
         const tbody = document.getElementById('dbp-table-body');
         if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="6">Loading...</td></tr>`;
         try{
-            const url = location.origin.includes(':8000')
-                ? "/api/v1/cellular/batch/saved?page=1&page_size=100&order_by=timestamp_desc"
-                : "http://127.0.0.1:8000/api/v1/cellular/batch/saved?page=1&page_size=100&order_by=timestamp_desc";
-            const r = await fetch(url);
+            const qs = "page=1&page_size=100&order_by=timestamp_desc";
+            const useRelative = location.origin.includes(':8000');
+            const urls = useRelative
+                ? ["/api/v1/cellular/batch/saved?" + qs]
+                : [
+                    API_BASE + "/api/v1/cellular/batch/saved?" + qs,
+                    "http://127.0.0.1:8000/api/v1/cellular/batch/saved?" + qs,
+                    "http://localhost:8000/api/v1/cellular/batch/saved?" + qs
+                ];
+            
+            let r;
+            for (const u of urls) {
+                try {
+                    r = await fetch(u);
+                    if (r && r.ok) break;
+                } catch (e) {}
+            }
+
             if(!r || !r.ok){
                 if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="6">Failed to load (HTTP ${r ? r.status : 'no response'})</td></tr>`;
                 return;
@@ -3006,8 +3544,16 @@
         const tbody = document.getElementById('dbp-table-body');
         const pageSpan = document.getElementById('dbp-page');
         const pagesSpan = document.getElementById('dbp-pages');
+        const searchInput = document.getElementById('dbp-search-input');
+        const search = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
         const s = window.savedState || { page: 1, page_size: 5 };
-        const rows = window.savedRows || [];
+        let rows = window.savedRows || [];
+
+        if (search) {
+            rows = rows.filter(r => String(r.patient_id || '').toLowerCase().includes(search));
+        }
+
         const totalPages = Math.max(1, Math.ceil(rows.length / s.page_size));
         if(s.page > totalPages) s.page = totalPages;
         const start = (s.page - 1) * s.page_size;
@@ -3050,6 +3596,9 @@
                 <td class="px-2 py-1">${tierBadge}</td>
                 <td class="px-2 py-1 text-[10px]">${String(row.action || '')}</td>
                 <td class="px-2 py-1 font-mono text-slate-500 text-[10px]">${dateOnly}</td>
+                <td class="px-2 py-1 text-right">
+                    <button class="px-2 py-1 text-xs rounded border border-pink-200 bg-white text-pink-600" onclick="dbpOpen('${String(row.patient_id || '')}')" data-pid="${String(row.patient_id || '')}" aria-controls="patient-slideover" aria-expanded="false">View More</button>
+                </td>
             `;
             tbody.appendChild(tr);
         });
@@ -3058,11 +3607,24 @@
         const tbody = document.getElementById('prg-table-body');
         if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-slate-500" colspan="5">Loading...</td></tr>`;
         try{
+            const qs = "page=1&page_size=200&order_by=timestamp_desc";
             const useRelative = location.origin.includes(':8000');
-            const url = useRelative
-                ? "/api/v1/metabric/prognosis/saved?page=1&page_size=200&order_by=timestamp_desc"
-                : "http://127.0.0.1:8000/api/v1/metabric/prognosis/saved?page=1&page_size=200&order_by=timestamp_desc";
-            const r = await fetch(url);
+            const urls = useRelative
+                ? ["/api/v1/metabric/prognosis/saved?" + qs]
+                : [
+                    API_BASE + "/api/v1/metabric/prognosis/saved?" + qs,
+                    "http://127.0.0.1:8000/api/v1/metabric/prognosis/saved?" + qs,
+                    "http://localhost:8000/api/v1/metabric/prognosis/saved?" + qs
+                ];
+            
+            let r;
+            for (const u of urls) {
+                try {
+                    r = await fetch(u);
+                    if (r && r.ok) break;
+                } catch (e) {}
+            }
+
             if(!r || !r.ok){
                 if(tbody) tbody.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="5">Failed to load (HTTP ${r ? r.status : 'no response'})</td></tr>`;
                 return;
@@ -3181,7 +3743,7 @@
                     <td class="px-3 py-2">${String(row.action || '')}</td>
                     <td class="px-3 py-2 font-mono text-slate-500">${String(row.timestamp || '')}</td>
                     <td class="px-3 py-2 text-right">
-                        <button class="px-2 py-1 text-xs rounded border border-pink-200 bg-white text-pink-600" onclick="dbpOpen('${String(row.patient_id || '')}')" data-pid="${String(row.patient_id || '')}" aria-controls="dbp-slideover" aria-expanded="false">View More</button>
+                        <button class="px-2 py-1 text-xs rounded border border-pink-200 bg-white text-pink-600" onclick="dbpOpen('${String(row.patient_id || '')}')" data-pid="${String(row.patient_id || '')}" aria-controls="patient-slideover" aria-expanded="false">View More</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -3216,46 +3778,96 @@
         if(t.includes('VERY')) return '<span class="badge badge-vlow">VERY LOW</span>';
         return '<span class="badge badge-low">LOW</span>';
     }
-    function dbpOpen(pid){
-        const rows = window.savedBatchRows || [];
-        const row = rows.find(r => String(r.patient_id || '') === String(pid));
+    function dbpOpen(pid, optionalData){
+        let row = optionalData;
+        if (!row) {
+            const rows = (window.savedBatchRows || []).concat(window.savedRows || []);
+            row = rows.find(r => String(r.patient_id || '') === String(pid));
+        }
+        if(!row) {
+            if (typeof appointments !== 'undefined') {
+                row = appointments.find(a => String(a.patient_id || '') === String(pid));
+            }
+        }
         if(!row) return;
-        window.currentSavedRow = row;
-        document.getElementById('dbp-detail-id').innerText = String(row.patient_id || '');
-        document.getElementById('dbp-detail-pred').innerHTML = formatPredBadge(String(row.predicted_class || ''));
-        document.getElementById('dbp-detail-prob').innerText = (typeof row.probability === 'number' ? (row.probability*100).toFixed(1) + '%' : '');
-        document.getElementById('dbp-detail-tier').innerHTML = formatTierBadge(String(row.risk_tier || ''));
-        document.getElementById('dbp-detail-action').innerText = String(row.action || '');
-        document.getElementById('dbp-detail-time').innerText = String(row.timestamp || '');
-        const top = [
-            {n:row.top1_name,v:row.top1_value},
-            {n:row.top2_name,v:row.top2_value},
-            {n:row.top3_name,v:row.top3_value},
-            {n:row.top4_name,v:row.top4_value},
-            {n:row.top5_name,v:row.top5_value},
-        ].filter(x => x.n);
-        const tbody = document.getElementById('dbp-detail-features');
-        tbody.innerHTML = '';
-        top.forEach(t => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td class="px-3 py-2">${String(t.n)}</td><td class="px-3 py-2 font-mono">${typeof t.v==='number' ? Number(t.v).toFixed(2) : String(t.v||'')}</td>`;
-            tbody.appendChild(tr);
-        });
-        document.getElementById('slide-overlay').classList.add('open');
-        document.getElementById('dbp-slideover').classList.add('open');
-        try {
-            const btn = document.querySelector(`button[data-pid="${String(pid)}"][aria-controls="dbp-slideover"]`);
-            if (btn) btn.setAttribute('aria-expanded','true');
-            const closeBtn = document.querySelector('#dbp-slideover button[onclick="closeDbpDetails()"]');
-            if (closeBtn) closeBtn.focus();
-        } catch(_) {}
+        
+        const p = adaptSavedRowToPatient(row);
+        renderUnifiedDetails(p);
     }
-    function closeDbpDetails(){
-        document.getElementById('slide-overlay').classList.remove('open');
-        document.getElementById('dbp-slideover').classList.remove('open');
+    
+    async function updatePatientDate() {
+        const row = window.currentSavedRow;
+        if (!row || !row.patient_id) return;
+        
+        const dateInput = document.getElementById('detail-action-date');
+        const newDate = dateInput ? dateInput.value : null;
+        if (!newDate) {
+            alert("Please select a valid date.");
+            return;
+        }
+        
+        const btn = document.getElementById('btn-update-date');
+        const original = btn ? btn.innerHTML : 'Update';
+        if(btn) { btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i>'; }
+        
         try {
-            document.querySelectorAll('button[aria-controls="dbp-slideover"]').forEach(b => b.setAttribute('aria-expanded','false'));
-        } catch(_) {}
+            const res = await fetch(`${API_BASE}/triage/update_date`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ patient_id: row.patient_id, new_date: newDate })
+            });
+            
+            if (!res.ok) throw new Error('Update failed');
+            
+            // Refresh
+            if (typeof loadTriagePlan === 'function') await loadTriagePlan();
+            if (typeof loadSavedBatchSimple === 'function') await loadSavedBatchSimple();
+            
+            // Close panel
+            closeDetails();
+            alert("Appointment updated successfully.");
+        } catch (e) {
+            console.error(e);
+            alert("Failed to update appointment: " + e.message);
+        } finally {
+            if(btn) { btn.innerHTML = original; btn.disabled = false; }
+        }
+    }
+    
+    async function deletePatient() {
+        const row = window.currentSavedRow;
+        if (!row || !row.patient_id) return;
+        
+        if (!confirm(`Are you sure you want to delete patient ${row.patient_id}? This action cannot be undone.`)) return;
+        
+        const btn = document.getElementById('btn-delete-patient');
+        const original = btn ? btn.innerHTML : 'Delete';
+        if(btn) { btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i>'; }
+        
+        try {
+            const res = await fetch(`${API_BASE}/triage/delete/${row.patient_id}`, {
+                method: 'DELETE'
+            });
+            
+            if (!res.ok) throw new Error('Delete failed');
+            
+            // Refresh
+            if (typeof loadTriagePlan === 'function') await loadTriagePlan();
+            if (typeof loadSavedBatchSimple === 'function') await loadSavedBatchSimple();
+            
+            // Close panel
+            closeDetails();
+            alert("Patient deleted successfully.");
+        } catch (e) {
+            console.error(e);
+            alert("Failed to delete patient: " + e.message);
+        } finally {
+            if(btn) { btn.innerHTML = original; btn.disabled = false; }
+        }
+    }
+
+    function closeDbpDetails(){
+        closeDetails();
     }
     function dbpExportCSV(){
         const r = window.currentSavedRow || {};
@@ -3351,7 +3963,8 @@
                 probability: Number(meta.prob) / 100,
                 risk_tier: meta.tier,
                 action: meta.action,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                danger_flag_count: (res.risk_analysis && res.risk_analysis.danger_flag_count !== undefined) ? res.risk_analysis.danger_flag_count : 0
             };
             for(let i=0;i<5;i++){
                 const tf = top[i];
@@ -3379,6 +3992,8 @@
                 if(saved > 0){
                     btn.innerHTML = `<i class="ph ph-check text-lg"></i> Saved`;
                     setTimeout(()=>{ btn.innerHTML = original; btn.disabled = false; }, 1500);
+                    // Refresh triage plan after saving new data
+                    loadTriagePlan();
                 } else {
                     alert('No rows saved. Try again.');
                     btn.disabled = false;
@@ -3517,9 +4132,337 @@
             if(btn){ btn.setAttribute('aria-expanded','true'); }
         }
     }
+    // --- CALENDAR INTEGRATION ---
+    let currentView = 'week';
+    let currentDate = new Date();
+    let appointments = [];
+
+    async function loadTriagePlan() {
+        const loadingEl = document.getElementById('calendar-loading');
+        const errorEl = document.getElementById('calendar-error');
+        const emptyEl = document.getElementById('calendarEmptyState');
+        
+        try {
+            if(loadingEl) loadingEl.classList.remove('hidden');
+            if(errorEl) errorEl.classList.add('hidden');
+            if(emptyEl) emptyEl.classList.add('hidden');
+            
+            const response = await fetch(`${API_BASE}/triage/plan`);
+            if (!response.ok) throw new Error('Network response was not ok'); 
+            
+            const data = await response.json();
+            console.log("Triage plan loaded:", data.planning ? data.planning.length : 0, "appointments");
+            
+            if(loadingEl) loadingEl.classList.add('hidden');
+            renderPlanning(data.planning || []);
+        } catch (error) {
+            console.error("Failed to load triage plan:", error);
+            if(loadingEl) loadingEl.classList.add('hidden');
+            if(errorEl) errorEl.classList.remove('hidden');
+        }
+    }
+
+    function renderPlanning(planningData) {
+        appointments = planningData;
+        renderCalendar();
+        const emptyState = document.getElementById('calendarEmptyState');
+        if (emptyState) {
+            if (appointments.length > 0) emptyState.classList.add('hidden');
+            else emptyState.classList.remove('hidden');
+        }
+    }
+
+    function setCalendarView(view) {
+        currentView = view;
+        ['day', 'week', 'month'].forEach(v => {
+            const btn = document.getElementById(`btnView${v.charAt(0).toUpperCase() + v.slice(1)}`);
+            if(btn) {
+                if (v === view) btn.className = "px-3 py-1.5 text-xs font-medium rounded-md transition-all bg-white text-pink-600 shadow-sm";
+                else btn.className = "px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-500 hover:text-gray-900";
+            }
+        });
+        renderCalendar();
+    }
+
+    function navCalendar(delta) {
+        if (currentView === 'day') currentDate.setDate(currentDate.getDate() + delta);
+        else if (currentView === 'week') currentDate.setDate(currentDate.getDate() + (delta * 7));
+        else if (currentView === 'month') currentDate.setMonth(currentDate.getMonth() + delta);
+        renderCalendar();
+    }
+
+    function navToday() {
+        currentDate = new Date();
+        renderCalendar();
+    }
+
+    function getFilteredAppointments() {
+        const query = document.getElementById('calendar-search')?.value.toLowerCase() || '';
+        if (!query) return appointments;
+        return appointments.filter(a => 
+            String(a.patient_id || '').toLowerCase().includes(query) ||
+            String(a.risk_tier || '').toLowerCase().includes(query) ||
+            String(a.prediction || '').toLowerCase().includes(query)
+        );
+    }
+
+    function renderCalendar() {
+        updateDateLabel();
+        const vDay = document.getElementById('viewDay');
+        const vWeek = document.getElementById('viewWeek');
+        const vMonth = document.getElementById('viewMonth');
+        if(vDay) vDay.classList.add('hidden');
+        if(vWeek) vWeek.classList.add('hidden');
+        if(vMonth) vMonth.classList.add('hidden');
+
+        if (currentView === 'day' && vDay) {
+            vDay.classList.remove('hidden');
+            renderDayView();
+        } else if (currentView === 'week' && vWeek) {
+            vWeek.classList.remove('hidden');
+            renderWeekView();
+        } else if (currentView === 'month' && vMonth) {
+            vMonth.classList.remove('hidden');
+            renderMonthView();
+        }
+    }
+
+    function updateDateLabel() {
+        const label = document.getElementById('currentDateLabel');
+        if(!label) return;
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        if (currentView === 'day') {
+            label.textContent = currentDate.toLocaleDateString('fr-FR', options);
+        } else if (currentView === 'week') {
+            const start = getStartOfWeek(currentDate);
+            const end = new Date(start);
+            end.setDate(end.getDate() + 6);
+            label.textContent = `${start.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} - ${end.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+        } else {
+            label.textContent = currentDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+        }
+    }
+
+    function formatDateLocal(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function getStartOfWeek(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        return new Date(d.setDate(diff));
+    }
+
+    function renderDayView() {
+        const container = document.getElementById('viewDay');
+        if(!container) return;
+        container.innerHTML = '';
+        const dayStr = formatDateLocal(currentDate);
+        const daysAppointments = getFilteredAppointments().filter(a => a.appointment_date === dayStr);
+        
+        if (daysAppointments.length === 0) {
+            container.innerHTML = `<div class="text-center text-gray-400 py-10">Aucun rendez-vous pour ce jour.</div>`;
+            return;
+        }
+        daysAppointments.forEach((app, index) => {
+            const time = `${8 + index}:00`;
+            container.appendChild(createAppointmentCard(app, 'horizontal', time));
+        });
+    }
+
+    function renderWeekView() {
+        const container = document.getElementById('viewWeek');
+        if(!container) return;
+        container.innerHTML = '';
+        const startOfWeek = getStartOfWeek(currentDate);
+        const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+        
+        for (let i = 0; i < 7; i++) {
+            const dayDate = new Date(startOfWeek);
+            dayDate.setDate(dayDate.getDate() + i);
+            const dayStr = formatDateLocal(dayDate);
+            const isToday = dayStr === formatDateLocal(new Date());
+            
+            const col = document.createElement('div');
+            col.className = `flex flex-col gap-2 rounded-xl p-1 ${isToday ? 'bg-pink-50/50' : 'bg-gray-50'}`;
+            col.innerHTML = `
+                <div class="text-center mb-1">
+                    <div class="text-xs font-medium text-gray-500">${days[i]}</div>
+                    <div class="text-sm font-bold ${isToday ? 'text-pink-600' : 'text-gray-900'}">${dayDate.getDate()}</div>
+                </div>
+            `;
+            const dayApps = getFilteredAppointments().filter(a => a.appointment_date === dayStr);
+            dayApps.forEach((app, index) => {
+                 const time = `${8 + index}:00`;
+                col.appendChild(createAppointmentCard(app, 'compact', time));
+            });
+            container.appendChild(col);
+        }
+    }
+
+    function renderMonthView() {
+        const grid = document.getElementById('monthGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        let startDay = firstDay.getDay() || 7; 
+        startDay -= 1;
+        
+        for (let i = 0; i < startDay; i++) {
+            grid.innerHTML += `<div class="bg-white min-h-[60px] p-1 border-b border-r border-gray-100 bg-gray-50/30"></div>`;
+        }
+        
+        for (let d = 1; d <= lastDay.getDate(); d++) {
+            const currentDayDate = new Date(year, month, d);
+            const dateStr = formatDateLocal(currentDayDate);
+            const dayApps = getFilteredAppointments().filter(a => a.appointment_date === dateStr);
+            const isToday = dateStr === formatDateLocal(new Date());
+            const hasUrgent = dayApps.some(a => a.priority_category === 'URGENT_MALIGNANT' || a.priority_category === 'CRITIQUE');
+            const isOverload = dayApps.length > 8;
+            
+            let indicators = '';
+            if (dayApps.length > 0) {
+                indicators = `
+                    <div class="flex flex-wrap gap-1 mt-1">
+                        ${dayApps.slice(0, 4).map(() => `<div class="w-1.5 h-1.5 rounded-full bg-pink-400"></div>`).join('')}
+                        ${dayApps.length > 4 ? `<span class="text-[10px] text-gray-400 leading-none">+${dayApps.length - 4}</span>` : ''}
+                    </div>
+                `;
+            }
+            
+            const cell = document.createElement('div');
+            cell.className = `bg-white min-h-[60px] p-2 border-b border-r border-gray-100 hover:bg-gray-50 transition-colors relative group cursor-pointer`;
+            cell.onclick = () => {
+                currentDate = new Date(year, month, d);
+                setCalendarView('day');
+            };
+            cell.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium ${isToday ? 'bg-pink-600 text-white w-6 h-6 flex items-center justify-center rounded-full' : 'text-gray-700'}">${d}</span>
+                    ${hasUrgent ? '<i class="ph ph-warning text-red-500 text-xs"></i>' : ''}
+                </div>
+                ${indicators}
+                ${isOverload ? '<div class="absolute bottom-1 right-1 text-[10px] text-red-600 font-bold bg-red-50 px-1 rounded">!</div>' : ''}
+            `;
+            grid.appendChild(cell);
+        }
+    }
+
+    function createAppointmentCard(app, type, time) {
+        const el = document.createElement('div');
+        let borderColor = 'border-l-4 border-l-gray-300';
+        
+        const pred = (app.prediction || '').toUpperCase();
+        const tier = (app.risk_tier || '').toUpperCase();
+        
+        if (pred === 'MALIGNANT') {
+            if (tier.includes('HIGH') || tier.includes('CRITICAL')) {
+                borderColor = 'border-l-4 border-l-red-500';
+            } else if (tier.includes('MEDIUM')) {
+                borderColor = 'border-l-4 border-l-orange-500';
+            } else {
+                // Low/Very Low
+                borderColor = 'border-l-4 border-l-orange-500'; 
+            }
+        } else {
+            // Fallback for old logic or Benign
+            if (app.priority_category === 'URGENT_MALIGNANT') borderColor = 'border-l-4 border-l-red-500';
+            else if (app.priority_category === 'CRITIQUE') borderColor = 'border-l-4 border-l-orange-500';
+            else if (app.priority_category === 'HAUT') borderColor = 'border-l-4 border-l-yellow-500';
+        }
+        
+        if (type === 'compact') {
+            el.className = `bg-white p-1 rounded shadow-sm text-xs cursor-pointer hover:shadow-md transition-shadow ${borderColor}`;
+            el.innerHTML = `
+                <div class="font-bold truncate text-gray-800">${app.patient_id}</div>
+                <div class="flex justify-between items-center mt-0.5">
+                    <span class="text-gray-500">${time}</span>
+                    ${app.priority_category === 'URGENT_MALIGNANT' ? '<i class="ph ph-warning-circle text-red-500"></i>' : ''}
+                </div>
+            `;
+            el.onclick = (e) => { e.stopPropagation(); dbpOpen(app.patient_id); };
+        } else {
+            el.className = `bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center ${borderColor} hover:shadow-md transition-all`;
+            el.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-xs">
+                        ${app.patient_id.substring(0, 2)}
+                    </div>
+                    <div>
+                        <div class="font-bold text-gray-900 flex items-center gap-2 text-sm">
+                            ${app.patient_id}
+                            ${app.priority_category === 'URGENT_MALIGNANT' ? '<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px]">URGENT</span>' : ''}
+                        </div>
+                        <div class="text-xs text-gray-500 flex items-center gap-2">
+                            <span><i class="ph ph-clock mr-1"></i> ${time}</span>
+                            <span><i class="ph ph-prohibit mr-1"></i> ${(app.probability*100).toFixed(0)}%</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="dbpOpen('${app.patient_id}')" class="px-3 py-1.5 bg-pink-50 text-pink-700 text-xs font-medium rounded-lg hover:bg-pink-100 transition-colors">
+                    Voir
+                </button>
+            `;
+        }
+        return el;
+    }
+
+    function openTriagePatientModal(appObj, pid) {
+        const app = appObj || appointments.find(a => a.patient_id === pid);
+        if(!app) return;
+        
+        const modal = document.getElementById('triage-modal');
+        if(!modal) return;
+        
+        document.getElementById('tm-id').innerText = app.patient_id;
+        document.getElementById('tm-date').innerText = app.appointment_date;
+        document.getElementById('tm-cat').innerText = app.priority_category;
+        document.getElementById('tm-prob').innerText = (app.probability * 100).toFixed(1) + '%';
+        document.getElementById('tm-flags').innerText = app.danger_flag_count;
+        
+        const catBadge = document.getElementById('tm-cat');
+        if (app.priority_category.includes('URGENT') || app.priority_category === 'CRITIQUE') {
+            catBadge.className = "px-2 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200";
+        } else {
+            catBadge.className = "px-2 py-1 rounded-full text-xs font-bold bg-white border border-gray-200";
+        }
+        
+        modal.classList.remove('hidden');
+        modal.classList.remove('opacity-0');
+        const content = modal.querySelector('div');
+        if(content) {
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+    }
+
+    function closeTriageModal() {
+        const modal = document.getElementById('triage-modal');
+        if(!modal) return;
+        modal.classList.add('opacity-0');
+        const content = modal.querySelector('div');
+        if(content) {
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
     // INITIALIZATION
     initInputs();
     router('dashboard');
+    // Initialize calendar if we are on dashboard (or just init in background)
+    // We wrap it in a small timeout to ensure DOM elements are ready if script is in head (though it's at end of body usually)
+    setTimeout(loadTriagePlan, 100);
     document.getElementById('btnGenerateData').addEventListener('click', () => console.log('Generate Data clicked'));
     document.getElementById('btnRunPrediction').addEventListener('click', () => console.log('Run Prediction clicked'));
     const btnR = document.getElementById('btnRefreshSaved');
@@ -3536,6 +4479,47 @@
     if(pNext){ pNext.addEventListener('click', ()=>{ const s=window.prgState; const total = Math.max(1, Math.ceil((window.prgRows||[]).length / s.page_size)); if(s.page<total){ s.page+=1; renderPrognosisSavedPage(); }}); }
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ try{ closeDetails(); }catch(_){} try{ closeDbpDetails(); }catch(_){} try{ closePrognosisDetails(); }catch(_){} try{ document.getElementById('slide-overlay').classList.remove('open'); }catch(_){} } });
 </script>
+    <!-- Triage Patient Modal -->
+    <div id="triage-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <i class="ph ph-user-circle text-pink-600"></i> Détails Patient
+                </h3>
+                <button onclick="closeTriageModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-lg font-bold text-gray-900" id="tm-id">--</div>
+                            <div class="text-xs text-gray-500" id="tm-date">--</div>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-white border border-gray-200" id="tm-cat">--</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-white p-2 rounded border border-gray-100">
+                            <div class="text-gray-400">Probabilité</div>
+                            <div class="font-semibold text-gray-900" id="tm-prob">--%</div>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100">
+                            <div class="text-gray-400">Danger Flags</div>
+                            <div class="font-semibold text-red-600" id="tm-flags">--</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="closeTriageModal()" class="w-full py-2.5 bg-pink-600 text-white rounded-xl font-medium hover:bg-pink-700 transition shadow-lg shadow-pink-200">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Sign Out Modal -->
     <div id="signout-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
         <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300" id="signout-modal-content">

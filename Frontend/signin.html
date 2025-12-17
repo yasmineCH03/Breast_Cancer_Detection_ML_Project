@@ -175,7 +175,7 @@
                                 class="input-field w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium" 
                                 placeholder="name@hospital.org" value="demo@oncoai.com">
                         </div>
-                        <div id="email-error" class="validation-msg">Please enter a valid email address.</div>
+                        <div id="email-error" class="validation-msg">Field required.</div>
                     </div>
 
                     <!-- Password -->
@@ -195,7 +195,7 @@
                                 <i id="eye-icon" class="ph ph-eye text-lg"></i>
                             </button>
                         </div>
-                        <div id="password-error" class="validation-msg">Password must be at least 6 characters.</div>
+                        <div id="password-error" class="validation-msg">Field required.</div>
                     </div>
 
                     <!-- Remember Me -->
@@ -281,10 +281,10 @@
         const passwordInput = document.getElementById('password');
         const emailError = document.getElementById('email-error');
         const passwordError = document.getElementById('password-error');
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Removed for demo mode
 
         function validateEmail() {
-            if (!emailRegex.test(emailInput.value) && emailInput.value !== '') {
+            if (emailInput.value.trim() === '') {
                 emailInput.classList.add('error');
                 emailError.classList.add('show');
                 return false;
@@ -296,7 +296,7 @@
         }
 
         function validatePassword() {
-            if (passwordInput.value.length < 6 && passwordInput.value !== '') {
+            if (passwordInput.value.trim() === '') {
                 passwordInput.classList.add('error');
                 passwordError.classList.add('show');
                 return false;
@@ -324,7 +324,7 @@
         }
 
         // Login Handler
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             
             const isEmailValid = validateEmail();
@@ -345,16 +345,24 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="ph ph-spinner ph-spin text-lg"></i> Authenticating...';
 
-            // Remember Me Logic
-            const rememberMe = document.getElementById('remember-me').checked;
-            if (rememberMe) {
-                localStorage.setItem('oncoai_user', emailInput.value);
-            } else {
-                localStorage.removeItem('oncoai_user');
-            }
+            try {
+                // Simulate network delay for effect
+                await new Promise(resolve => setTimeout(resolve, 800));
 
-            // Simulate API delay
-            setTimeout(() => {
+                // Set static demo token
+                const demoToken = 'demo-token-static-access-granted';
+                
+                // Store token
+                localStorage.setItem('access_token', demoToken);
+                
+                // Remember Me Logic
+                const rememberMe = document.getElementById('remember-me').checked;
+                if (rememberMe) {
+                    localStorage.setItem('oncoai_user', emailInput.value);
+                } else {
+                    localStorage.removeItem('oncoai_user');
+                }
+
                 // Success animation
                 btn.innerHTML = '<i class="ph ph-check-circle text-lg"></i> Redirecting...';
                 btn.classList.remove('btn-primary');
@@ -362,8 +370,22 @@
                 
                 setTimeout(() => {
                     window.location.href = 'oncoai_merged.html';
-                }, 800);
-            }, 1200);
+                }, 500);
+
+            } catch (error) {
+                console.error('Login error:', error);
+                // Show error message (you might want to add a UI element for this)
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                
+                // Shake animation again
+                const form = document.getElementById('signin-form');
+                form.classList.add('animate-[shake_0.5s_ease-in-out]');
+                setTimeout(() => form.classList.remove('animate-[shake_0.5s_ease-in-out]'), 500);
+                
+                // Optional: Show specific error message
+                alert('Login failed. Please check your credentials.');
+            }
         }
 
         // Check for remembered user

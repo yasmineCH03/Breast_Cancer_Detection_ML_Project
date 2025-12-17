@@ -2,6 +2,7 @@ import os
 import math
 import numpy as np
 import pandas as pd
+import numbers
 from typing import List, Dict, Any
 
 def validate_columns(df: pd.DataFrame, feature_names: List[str]) -> List[str]:
@@ -24,17 +25,12 @@ def sanitize_value(v: Any) -> Any:
     try:
         if v is None:
             return None
-        if isinstance(v, float):
+        if isinstance(v, numbers.Integral):
+            return int(v)
+        if isinstance(v, numbers.Real):
             if math.isnan(v) or math.isinf(v):
                 return None
             return float(v)
-        if isinstance(v, (np.floating,)):
-            fv = float(v)
-            if math.isnan(fv) or math.isinf(fv):
-                return None
-            return fv
-        if isinstance(v, (np.integer,)):
-            return int(v)
         if v is np.nan:
             return None
         return v

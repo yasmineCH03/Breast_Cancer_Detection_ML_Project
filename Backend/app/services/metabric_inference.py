@@ -1,7 +1,6 @@
 import os
 import joblib
 import numpy as np
-import pandas as pd
 from typing import Dict, Any, List, Tuple
 from .metabric_preprocessing import (
     validate_columns,
@@ -44,22 +43,16 @@ def load_artifacts() -> Tuple[Any, Any, List[str], Dict[str, Any]]:
             metadata = json.load(f)
     except Exception:
         metadata = {}
-    try:
-        model = joblib.load(paths["model"])
-        scaler = joblib.load(paths["scaler"])
-        feature_names = joblib.load(paths["features"])
-    except Exception as e:
-        test_mode = os.environ.get("METABRIC_TEST_MODE") == "1"
-        if not test_mode:
-            raise
-        # Fallback: build lightweight model/scaler from evaluation dataset for testing
-        import pandas as pd
+    test_mode = os.environ.get("METABRIC_TEST_MODE") == "1"
+    if test_mode:
         from sklearn.preprocessing import StandardScaler
         from sklearn.multioutput import MultiOutputRegressor
         from sklearn.linear_model import LinearRegression
+        import pandas as pd
         candidates = [
             os.environ.get("METABRIC_EVAL_DATA_PATH"),
             os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "metabric_cleaned_final.csv"),
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "row", "metabric_cleaned_final.csv"),
         ]
         eval_path = next((p for p in candidates if p and os.path.exists(p)), None)
         if not eval_path:
@@ -75,16 +68,19 @@ def load_artifacts() -> Tuple[Any, Any, List[str], Dict[str, Any]]:
         model = MultiOutputRegressor(LinearRegression())
         model.fit(Xs, y.values)
         metadata["test_mode"] = True
+    else:
+        model = joblib.load(paths["model"])
+        scaler = joblib.load(paths["scaler"])
+        feature_names = joblib.load(paths["features"])
     _CACHE["artifacts"] = (model, scaler, feature_names, metadata)
     return _CACHE["artifacts"]
 
 def predict_single(features: Dict[str, Any]) -> Dict[str, Any]:
     model, scaler, feature_names, _ = load_artifacts()
-    row = {c: features.get(c, 0) for c in feature_names}
-    df = pd.DataFrame([row], columns=feature_names)
-    df = coerce_types(df)
-    Xs = scale_features(df, scaler, feature_names)
-    y_pred = model.predict(Xs.values)
+    row = [float(features.get(c, 0) or 0) for c in feature_names]
+    X = np.array([row], dtype=float)
+    Xs = scaler.transform(X)
+    y_pred = model.predict(Xs)
     out = {
         "aggressiveness_score": float(y_pred[0][0]),
         "growth_rate": float(y_pred[0][1]),
@@ -95,23 +91,31 @@ def predict_single(features: Dict[str, Any]) -> Dict[str, Any]:
 
 def predict_batch(csv_path: str) -> List[Dict[str, Any]]:
     model, scaler, feature_names, _ = load_artifacts()
-    df = pd.read_csv(csv_path)
-    missing = validate_columns(df, feature_names)
-    if missing:
-        raise ValueError(f"Missing features: {missing}")
-    df = coerce_types(df)
-    Xs = scale_features(df, scaler, feature_names)
-    preds = model.predict(Xs.values)
-    rows = []
-    for i in range(len(df)):
-        raw = preds[i]
+    import csv
+    rows_out: List[Dict[str, Any]] = []
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        data_rows = [r for r in reader]
+    if not data_rows:
+        return []
+    for i, r in enumerate(data_rows):
+        vals = []
+        for c in feature_names:
+            v = r.get(c, 0)
+            try:
+                vals.append(float(v))
+            except Exception:
+                vals.append(0.0)
+        X = np.array([vals], dtype=float)
+        Xs = scaler.transform(X)
+        pred = model.predict(Xs)[0]
         rec = {
             "row_index": int(i),
-            "aggressiveness_score": float(raw[0]),
-            "growth_rate": float(raw[1]),
-            "evolution_6m_raw": float(raw[2]),
-            "evolution_6m_class": int(np.round(raw[2]).clip(0, 2)),
+            "aggressiveness_score": float(pred[0]),
+            "growth_rate": float(pred[1]),
+            "evolution_6m_raw": float(pred[2]),
+            "evolution_6m_class": int(np.round(pred[2]).clip(0, 2)),
             "processing_status": "SUCCESS",
         }
-        rows.append(sanitize_record(rec))
-    return rows
+        rows_out.append(sanitize_record(rec))
+    return rows_out

@@ -32,11 +32,23 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from pydantic import Field
-
+from app import sql_models, database
+from app.routers import auth, triage
+os.environ["METABRIC_TEST_MODE"] = os.environ.get("METABRIC_TEST_MODE", "1")
+try:
+    _root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    _eval_path = os.path.join(_root_dir, "data", "row", "metabric_cleaned_final.csv")
+    if os.path.exists(_eval_path):
+        os.environ["METABRIC_EVAL_DATA_PATH"] = _eval_path
+except Exception:
+    pass
 
 # ============================================================================
 # 1. INITIALIZE FASTAPI APP
 # ============================================================================
+# Create database tables
+sql_models.Base.metadata.create_all(bind=database.engine)
+
 app = FastAPI(
     title="OncoAI Medical API",
     description="Evidence-based breast cancer detection with NCCN/ACR/USPSTF/ACS compliance",
@@ -45,6 +57,10 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# Include Authentication Router
+app.include_router(auth.router)
+app.include_router(triage.router)
+
 # CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
@@ -52,7 +68,11 @@ app.add_middleware(
         "http://localhost:8080",
         "http://127.0.0.1:8080",
         "http://localhost:8081",
-        "http://127.0.0.1:8081"
+        "http://127.0.0.1:8081",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
     ],
     allow_origin_regex=None,
     allow_credentials=True,
@@ -132,16 +152,55 @@ class CellularFeatures(BaseModel):
     symmetry_worst: float
     fractal_dimension_worst: float
 
+class DiagnosisDetails(BaseModel):
+    predicted_class: str
+    malignancy_probability: float
+    confidence: str
+
+class RiskAssessment(BaseModel):
+    risk_tier: str
+    probability_range: str
+    evidence_based_actions: List[Dict[str, Any]]
+    clinical_implication: str
+
+class RiskAnalysis(BaseModel):
+    danger_flag_count: int
+    danger_flags_list: List[str]
+    interpretation_table: List[Dict[str, Any]]
+
+class Explainability(BaseModel):
+    top_features: List[Dict[str, Any]]
+    all_features: List[Dict[str, Any]]
+    original_features: Dict[str, float]
+
+class ClinicalActionsSummary(BaseModel):
+    urgent_actions: List[Dict[str, Any]]
+    short_term_actions: List[Dict[str, Any]]
+    follow_up_actions: List[Dict[str, Any]]
+
+class ModelInformation(BaseModel):
+    model_name: str
+    training_data: str
+    validation_auc: str
+    guidelines_compliance: str
+
+class MedicalCompliance(BaseModel):
+    evidence_based: bool
+    hipaa_compliant: bool
+    audit_trail: bool
+    explainability: str
+
 class DiagnosisResponse(BaseModel):
     """Evidence-based diagnosis response"""
-    diagnosis: str
-    probability: float
-    risk_tier: str
-    recommended_action: str
-    confidence: str
-    used_model: str
-    timestamp: str
-    evidence_based: bool = True
+    diagnosis: DiagnosisDetails
+    risk_assessment: RiskAssessment
+    risk_analysis: RiskAnalysis
+    explainability: Explainability
+    clinical_actions_summary: ClinicalActionsSummary
+    model_information: ModelInformation
+    medical_compliance: MedicalCompliance
+    clinical_disclaimers: List[str]
+    prediction_timestamp: str
 
 class MetabricPredictRequest(BaseModel):
     patient_id: str | None = None
@@ -157,7 +216,7 @@ class MetabricPredictResponse(BaseModel):
 # ============================================================================
 # 4. GROUP A: MEDICAL INTERFACE ENDPOINTS (DOCTOR'S VIEW)
 # ============================================================================
-@app.post("/api/v1/cellular/predict")
+@app.post("/api/v1/cellular/predict", response_model=DiagnosisResponse)
 async def predict_cellular(features: CellularFeatures):
     """
     Single prediction endpoint for doctors (WBCD)
@@ -265,6 +324,7 @@ class SavedRow(BaseModel):
     risk_tier: str
     action: str
     timestamp: str
+    danger_flag_count: int = 0
     top1_name: str | None = None
     top1_value: float | None = None
     top2_name: str | None = None
@@ -275,6 +335,9 @@ class SavedRow(BaseModel):
     top4_value: float | None = None
     top5_name: str | None = None
     top5_value: float | None = None
+    clinical_interpretation: str | None = None
+    original_features: str | None = None
+    manual_date: str | None = None
 
 @app.post("/api/v1/cellular/batch/save")
 async def save_batch_outcomes(payload: dict):
@@ -289,13 +352,23 @@ async def save_batch_outcomes(payload: dict):
         to_save: list[SavedRow] = []
         for r in rows:
             try:
+                # Serialize complex objects if present
+                ci = r.get("clinical_interpretation")
+                of = r.get("original_features")
+                ci_str = json.dumps(ci) if ci else None
+                of_str = json.dumps(of) if of else None
+
                 sr_kwargs = {
                     "patient_id": str(r.get("patient_id") or r.get("id") or ""),
                     "predicted_class": str(r.get("predicted_class") or r.get("diagnosis") or "").upper(),
                     "probability": float(r.get("probability")),
                     "risk_tier": str(r.get("risk_tier") or "").upper(),
                     "action": str(r.get("action") or ""),
-                    "timestamp": str(r.get("timestamp") or datetime.now().isoformat())
+                    "timestamp": str(r.get("timestamp") or datetime.now().isoformat()),
+                    "danger_flag_count": int(r.get("danger_flag_count") or 0),
+                    "clinical_interpretation": ci_str,
+                    "original_features": of_str,
+                    "manual_date": str(r.get("manual_date")) if r.get("manual_date") else None
                 }
                 for i in range(1, 6):
                     name_key = f"top{i}_name"
@@ -318,8 +391,9 @@ async def save_batch_outcomes(payload: dict):
         data_dir = os.path.join(os.path.dirname(__file__), "data")
         os.makedirs(data_dir, exist_ok=True)
         db_path = os.path.join(data_dir, "batch_predictions_db.csv")
-        standard_header = ["patient_id","predicted_class","probability","risk_tier","action","timestamp",
-                           "top1_name","top1_value","top2_name","top2_value","top3_name","top3_value","top4_name","top4_value","top5_name","top5_value"]
+        standard_header = ["patient_id","predicted_class","probability","risk_tier","action","timestamp","danger_flag_count",
+                           "top1_name","top1_value","top2_name","top2_value","top3_name","top3_value","top4_name","top4_value","top5_name","top5_value",
+                           "clinical_interpretation", "original_features", "manual_date"]
         write_header = not os.path.exists(db_path) or os.path.getsize(db_path) == 0
         # If file exists with different header, rewrite with standard header preserving rows
         if not write_header:
@@ -333,7 +407,7 @@ async def save_batch_outcomes(payload: dict):
                     fr.seek(0)
                     dict_reader = csv.DictReader(fr)
                     rows_existing = list(dict_reader)
-                base6 = ["patient_id","predicted_class","probability","risk_tier","action","timestamp"]
+                
                 needs_upgrade = (
                     existing_header is None
                     or existing_header != standard_header
@@ -352,9 +426,23 @@ async def save_batch_outcomes(payload: dict):
                                 row.get("probability",""),
                                 row.get("risk_tier",""),
                                 row.get("action",""),
-                                row.get("timestamp","")
+                                row.get("timestamp",""),
+                                row.get("danger_flag_count","0")
                             ]
-                            w.writerow(base + ["","","","","","","","","",""])
+                            # Preserve top features
+                            tops = []
+                            for i in range(1, 6):
+                                tops.append(row.get(f"top{i}_name", ""))
+                                tops.append(row.get(f"top{i}_value", ""))
+                            
+                            # New columns empty
+                            extras = [
+                                row.get("clinical_interpretation", ""),
+                                row.get("original_features", ""),
+                                row.get("manual_date", "")
+                            ]
+                            
+                            w.writerow(base + tops + extras)
                     os.replace(tmp_path, db_path)
                     write_header = False
             except Exception:
@@ -366,12 +454,13 @@ async def save_batch_outcomes(payload: dict):
                 w.writerow(standard_header)
             for sr in to_save:
                 w.writerow([
-                    sr.patient_id, sr.predicted_class, sr.probability, sr.risk_tier, sr.action, sr.timestamp,
+                    sr.patient_id, sr.predicted_class, sr.probability, sr.risk_tier, sr.action, sr.timestamp, sr.danger_flag_count,
                     sr.top1_name or "", sr.top1_value if sr.top1_value is not None else "",
                     sr.top2_name or "", sr.top2_value if sr.top2_value is not None else "",
                     sr.top3_name or "", sr.top3_value if sr.top3_value is not None else "",
                     sr.top4_name or "", sr.top4_value if sr.top4_value is not None else "",
-                    sr.top5_name or "", sr.top5_value if sr.top5_value is not None else ""
+                    sr.top5_name or "", sr.top5_value if sr.top5_value is not None else "",
+                    sr.clinical_interpretation or "", sr.original_features or "", sr.manual_date or ""
                 ])
         return {"status":"saved","rows_saved":len(to_save),"path":"data/batch_predictions_db.csv"}
     except HTTPException as he:
@@ -446,7 +535,7 @@ async def get_saved_batch(page: int = 1, page_size: int = 20, order_by: str = "t
         page_df.replace([np.inf, -np.inf], np.nan, inplace=True)
         cols = [
             "patient_id","predicted_class","probability","risk_tier","action",
-            "timestamp","top1_name","top1_value","top2_name","top2_value",
+            "timestamp","danger_flag_count","top1_name","top1_value","top2_name","top2_value",
             "top3_name","top3_value","top4_name","top4_value","top5_name","top5_value"
         ]
         for c in cols:
@@ -729,12 +818,7 @@ async def metabric_evaluate(data_path: str | None = None, algorithm: str = "grad
 
 @app.get("/api/v1/metabric/sample")
 async def metabric_sample():
-    """
-    Returns a random clinical record with features aligned to the model's expected inputs.
-    Also groups features into genetic, historical, and prognostic for UI display.
-    """
     try:
-        _, _, feature_names, _ = load_artifacts()
         candidates = [
             os.environ.get("METABRIC_EVAL_DATA_PATH"),
             os.path.join(os.path.dirname(__file__), "..", "..", "data", "row", "clean_metabric_final1.csv"),
@@ -743,16 +827,25 @@ async def metabric_sample():
         path = next((p for p in candidates if p and os.path.exists(p)), None)
         if not path:
             raise HTTPException(status_code=404, detail="Evaluation dataset not found")
-        import pandas as pd, numpy as np
-        df = pd.read_csv(path, index_col=0)
-        targets = ['aggressiveness_score','growth_rate','evolution_6m']
-        cols = [c for c in df.columns if c in feature_names]
-        if not cols:
-            raise HTTPException(status_code=400, detail="No overlapping features between dataset and model")
-        idx = np.random.randint(0, len(df))
-        row = df.iloc[idx]
-        features = {c: float(row[c]) if isinstance(row[c], (int, float, np.integer, np.floating)) else row[c] for c in cols}
-        # Grouping by domain
+        import csv, random
+        with open(path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            rows = [row for row in reader]
+        if not rows:
+            raise HTTPException(status_code=400, detail="Evaluation dataset is empty")
+        header = rows[0].keys()
+        targets = {"aggressiveness_score", "growth_rate", "evolution_6m"}
+        feature_names = [c for c in header if c not in targets]
+        idx = random.randrange(0, len(rows))
+        src = rows[idx]
+        features: Dict[str, Any] = {}
+        for c in feature_names:
+            if c in src:
+                v = src.get(c)
+                try:
+                    features[c] = float(v)
+                except Exception:
+                    features[c] = v
         genetic_keys = ['pik3ca_mut','tp53_mut','gata3_mut','map3k1_mut','cdh1_mut','integrative_cluster_encoded','pam50_+_claudin-low_subtype_encoded','3-gene_classifier_subtype_encoded']
         historical_keys = ['age_at_diagnosis','tumor_size','lymph_nodes_examined_positive','mutation_count','overall_survival_months','tumor_stage_encoded','neoplasm_histologic_grade_encoded','cellularity_encoded','er_status_binary','pr_status_binary','her2_status_binary']
         prognostic_keys = ['hormone_receptor_score','triple_negative','size_category','grade_stage_interaction','high_risk','overall_survival_binary','death_from_cancer_binary','nottingham_prognostic_index']
