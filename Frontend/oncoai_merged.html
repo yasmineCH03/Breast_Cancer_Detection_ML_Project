@@ -363,69 +363,8 @@
                     </div>
                 </div>
                 
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="micro-card border border-pink-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500" role="group">
-                        <div class="micro-top bg-gradient-to-r from-pink-500 to-rose-500"></div>
-                        <div class="micro-body grid grid-cols-[auto,1fr,auto] items-center gap-3 px-4 py-3">
-                            <div class="micro-icon rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center" aria-hidden="true"><i class="ph ph-microscope"></i></div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-2">
-                                    <h2 class="text-sm font-bold text-slate-900">Cellular Analysis</h2>
-                                    <span class="indicator-dot bg-pink-500" aria-label="Ready"></span>
-                                </div>
-                                <p class="text-[12px] text-slate-600 truncate">FNA biopsy (WBCD) • Benign/Malignant • Risk tiers</p>
-                            </div>
-                            <!-- Buttons removed as requested -->
-                            <!-- <div class="flex items-center gap-2">
-                                <button class="text-[11px] px-2 py-1 rounded bg-pink-50 border border-pink-200 text-pink-700 hover:bg-pink-600 hover:text-white transition" onclick="router('model1')">Open</button>
-                                <button class="text-[11px] px-2 py-1 rounded bg-white border border-pink-200 text-slate-700 hover:bg-pink-50 transition" aria-controls="cellular-details" aria-expanded="false" onclick="toggleCardDetails('cellular-details', this)">Details</button>
-                            </div> -->
-                        </div>
-                        <div id="cellular-details" class="disclose-content px-4 pb-3" hidden>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="p-2 rounded-lg bg-pink-50 border border-pink-100">
-                                    <div class="text-[10px] font-bold text-pink-600 uppercase">Focus</div>
-                                    <div class="text-[12px] text-slate-700">Morphology, nucleus, texture</div>
-                                </div>
-                                <div class="p-2 rounded-lg bg-pink-50 border border-pink-100">
-                                    <div class="text-[10px] font-bold text-pink-600 uppercase">Output</div>
-                                    <div class="text-[12px] text-slate-700">Prediction, probability, tier</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Cards removed as requested -->
 
-                    <div class="micro-card border border-rose-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500" role="group">
-                        <div class="micro-top bg-gradient-to-r from-rose-500 to-pink-500"></div>
-                        <div class="micro-body grid grid-cols-[auto,1fr,auto] items-center gap-3 px-4 py-3">
-                            <div class="micro-icon rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center" aria-hidden="true"><i class="ph ph-heart-pulse"></i></div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-2">
-                                    <h2 class="text-sm font-bold text-slate-900">Clinical Prognosis</h2>
-                                    <span class="indicator-dot bg-rose-500" aria-label="Ready"></span>
-                                </div>
-                                <p class="text-[12px] text-slate-600 truncate">History & genomics • Aggressiveness • Timeline</p>
-                            </div>
-                            <!-- Buttons removed as requested -->
-                            <!-- <div class="flex items-center gap-2">
-                                <button class="text-[11px] px-2 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white transition" onclick="router('model2')">Open</button>
-                                <button class="text-[11px] px-2 py-1 rounded bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 transition" aria-controls="prognosis-details" aria-expanded="false" onclick="toggleCardDetails('prognosis-details', this)">Details</button>
-                            </div> -->
-                        </div>
-                        <div id="prognosis-details" class="disclose-content px-4 pb-3" hidden>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="p-2 rounded-lg bg-rose-50 border border-rose-100">
-                                    <div class="text-[10px] font-bold text-rose-600 uppercase">Focus</div>
-                                    <div class="text-[12px] text-slate-700">Clinical factors, genomics</div>
-                                </div>
-                                <div class="p-2 rounded-lg bg-rose-50 border border-rose-100">
-                                    <div class="text-[10px] font-bold text-rose-600 uppercase">Output</div>
-                                    <div class="text-[12px] text-slate-700">Prognosis, trajectory</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 
 
@@ -1053,6 +992,58 @@
                                     <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
                                         <div class="text-xs font-bold text-slate-600 uppercase">Evolution 6m Accuracy</div>
                                         <div id="doc-mb-evol-acc" class="text-2xl font-mono numeric font-bold text-slate-800 mt-1">--%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                <div class="p-6 border-b border-slate-200">
+                                    <h3 class="font-display text-lg font-bold text-slate-900">Top Features – Interprétation Clinique & Sources Accessibles</h3>
+                                </div>
+                                <div class="p-6">
+                                    <p class="mb-6 text-sm text-slate-600">Ce tableau résume les features les plus influentes dans les prédictions du modèle. Chaque valeur est accompagnée d’une interprétation clinique et d’une source scientifique accessible.</p>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm text-left border-collapse">
+                                            <thead>
+                                                <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                                                    <th class="px-4 py-3 font-semibold">Feature</th>
+                                                    <th class="px-4 py-3 font-semibold">Coeff</th>
+                                                    <th class="px-4 py-3 font-semibold">Signification clinique</th>
+                                                    <th class="px-4 py-3 font-semibold">Source</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-slate-100">
+                                                <tr>
+                                                    <td class="px-4 py-3 font-mono text-xs text-slate-700">concave_points_worst</td>
+                                                    <td class="px-4 py-3 font-mono text-xs text-emerald-600 font-bold">+2.84</td>
+                                                    <td class="px-4 py-3 text-slate-600">Points concaves maximaux → marqueur morphologique de malignité</td>
+                                                    <td class="px-4 py-3"><a href="https://doi.org/10.1038/s41598-020-77203-8" target="_blank" class="text-blue-600 hover:underline hover:text-blue-800">Article</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-3 font-mono text-xs text-slate-700">radius_worst</td>
+                                                    <td class="px-4 py-3 font-mono text-xs text-emerald-600 font-bold">+1.92</td>
+                                                    <td class="px-4 py-3 text-slate-600">Grand rayon maximal → associé à des tumeurs invasives</td>
+                                                    <td class="px-4 py-3"><a href="https://pubmed.ncbi.nlm.nih.gov/23740097/" target="_blank" class="text-blue-600 hover:underline hover:text-blue-800">Article</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-3 font-mono text-xs text-slate-700">area_worst</td>
+                                                    <td class="px-4 py-3 font-mono text-xs text-emerald-600 font-bold">+1.76</td>
+                                                    <td class="px-4 py-3 text-slate-600">Surface maximale étendue → critère de risque</td>
+                                                    <td class="px-4 py-3"><a href="https://pubmed.ncbi.nlm.nih.gov/23740097/" target="_blank" class="text-blue-600 hover:underline hover:text-blue-800">Article</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-3 font-mono text-xs text-slate-700">compactness_mean</td>
+                                                    <td class="px-4 py-3 font-mono text-xs text-rose-500 font-bold">-1.05</td>
+                                                    <td class="px-4 py-3 text-slate-600">Compacité élevée → forme ronde = lésion bénigne</td>
+                                                    <td class="px-4 py-3"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4005926/" target="_blank" class="text-blue-600 hover:underline hover:text-blue-800">Article</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-3 font-mono text-xs text-slate-700">symmetry_se</td>
+                                                    <td class="px-4 py-3 font-mono text-xs text-rose-500 font-bold">-0.22</td>
+                                                    <td class="px-4 py-3 text-slate-600">Faible asymétrie → caractéristique des lésions bénignes</td>
+                                                    <td class="px-4 py-3"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4005926/" target="_blank" class="text-blue-600 hover:underline hover:text-blue-800">Article</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
