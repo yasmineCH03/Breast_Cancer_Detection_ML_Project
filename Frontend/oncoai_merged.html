@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OncoCare – Octobre Rose Edition</title>
+    <title>&lt;OncoCure&gt; – Octobre Rose Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/index.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -265,12 +265,17 @@
         </nav>
 
         <div class="p-4 border-t border-pink-100 text-center lg:text-left">
-            <div class="flex items-center gap-3 justify-center lg:justify-start">
-                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-md">SJ</div>
-                <div class="hidden lg:block text-xs">
-                    <p class="text-slate-900 font-bold">Dr. Sarah Jenkins</p>
-                    <p class="text-pink-500">Oncology Dept.</p>
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-3 justify-center lg:justify-start">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-md">SJ</div>
+                    <div class="hidden lg:block text-xs">
+                        <p class="text-slate-900 font-bold">Dr. Sarah Jenkins</p>
+                        <p class="text-pink-500">Oncology Dept.</p>
+                    </div>
                 </div>
+                <button onclick="openSignOutModal()" class="hidden lg:flex h-8 w-8 items-center justify-center rounded-full hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition" title="Sign Out">
+                    <i class="ph ph-sign-out text-lg"></i>
+                </button>
             </div>
         </div>
     </aside>
@@ -280,7 +285,7 @@
         
         <header class="h-20 border-b nav-skin backdrop-blur-md flex items-center justify-between px-6 z-30 flex-shrink-0 shadow-sm" role="navigation" aria-label="Primary">
             <div class="flex items-center gap-3">
-                <h1 id="page-title" class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-snug" style="color: var(--text)">OncoCare Dashboard</h1>
+                <h1 id="page-title" class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-snug" style="color: var(--text)">&lt;OncoCure&gt; Dashboard</h1>
                 <span class="px-3 py-1 rounded-full btn-skin text-[10px] font-bold uppercase tracking-wide flex items-center space-x-2">
                     <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill="var(--brand-primary)" d="M12 2c3.314 0 6 2.686 6 6 0 3.093-2.366 5.145-3.994 6.976l3.494 5.024c.238.343-.054.808-.463.683l-3.508-1.087-1.529 2.766c-.214.387-.786.387-1 0l-1.529-2.766-3.508 1.087c-.409.125-.701-.34-.463-.683l3.494-5.024C8.366 13.145 6 11.093 6 8c0-3.314 2.686-6 6-6zm0 2a4 4 0 00-4 4c0 2.516 2.179 4.157 4 6.136 1.821-1.979 4-3.62 4-6.136a4 4 0 00-4-4z"/>
@@ -300,7 +305,7 @@
                         <i id="themeIcon" class="ph ph-sun text-yellow-500"></i>
                     </div>
                 </button>
-                <button class="nav-link px-2 py-2 rounded-lg transition opacity-50 cursor-not-allowed" aria-label="Sign out (coming soon)" aria-disabled="true" tabindex="-1" title="Coming soon">
+                <button onclick="document.getElementById('signout-modal').classList.remove('hidden')" class="nav-link px-2 py-2 rounded-lg transition hover:bg-pink-100 dark:hover:bg-gray-700" aria-label="Sign out" title="Sign out">
                     <i class="ph ph-sign-out text-xl icon-skin"></i>
                 </button>
                 <button id="btnMobileMenu" class="md:hidden h-10 w-10 rounded-lg border border-pink-200 text-slate-600 hover:bg-pink-50 transition grid place-items-center" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">
@@ -1189,8 +1194,8 @@
                 btn.setAttribute('aria-current', 'page');
             }
         });
-        const titles = { 'dashboard': "OncoCare Dashboard", 'model1': "Cellular Analysis", 'model2': "Clinical Prognosis", 'docs': "Documentation & Resources" };
-        document.getElementById('page-title').innerText = titles[viewId] || "OncoCare";
+        const titles = { 'dashboard': "<OncoCure> Dashboard", 'model1': "Cellular Analysis", 'model2': "Clinical Prognosis", 'docs': "Documentation & Resources" };
+        document.getElementById('page-title').innerText = titles[viewId] || "<OncoCure>";
         if(viewId === 'docs') loadDocs();
         if(viewId === 'dashboard') { loadSavedBatchSimple(); loadSavedPrognosisSimple(); }
         if(viewId === 'model1') { try { switchSubTab('tab-batch'); } catch (_) {} }
@@ -3531,5 +3536,70 @@
     if(pNext){ pNext.addEventListener('click', ()=>{ const s=window.prgState; const total = Math.max(1, Math.ceil((window.prgRows||[]).length / s.page_size)); if(s.page<total){ s.page+=1; renderPrognosisSavedPage(); }}); }
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ try{ closeDetails(); }catch(_){} try{ closeDbpDetails(); }catch(_){} try{ closePrognosisDetails(); }catch(_){} try{ document.getElementById('slide-overlay').classList.remove('open'); }catch(_){} } });
 </script>
+    <!-- Sign Out Modal -->
+    <div id="signout-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300" id="signout-modal-content">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <i class="ph ph-sign-out text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Sign Out</h3>
+                <p class="text-sm text-gray-500 mb-6">Are you sure you want to sign out? Your session data will be cleared.</p>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="closeSignOutModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium">Cancel</button>
+                    <button onclick="confirmSignOut(this)" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium flex items-center gap-2">
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sign Out Logic
+        function openSignOutModal() {
+            const modal = document.getElementById('signout-modal');
+            const content = document.getElementById('signout-modal-content');
+            modal.classList.remove('hidden');
+            // Trigger reflow
+            void modal.offsetWidth; 
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeSignOutModal() {
+            const modal = document.getElementById('signout-modal');
+            const content = document.getElementById('signout-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function confirmSignOut(btn) {
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Signing Out...';
+            
+            // Clear session data
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Simulate network delay
+            setTimeout(() => {
+                window.location.href = 'signin.html';
+            }, 800);
+        }
+
+        // Close modal on outside click
+        document.getElementById('signout-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSignOutModal();
+            }
+        });
+    </script>
 </body>
 </html>
