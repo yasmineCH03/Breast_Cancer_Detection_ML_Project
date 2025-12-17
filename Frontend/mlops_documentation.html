@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OncoCure - MLOps Pipeline Documentation</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            900: '#831843',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-600 rounded-lg flex items-center justify-center text-white">
+                        <i class="ph ph-dna text-xl"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">OncoCure <span class="text-brand-600 font-medium text-sm ml-1 uppercase tracking-wider">MLOps Docs</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#overview" class="hover:text-brand-600 transition-colors">Overview</a>
+                    <a href="#architecture" class="hover:text-brand-600 transition-colors">Architecture</a>
+                    <a href="#workflow" class="hover:text-brand-600 transition-colors">Workflow</a>
+                    <a href="#commands" class="hover:text-brand-600 transition-colors">Quick Start</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden bg-slate-900 text-white py-20">
+        <div class="absolute inset-0">
+            <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-900/50 to-transparent"></div>
+            <div class="absolute bottom-[-100px] left-[-100px] w-96 h-96 bg-brand-600/30 rounded-full blur-3xl"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Machine Learning Operations Pipeline</h1>
+            <p class="text-xl text-slate-300 max-w-2xl leading-relaxed">
+                A robust, automated pipeline for Breast Cancer Detection. Integrating Data Versioning, Experiment Tracking, CI/CD, and Scalable Deployment.
+            </p>
+            <div class="mt-10 flex gap-4">
+                <a href="#workflow" class="bg-brand-600 hover:bg-brand-500 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg shadow-brand-600/30 flex items-center gap-2">
+                    Explore Workflow <i class="ph ph-arrow-right"></i>
+                </a>
+                <a href="https://github.com/your-repo" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-semibold transition-all border border-white/10 flex items-center gap-2">
+                    <i class="ph ph-github-logo text-xl"></i> View Repository
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+        <!-- Tech Stack -->
+        <section id="architecture">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Core Technology Stack</h2>
+                <p class="text-slate-600">Built with industry-standard tools for reliability and reproducibility.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- DVC -->
+                <div class="glass-card p-8 rounded-2xl hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform">
+                        <i class="ph ph-database"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">DVC</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Data Version Control. Tracks large datasets and model files alongside code, enabling reproducibility of any historical state.
+                    </p>
+                </div>
+
+                <!-- MLflow -->
+                <div class="glass-card p-8 rounded-2xl hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform">
+                        <i class="ph ph-chart-line-up"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">MLflow</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Experiment Tracking. Logs hyperparameters, metrics, and artifacts for every training run to compare performance.
+                    </p>
+                </div>
+
+                <!-- GitHub Actions -->
+                <div class="glass-card p-8 rounded-2xl hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform">
+                        <i class="ph ph-arrows-merge"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">GitHub Actions</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        CI/CD Automation. Automatically tests code, runs training jobs on commit, and packages artifacts.
+                    </p>
+                </div>
+
+                <!-- FastAPI -->
+                <div class="glass-card p-8 rounded-2xl hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform">
+                        <i class="ph ph-lightning"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">FastAPI</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Model Serving. High-performance API for real-time inference, serving the best model from the registry.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Workflow -->
+        <section id="workflow" class="bg-white rounded-3xl p-10 border border-slate-200 shadow-sm">
+            <div class="mb-12">
+                <span class="text-brand-600 font-semibold tracking-wider uppercase text-sm">The Pipeline</span>
+                <h2 class="text-3xl font-bold text-slate-900 mt-2">End-to-End Workflow</h2>
+            </div>
+
+            <div class="space-y-12 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                
+                <!-- Step 1 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-slate-200 group-[.is-active]:bg-brand-500 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow z-10">
+                        <span class="font-bold">1</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph ph-database text-2xl text-purple-600"></i>
+                            <h3 class="font-bold text-lg text-slate-900">Data Ingestion & Versioning</h3>
+                        </div>
+                        <p class="text-slate-600 text-sm mb-4">
+                            Raw data (WBCD dataset) is ingested and tracked using DVC. A <code>.dvc</code> file serves as a pointer to the actual data storage (S3, GDrive, or local).
+                        </p>
+                        <div class="code-block text-xs">
+dvc add data/row/data.csv
+git add data/row/data.csv.dvc
+git commit -m "Update dataset"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-slate-200 group-[.is-active]:bg-brand-500 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow z-10">
+                        <span class="font-bold">2</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph ph-flask text-2xl text-blue-600"></i>
+                            <h3 class="font-bold text-lg text-slate-900">Training & Experimentation</h3>
+                        </div>
+                        <p class="text-slate-600 text-sm mb-4">
+                            The <code>train_wbcd.py</code> script runs the SGD-SVM model. MLflow automatically logs:
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mb-4 space-y-1">
+                            <li>Hyperparameters (alpha, penalty)</li>
+                            <li>Metrics (Accuracy, F1, AUC)</li>
+                            <li>Serialized Model (.joblib)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-slate-200 group-[.is-active]:bg-brand-500 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow z-10">
+                        <span class="font-bold">3</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph ph-git-commit text-2xl text-slate-700"></i>
+                            <h3 class="font-bold text-lg text-slate-900">CI/CD Pipeline</h3>
+                        </div>
+                        <p class="text-slate-600 text-sm mb-4">
+                            On every <code>git push</code>, GitHub Actions triggers:
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 text-xs text-slate-700 bg-white p-2 rounded border border-slate-200">
+                                <i class="ph ph-check-circle text-green-500"></i> Linting & Formatting (Black, Ruff)
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-slate-700 bg-white p-2 rounded border border-slate-200">
+                                <i class="ph ph-check-circle text-green-500"></i> Unit Tests (Pytest)
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-slate-700 bg-white p-2 rounded border border-slate-200">
+                                <i class="ph ph-check-circle text-green-500"></i> Model Training & Artifact Upload
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section id="commands">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8">Developer Quick Start</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Running Locally -->
+                <div class="bg-slate-900 rounded-2xl p-8 text-white">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="ph ph-terminal-window text-2xl text-brand-500"></i>
+                        <h3 class="text-xl font-bold">Run Training Locally</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">1. Install Dependencies</p>
+                            <div class="code-block bg-black/50 border border-white/10">pip install -r Backend/requirements.txt</div>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">2. Run Training Script</p>
+                            <div class="code-block bg-black/50 border border-white/10">python Backend/app/scripts/run_train_wbcd.py</div>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm mb-2">3. View Experiments</p>
+                            <div class="code-block bg-black/50 border border-white/10">mlflow ui</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DVC Ops -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="ph ph-arrows-clockwise text-2xl text-brand-600"></i>
+                        <h3 class="text-xl font-bold text-slate-900">Data Operations</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-slate-600 text-sm mb-2">Initialize DVC</p>
+                            <div class="code-block text-xs">dvc init</div>
+                        </div>
+                        <div>
+                            <p class="text-slate-600 text-sm mb-2">Track New Data</p>
+                            <div class="code-block text-xs">
+dvc add Backend/app/data/row/data.csv
+git add Backend/app/data/row/data.csv.dvc .dvc/config
+git commit -m "Update dataset"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
+            <p>&copy; 2025 OncoCure AI. All rights reserved.</p>
+            <div class="flex items-center gap-6 mt-4 md:mt-0">
+                <a href="#" class="hover:text-brand-600 transition-colors">Documentation</a>
+                <a href="#" class="hover:text-brand-600 transition-colors">Support</a>
+                <a href="#" class="hover:text-brand-600 transition-colors">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

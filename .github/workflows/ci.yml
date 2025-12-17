@@ -37,11 +37,15 @@ jobs:
       - name: Evaluate WBCD
         run: |
           python Backend/app/scripts/run_evaluate_wbcd.py
+      - name: Train Metabric
+        run: |
+          python Backend/app/scripts/run_train_metabric.py
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
             Backend/app/models/*.joblib
+            Backend/app/models/*.pkl
             Backend/app/data/*.json
             mlruns/
