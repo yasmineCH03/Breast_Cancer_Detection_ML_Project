@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=40&pause=1000&color=FF1493&center=true&vCenter=true&width=600&lines=ONCOGUARD+AI;OBJECTIVE+2:+RISK+STRATIFICATION" alt="Typing SVG" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=40&pause=1000&color=FF1493&center=true&vCenter=true&width=600&lines=ONCOGUARD+AI;INTELLIGENT+CANCER+DETECTION;CLINICAL+DECISION+SUPPORT" alt="Typing SVG" />
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Module-Objective%202-FF1493?style=for-the-badge&logo=none" />
+    <img src="https://img.shields.io/badge/OncoGuard-AI-FF1493?style=for-the-badge&logo=none" />
     <img src="https://img.shields.io/badge/Accuracy-99.8%25-2ea44f?style=for-the-badge&logo=none" />
-    <img src="https://img.shields.io/badge/Model-SGD--SVM-000000?style=for-the-badge&logo=scikitlearn&logoColor=white" />
+    <img src="https://img.shields.io/badge/Powered%20By-MLOps-000000?style=for-the-badge&logo=githubactions&logoColor=white" />
 </p>
 
-<h3 align="center" style="color: #999; font-weight: 400;">Intelligent Triage & Predictive Modeling</h3>
+<h3 align="center" style="color: #999; font-weight: 400;">Advanced Machine Learning for Breast Cancer Diagnosis & Prognosis</h3>
 
 </div>
 
