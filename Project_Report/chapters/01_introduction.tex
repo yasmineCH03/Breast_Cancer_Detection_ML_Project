@@ -1,0 +1,30 @@
+\chapter{Introduction and Methodology}
+
+\section{Project Context}
+Breast cancer remains the most prevalent cancer among women worldwide, posing a significant global health challenge. Early and accurate diagnosis is the single most critical factor influencing patient survival rates. However, traditional diagnostic workflows—relying heavily on manual interpretation of mammography and histology—are resource-intensive, time-consuming, and subject to inter-observer variability.
+
+\textbf{OncoCare} emerges as an intelligent Clinical Decision Support System (CDSS) designed to bridge the gap between medical expertise and computational precision. By automating risk stratification and providing predictive insights, OncoCare aims to assist oncologists in making faster, more evidence-based decisions. This project integrates advanced machine learning techniques to not only classify tumor malignancy with high sensitivity but also to predict tumor aggressiveness, thereby optimizing the triage process and prioritizing high-risk patients.
+
+\section{Methodology}
+This project adopts the \textbf{CRISP-DM} (Cross-Industry Standard Process for Data Mining) framework, ensuring a robust and medically aligned development lifecycle. The process is structured into five key phases:
+
+\begin{table}[h]
+    \centering
+    \caption{CRISP-DM Project Methodology Phases}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|p{0.3\textwidth}|p{0.65\textwidth}|}
+        \hline
+        \textbf{Phase} & \textbf{Content} \\
+        \hline
+        \textbf{Business Understanding} & We define the clinical objectives, focusing on minimizing False Negatives to ensure patient safety and optimizing triage workflows to reduce diagnostic delays. \\
+        \hline
+        \textbf{Data Understanding \& Preparation} & Leveraging the WBCD and METABRIC datasets, we perform rigorous exploratory analysis (EDA) and preprocessing. This includes handling class imbalance, feature scaling, and outlier detection. \\
+        \hline
+        \textbf{Modeling} & We develop and compare multiple architectures, ranging from interpretable linear models (Softmax Regression, SVM) to complex ensemble methods (XGBoost) and hybrid Neural Networks. \\
+        \hline
+        \textbf{Evaluation} & \textbf{WBCD (Diagnosis):} Validated using Accuracy, Sensitivity, Confusion Matrix, and ROC Curve. \newline \textbf{METABRIC (Prognosis):} Evaluated using R\textsuperscript{2}, RMSE, and MAE. \\
+        \hline
+        \textbf{Deployment} & The final solution is operationalized via a modern MLOps pipeline, featuring a FastAPI backend, static html frontend, and MLflow for experiment tracking. \\
+        \hline
+    \end{tabular}
+\end{table}

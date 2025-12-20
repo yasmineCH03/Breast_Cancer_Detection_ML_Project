@@ -1,0 +1,86 @@
+\chapter{Data Preprocessing and Cleaning}
+
+Effective preprocessing is crucial for model performance, especially in medical datasets where noise and scale discrepancies can lead to critical prediction errors. The preprocessing workflow is divided into two distinct pipelines: one for the diagnosis task (WBCD) and one for the prognosis task (METABRIC).
+
+\section{WBCD Data Preprocessing}
+The preprocessing pipeline for the Wisconsin Breast Cancer Diagnosis (WBCD) dataset focuses on preparing the features for binary classification.
+
+\subsection{Encoding Target Variable}
+The target variable \texttt{diagnosis} initially consists of categorical labels: 'M' (Malignant) and 'B' (Benign). Since machine learning algorithms operate on numerical data, Label Encoding was applied to map these categories to binary values:
+\begin{itemize}
+    \item \textbf{Malignant (M)} $\rightarrow$ \textbf{1} (Positive Class)
+    \item \textbf{Benign (B)} $\rightarrow$ \textbf{0} (Negative Class)
+\end{itemize}
+This encoding ensures that the model correctly identifies the presence of cancer as the positive case.
+
+\subsection{Train-Test Split}
+To assess the model's generalization capability, the dataset was split into independent training and testing subsets.
+\begin{itemize}
+    \item \textbf{Ratio:} 70\% of the data was allocated for training, and 30\% for testing.
+    \item \textbf{Stratification:} A stratified split was employed to ensure that the proportion of Malignant and Benign cases remains consistent across both the training and testing sets. This is vital given the class imbalance observed in the EDA phase.
+\end{itemize}
+
+\subsection{Standardization}
+The WBCD dataset features vary significantly in magnitude (e.g., \texttt{area\_mean} $\approx$ 650 vs. \texttt{smoothness\_mean} $\approx$ 0.1). Distance-based algorithms (like KNN and SVM) and gradient-descent-based models are sensitive to these scale differences.
+
+To address this, \textbf{StandardScaler} was used to normalize the features. This technique rescales the distribution of values so that the mean of observed values is 0 and the standard deviation is 1. The mathematical equation applied is:
+
+\begin{equation}
+    z = \frac{x - \mu}{\sigma}
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $z$ is the standardized value (z-score).
+    \item $x$ is the original feature value.
+    \item $\mu$ is the mean of the feature in the training set.
+    \item $\sigma$ is the standard deviation of the feature in the training set.
+\end{itemize}
+Note that the scaler is fit only on the training set and then used to transform the test set to prevent data leakage.
+
+\section{METABRIC Data Preprocessing}
+For the prognosis task, the METABRIC dataset required a more complex preprocessing pipeline due to its high dimensionality and mixed data types. The process was divided into eight key stages:
+
+\subsection{Column Selection}
+The original dataset contained 693 columns. To reduce noise and focus on clinically relevant features, the dataset was reduced to 23 core columns, including patient demographics, tumor characteristics, and genetic mutations.
+
+(See Appendix \ref{app:feature_selection} for implementation details).
+
+\subsection{Data Imputation}
+Missing values were handled based on variable type to preserve distribution characteristics:
+\begin{itemize}
+    \item \textbf{Numerical Variables:} Missing values were imputed using the \textbf{median} (robust to outliers).
+    \item \textbf{Categorical Variables:} Missing values were imputed using the \textbf{mode} (most frequent category).
+    \item \textbf{Mutation Counts:} Missing values were filled with 0, assuming no mutation was detected.
+\end{itemize}
+(See Appendix \ref{app:imputation} for implementation details).
+
+\subsection{Outlier Detection and Treatment}
+Outliers in numerical features (e.g., \texttt{tumor\_size}) were detected using the Interquartile Range (IQR) method. Values exceeding the upper bound (Q3 + 1.5 * IQR) were capped at the 95th percentile to prevent them from skewing the model. (See Appendix \ref{app:outliers} for implementation details).
+
+\subsection{Categorical Encoding}
+Categorical variables were encoded to be machine-readable:
+\begin{itemize}
+    \item \textbf{Binary Encoding:} Variables like \texttt{her2\_status} were mapped to 0 (Negative) and 1 (Positive).
+    \item \textbf{Ordinal Encoding:} \texttt{cellularity} was mapped to ordered integers (Low=1, Moderate=2, High=3).
+    \item \textbf{Survival Status:} 'Living' $\rightarrow$ 0, 'Died of Disease' $\rightarrow$ 1, 'Died of Other Causes' $\rightarrow$ 0.
+\end{itemize}
+
+\subsection{Feature Engineering}
+New features were derived to capture complex biological interactions:
+\begin{itemize}
+    \item \textbf{Hormone Receptor Score:} Sum of ER and PR status.
+    \item \textbf{Triple Negative:} Flag identifying patients negative for ER, PR, and HER2.
+    \item \textbf{Grade-Stage Interaction:} Product of tumor grade and stage.
+    \item \textbf{High Risk Score:} Binary flag if NPI > 5.4.
+\end{itemize}
+(See Appendix \ref{app:feature_eng} for implementation details).
+
+\subsection{Target Variable Creation}
+To predict disease progression, a composite \textbf{Aggressiveness Score} was calculated based on grade, stage, lymph nodes, and NPI. This score was then used to define the \texttt{evolution\_6m} target. (See Appendix \ref{app:target_creation} for implementation details).
+
+\subsection{Train-Test Split}
+The dataset was split into training (80\%) and testing (20\%) sets. Crucially, the split was \textbf{stratified by} \texttt{evolution\_6m} to ensure that all risk categories (Low, Medium, High) were equally represented in both sets.
+
+\subsection{Feature Standardization}
+Finally, all numerical features were standardized using \textbf{StandardScaler} to ensure that features like \texttt{tumor\_size} and \texttt{age} contributed equally to the model, regardless of their original units.

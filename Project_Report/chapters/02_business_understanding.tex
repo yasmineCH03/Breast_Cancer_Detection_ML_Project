@@ -1,0 +1,193 @@
+\chapter{Business Understanding}
+
+
+\section{Strategic Context \& Objectives}
+\subsection{Problem Statement: The Diagnostic Gap}
+Breast cancer remains the most prevalent cancer worldwide. Despite advancements, traditional diagnostic workflows are strained by rising patient volumes and human fatigue. Statistics from recent real-world studies underscore the urgency of AI integration:
+
+\begin{itemize}
+    \item \textbf{Efficiency Bottlenecks:} Pathological analysis often incurs a \textbf{7-14 day delay}, increasing patient anxiety and delaying critical treatment inception.
+    \item \textbf{The Cost of Uncertainty:} Up to \textbf{20\% of cancers} can be missed in conventional screening, while \textbf{15-25\% of biopsies} performed are ultimately benign or unnecessary.
+    \item \textbf{Proven Impact:} Deployed tools (e.g., Vara, MammoScreen) have demonstrated that AI-assisted workflows can increase detection rates by \textbf{17.6\%} while maintaining specificity, proving AI is a validated safety net.
+\end{itemize}
+
+\subsection{Stakeholder Analysis}
+This system is designed not to replace, but to augment clinical expertise, targeting two primary stakeholders:
+
+\begin{description}
+    \item[Medical Professionals (Oncologists, Radiologists, Pathologists)] \hfill \\
+    \textit{Objective: Clinical Decision Support (CDS).} To provide a reliable "second opinion" that reduces fatigue-related errors. The system automates routine morphological measurements, allowing the expert to focus on complex, edge-case diagnosis.
+    
+    \item[Healthcare Administration (Hospital Mgmt, Operations)] \hfill \\
+    \textit{Objective: Resource Optimization.} To implement intelligent triage that dynamically routes high-probability cases to the front of the queue, maximizing the utilization of expensive diagnostic machinery (MRI/Biopsy) and specialist hours.
+\end{description}
+
+\section{BO 1: Classify Tumors for Rapid Diagnosis}
+
+\begin{infobox}[title=Context]
+In breast oncology, rapid and accurate differentiation between benign and malignant tumors is critical for patient outcomes. This AI system provides clinical decision support to optimize diagnostic accuracy and reduce unnecessary invasive procedures.
+\end{infobox}
+
+\subsection{Challenges}
+\begin{itemize}
+    \item \textbf{Medical Problem:} Diagnostic uncertainty leads to patient anxiety, delayed treatment for malignant cases, and unnecessary biopsies for benign masses.
+    \item \textbf{Business Challenge:} Pathology bottlenecks delay diagnoses by 7-14 days. Senior pathologists waste time on routine cases.
+    \item \textbf{AI Solution:} ML classifier predicting tumor malignancy from morphological features with $>97\%$ accuracy, enabling faster triage and ~20\% cost reduction.
+\end{itemize}
+
+\subsection{DSO 1: Binary Classification}
+We developed three distinct architectures optimized for sensitivity and accuracy using morphological features from the WBCD dataset.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|p{0.25\textwidth}|p{0.35\textwidth}|p{0.3\textwidth}|}
+\hline
+\textbf{Model} & \textbf{Hyperparameters Configuration} & \textbf{Input Variables} \\
+\hline
+\textbf{Softmax Regression} \newline \textit{\textcolor{magenta}{Optimized}} & 
+$\bullet$ $C = 10.0$ \newline
+$\bullet$ solver = 'lbfgs' \newline
+$\bullet$ max\_iter = 3000 \newline
+$\bullet$ threshold = 0.477 
+& \multirow{3}{=}{\textbf{30 Morphological Features:} \newline
+$\bullet$ radius (mean/se/worst) \newline
+$\bullet$ texture (mean/se/worst) \newline
+$\bullet$ perimeter (mean/se/worst) \newline
+$\bullet$ area (mean/se/worst) \newline
+$\bullet$ smoothness (mean/se/worst) \newline
+$\bullet$ compactness (mean/se/worst) \newline
+$\bullet$ concavity (mean/se/worst) \newline
+$\bullet$ concave points (mean/se/worst) \newline
+$\bullet$ symmetry (mean/se/worst) \newline
+$\bullet$ fractal dimension (mean/se/worst) \newline
+\vspace{0.2cm}
+\textbf{Target Variable:} \newline
+diagnosis $\rightarrow$ Binary (B/M)} \\
+\cline{1-2}
+\textbf{GRU-SVM Hybrid} \newline \textit{\textcolor{magenta}{Optimized}} & 
+\textbf{GRU Neural Network:} \newline
+$\bullet$ units = 128 \newline
+$\bullet$ dropout = 0.5 \newline
+$\bullet$ learning\_rate = 0.001 \newline
+\vspace{0.1cm}
+\textbf{SVM Classifier:} \newline
+$\bullet$ kernel = 'linear' \newline
+$\bullet$ threshold = 0.25 
+& \\
+\cline{1-2}
+\textbf{SVM-SGD} \newline \textit{\textcolor{magenta}{Optimized}} & 
+$\bullet$ loss = 'hinge' (SVM loss) \newline
+$\bullet$ penalty = 'l2' \newline
+$\bullet$ alpha = $1/(5 \times n\_samples)$ \newline
+$\bullet$ class\_weight = 'balanced' \newline
+$\bullet$ learning\_rate = 'constant' \newline
+$\bullet$ eta0 = 0.001 \newline
+$\bullet$ max\_iter = 3000 \newline
+$\bullet$ tol = 1e-4 \newline
+$\bullet$ random\_state = 42 
+& \\
+\hline
+\end{tabular}
+\caption{Model Configurations for Binary Classification}
+\label{tab:model_configurations}
+\end{table}
+
+\subsection{Success Metrics: Clinical Interpretation}
+\begin{itemize}
+    \item \textbf{Sensitivity (Recall):} \textit{Primary Safety Metric.} Measures the ability to identify all malignant cases. Maximizing this minimizes \textbf{False Negatives} (missed cancers), acting as the critical safety net for the diagnostic workflow.
+    \item \textbf{False Negative Rate (FNR):} \textit{Risk Metric.} The inverse of sensitivity. Our "Challenger" model is selected specifically to drive this metric towards zero, ensuring no patient is incorrectly discharged.
+    \item \textbf{Precision:} \textit{Efficiency Metric.} Balances the safety net by measuring how many predicted cancers are truly malignant. High precision minimizes \textbf{False Positives}, reducing unnecessary biopsies and patient anxiety.
+    \item \textbf{Accuracy:} \textit{Global Metric.} Provides a baseline for overall reliability across the population but is secondary to sensitivity in this imbalanced clinical context.
+\end{itemize}
+
+\section{BO 2: Optimize Triage and Resource Allocation}
+
+\begin{infobox}[title=Context]
+We are designing an AI-powered triage system to prioritize cancer patients based on malignancy risk probability. This system replaces traditional "first-come-first-served" logistics with a data-driven prioritization engine.
+\end{infobox}
+
+\subsection{DSO 2.1: Probability Scoring and Calibration}
+To ensure the reliability of risk estimates, the model's raw outputs are refined using \textbf{Sigmoid Calibration}. This process transforms the model's scores into true probabilities, ensuring that a predicted risk of 70\% corresponds to a true 70\% likelihood of malignancy.
+
+\subsection{DSO 2.2: Explainability}
+To build clinical trust, the system implements a dual-layer interpretability framework:
+
+\subsubsection{Global Explainability}
+We utilize \textbf{Model Coefficients} to provide a high-level overview of which features (e.g., Radius, Texture) generally drive predictions across the entire patient population.
+
+\subsubsection{Local Explainability}
+For individual patient cases, we employ \textbf{SHAP (SHapley Additive exPlanations)}. This technique breaks down a specific prediction, quantifying exactly how much each feature contributed to the final risk score, offering personalized transparency.
+
+\subsection{DSO 2.3: Risk Stratification Logic}
+The system employs a hybrid decision-making model integrating statistical predictions with clinical safety nets:
+
+\begin{itemize}
+    \item \textbf{Statistical Stratification:} Patients are categorized into five risk levels (Very Low to Critical) based on calibrated probabilities, guiding specific interventions.
+    \item \textbf{Clinical Safety Net:} "Danger Flags" are triggered when physiological features breach safety thresholds.
+    \item \textbf{Dynamic Escalation:} Patients with $\ge 2$ danger flags are automatically upgraded to the next risk tier.
+    \item \textbf{Enhanced Prioritization:} A "Priority Queue" flags high-acuity cases ($\ge 80\%$ probability or multiple flags) to ensure immediate attention.
+\end{itemize}
+
+\section{BO 3: Personalize Treatment Strategies}
+
+\begin{infobox}[title=Context]
+Moving beyond binary diagnosis to characterize specific biological behavior (aggressiveness, growth velocity) for precision medicine. This section details the technical specifications for the METABRIC dataset model integration.
+\end{infobox}
+
+\subsection{DSO 3.1: Multi-Output Architecture \& Generalization}
+Implementation of a \textbf{Gradient Boosting Multi-Output Regressor} designed to simultaneously predict three distinct clinical targets.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|p{0.2\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Component} & \textbf{Random Forest} & \textbf{Gradient Boosting} \\
+\hline
+\textbf{Architecture} & Multi-Output Regressor (RandomForestRegressor) & Multi-Output Regressor (GradientBoostingRegressor) \\
+\hline
+\textbf{Hyperparameters} & 
+$\bullet$ n\_estimators = 200 \newline
+$\bullet$ max\_depth = 10 \newline
+$\bullet$ n\_jobs = -1 \newline
+$\bullet$ random\_state = 42 & 
+$\bullet$ n\_estimators = 200 \newline
+$\bullet$ learning\_rate = 0.1 \newline
+$\bullet$ max\_depth = 5 \newline
+$\bullet$ random\_state = 42 \\
+\hline
+\textbf{Input Variables} & \multicolumn{2}{p{0.75\textwidth}|}{\textbf{21 Clinical \& Molecular Features:} \newline
+$\bullet$ Demographics: Age at Diagnosis \newline
+$\bullet$ Morphology: Tumor Size, Lymph Nodes, Cellularity \newline
+$\bullet$ Biomarkers: ER/PR/HER2 Status, Hormone Receptors \newline
+$\bullet$ Indices: NPI, Tumor Stage, Histologic Grade \newline
+$\bullet$ Genetics: Mutation Count, PAM50 Subtype} \\
+\hline
+\textbf{Output Targets} & \multicolumn{2}{p{0.75\textwidth}|}{
+\textbf{1. Aggressiveness Score:} Composite index of tumor severity. \newline
+\textbf{2. Growth Rate:} Predicted velocity of tumor expansion. \newline
+\textbf{3. Evolution 6M:} Projected patient status at 6 months.} \\
+\hline
+\end{tabular}
+\caption{Model Configurations for Prognosis Prediction (METABRIC)}
+\label{tab:metabric_model_config}
+\end{table}
+
+\subsection{Success Metrics: Prognostic Precision}
+Given the multi-output nature of this business objective, we employ target-specific metrics to validate both regression (continuous) and classification (categorical) predictions:
+
+\begin{itemize}
+    \item \textbf{Aggressiveness \& Growth (Regression Targets):}
+    \begin{itemize}
+        \item \textbf{R-Squared ($R^2$):} Measures the proportion of variance in the tumor characteristics (aggressiveness score, growth rate) that is predictable from the clinical features. A higher $R^2$ indicates a stronger fit to the biological reality.
+        \item \textbf{Mean Absolute Error (MAE):} Quantifies the average magnitude of errors in predictions (e.g., how far off the predicted growth rate is from the actual). This metric is robust to outliers and provides a clear, interpretable error margin for clinicians.
+    \end{itemize}
+    
+    \item \textbf{Evolution 6M (Classification Target):}
+    \begin{itemize}
+        \item \textbf{Accuracy:} Measures the correct classification rate of the patient's status at 6 months (Stable, Moderate Progression, Rapid Progression). This ensures the triage system correctly categorizes the urgency of the patient's trajectory.
+    \end{itemize}
+\end{itemize}

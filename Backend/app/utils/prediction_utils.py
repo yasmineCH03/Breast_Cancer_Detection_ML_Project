@@ -67,10 +67,10 @@ def predict_diagnosis(features_dict):
     elif probability >= 0.8:
         risk_tier = "HIGH"
         action = "Schedule biopsy within 7 days"
-    elif probability >= 0.6:
+    elif probability >= 0.4:
         risk_tier = "MEDIUM"
         action = "Ultrasound follow-up in 3 months"
-    elif probability >= 0.4:
+    elif probability >= 0.2:
         risk_tier = "LOW"
         action = "Routine screening in 6 months"
     else:

@@ -57,7 +57,7 @@
       ]
     },
     "medium_risk": {
-      "probability_threshold": 0.6,
+      "probability_threshold": 0.4,
       "risk_tier": "MEDIUM",
       "actions": [
         {
@@ -81,7 +81,7 @@
       ]
     },
     "low_risk": {
-      "probability_threshold": 0.4,
+      "probability_threshold": 0.2,
       "risk_tier": "LOW",
       "actions": [
         {

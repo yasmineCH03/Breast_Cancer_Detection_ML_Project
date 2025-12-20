@@ -1,0 +1,30 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Distribution of Diagnosis in WBCD Dataset}}{13}{figure.caption.8}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Feature Correlations with Malignancy}}{13}{figure.caption.9}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Missing Value Analysis: Top Columns and Distribution}}{14}{figure.caption.10}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Distribution of Numerical Clinical Variables}}{15}{figure.caption.12}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Distribution of Categorical Clinical Variables}}{16}{figure.caption.13}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Correlation Matrix of Clinical Variables}}{16}{figure.caption.14}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Top Feature Drivers: Malignant (Left) vs Benign (Right)}}{24}{figure.caption.15}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces SHAP Waterfall Plot for Patient P-1461 (Critical Risk)}}{25}{figure.caption.17}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Confusion Matrices for BO1 Models}}{28}{figure.caption.21}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces ROC Curve Analysis}}{29}{figure.caption.22}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Calibration Curve (Reliability Diagram) for the SGD-SVM Model. The plot shows the relationship between mean predicted probability and the fraction of positives (actual risk). The proximity of the curve to the diagonal dashed line indicates good calibration.}}{30}{figure.caption.23}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Model Comparison: Metrics Overview}}{31}{figure.caption.25}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Predictions vs. Actual Values (Gradient Boosting)}}{31}{figure.caption.26}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Confusion Matrix: Evolution 6M (Gradient Boosting)}}{32}{figure.caption.27}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces ROC Curves for Evolution 6M}}{32}{figure.caption.28}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Residual Analysis for Aggressiveness and Growth Rate}}{33}{figure.caption.29}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces High-Level Deployment Architecture}}{34}{figure.caption.30}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces MLflow Experiment Tracking Dashboard}}{35}{figure.caption.31}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsfinish 
+\contentsfinish 

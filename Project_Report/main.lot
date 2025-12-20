@@ -1,0 +1,22 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces CRISP-DM Project Methodology Phases}}{6}{table.caption.4}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Model Configurations for Binary Classification}}{8}{table.caption.5}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Model Configurations for Prognosis Prediction (METABRIC)}}{10}{table.caption.6}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Descriptive Statistics for All WBCD Features}}{12}{table.caption.7}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Descriptive Statistics for METABRIC Clinical Features}}{15}{table.caption.11}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Top Predictive Drivers and Clinical Interpretation}}{24}{table.caption.16}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Risk Tiers and Intervention Protocols}}{25}{table.caption.18}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Danger Flag Thresholds for Dynamic Escalation}}{26}{table.caption.19}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Final Leaderboard: Diagnosis Models (Test Set)}}{28}{table.caption.20}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Performance Comparison: Random Forest vs. Gradient Boosting}}{31}{table.caption.24}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsfinish 
+\contentsfinish 

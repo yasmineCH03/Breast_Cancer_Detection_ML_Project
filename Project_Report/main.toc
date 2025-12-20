@@ -1,0 +1,122 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction and Methodology}{6}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Project Context}{6}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Methodology}{6}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Business Understanding}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Strategic Context \& Objectives}{7}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Problem Statement: The Diagnostic Gap}{7}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Stakeholder Analysis}{7}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}BO 1: Classify Tumors for Rapid Diagnosis}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Challenges}{8}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}DSO 1: Binary Classification}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Success Metrics: Clinical Interpretation}{8}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}BO 2: Optimize Triage and Resource Allocation}{9}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}DSO 2.1: Probability Scoring and Calibration}{9}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}DSO 2.2: Explainability}{9}{subsection.2.3.2}%
+\contentsline {subsubsection}{Global Explainability}{9}{subsection.2.3.2}%
+\contentsline {subsubsection}{Local Explainability}{9}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}DSO 2.3: Risk Stratification Logic}{9}{subsection.2.3.3}%
+\contentsline {section}{\numberline {2.4}BO 3: Personalize Treatment Strategies}{10}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}DSO 3.1: Multi-Output Architecture \& Generalization}{10}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Success Metrics: Prognostic Precision}{10}{subsection.2.4.2}%
+\contentsline {chapter}{\numberline {3}Data Understanding}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Data Sources}{11}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}WBCD Dataset (Diagnosis)}{11}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}METABRIC Dataset (Prognosis)}{11}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Exploratory Data Analysis (EDA)}{11}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}WBCD Exploratory Analysis}{11}{subsection.3.2.1}%
+\contentsline {subsubsection}{Dimensions and Data Types}{11}{subsection.3.2.1}%
+\contentsline {subsubsection}{Descriptive Statistics}{12}{subsection.3.2.1}%
+\contentsline {subsubsection}{Missing Value Analysis}{12}{table.caption.7}%
+\contentsline {subsubsection}{Target Variable Distribution}{12}{table.caption.7}%
+\contentsline {subsubsection}{Feature Linearity and Correlation Analysis}{13}{figure.caption.8}%
+\contentsline {subsection}{\numberline {3.2.2}METABRIC Exploratory Data Analysis}{14}{subsection.3.2.2}%
+\contentsline {subsubsection}{Dataset Overview}{14}{subsection.3.2.2}%
+\contentsline {subsubsection}{Missing Value Analysis}{14}{subsection.3.2.2}%
+\contentsline {subsubsection}{Clinical Variable Statistics}{15}{figure.caption.10}%
+\contentsline {subsubsection}{Numerical Variable Distribution}{15}{table.caption.11}%
+\contentsline {subsubsection}{Categorical Variables Distribution}{16}{figure.caption.12}%
+\contentsline {subsubsection}{Correlation Analysis}{16}{figure.caption.13}%
+\contentsline {chapter}{\numberline {4}Data Preprocessing and Cleaning}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}WBCD Data Preprocessing}{17}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Encoding Target Variable}{17}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Train-Test Split}{17}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Standardization}{17}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}METABRIC Data Preprocessing}{18}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Column Selection}{18}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Data Imputation}{18}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Outlier Detection and Treatment}{18}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Categorical Encoding}{18}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Feature Engineering}{19}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.6}Target Variable Creation}{19}{subsection.4.2.6}%
+\contentsline {subsection}{\numberline {4.2.7}Train-Test Split}{19}{subsection.4.2.7}%
+\contentsline {subsection}{\numberline {4.2.8}Feature Standardization}{19}{subsection.4.2.8}%
+\contentsline {chapter}{\numberline {5}Modeling}{20}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Business Objective 1: Tumor Classification (Diagnostic)}{20}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Model 1: Hybrid GRU-SVM}{20}{subsection.5.1.1}%
+\contentsline {subsubsection}{Concept}{20}{subsection.5.1.1}%
+\contentsline {subsubsection}{Mathematical Formulation}{20}{subsection.5.1.1}%
+\contentsline {subsubsection}{Hyperparameter Choice}{21}{subsection.5.1.1}%
+\contentsline {subsubsection}{Métier Rationale}{21}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Model 2: Softmax Regression (Logistic Regression)}{21}{subsection.5.1.2}%
+\contentsline {subsubsection}{Mathematical Formulation}{21}{subsection.5.1.2}%
+\contentsline {subsubsection}{Hyperparameter Choice}{21}{equation.5.1.2}%
+\contentsline {subsubsection}{Métier Rationale}{22}{equation.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Model 3: SGD-SVM (Stochastic Gradient Descent)}{22}{subsection.5.1.3}%
+\contentsline {subsubsection}{Mathematical Formulation}{22}{subsection.5.1.3}%
+\contentsline {subsubsection}{Hyperparameter Choice}{22}{equation.5.1.5}%
+\contentsline {subsubsection}{Métier Rationale}{22}{equation.5.1.5}%
+\contentsline {section}{\numberline {5.2}Business Objective 2: Intelligent Triage \& Resource Allocation}{23}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Step 1: Probability Calibration}{23}{subsection.5.2.1}%
+\contentsline {subsubsection}{Selected Engine}{23}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Step 2: Explainability (XAI)}{23}{subsection.5.2.2}%
+\contentsline {subsubsection}{Global Interpretability (Top Drivers)}{23}{subsection.5.2.2}%
+\contentsline {subsubsection}{Local Interpretability (SHAP Waterfall)}{24}{table.caption.16}%
+\contentsline {subsection}{\numberline {5.2.3}DSO 2.3: Risk Stratification Logic}{25}{subsection.5.2.3}%
+\contentsline {subsubsection}{Statistical Risk Stratification}{25}{subsection.5.2.3}%
+\contentsline {subsubsection}{Clinical Safety Net (Danger Flags)}{26}{table.caption.18}%
+\contentsline {subsubsection}{Resource Allocation Impact}{26}{table.caption.19}%
+\contentsline {section}{\numberline {5.3}Business Objective 3: Prognosis \& Evolution (METABRIC)}{26}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Target Variables}{26}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Model Architecture \& Configuration}{26}{subsection.5.3.2}%
+\contentsline {subsubsection}{Selected Models}{27}{subsection.5.3.2}%
+\contentsline {subsubsection}{Mathematical Formulation}{27}{subsection.5.3.2}%
+\contentsline {paragraph}{Multi-Output Strategy:}{27}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Métier Interpretability Choices}{27}{subsection.5.3.3}%
+\contentsline {chapter}{\numberline {6}Evaluation}{28}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Evaluation Methodology}{28}{section.6.1}%
+\contentsline {section}{\numberline {6.2}BO1: Tumor Classification (Diagnosis)}{28}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Model Comparison Table}{28}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Confusion Matrix Evaluation}{28}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}ROC Curve Evaluation}{29}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Winning Model Selection}{29}{subsection.6.2.4}%
+\contentsline {section}{\numberline {6.3}BO2: Risk Triage (Stratification)}{29}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Calibration Quality}{30}{subsection.6.3.1}%
+\contentsline {section}{\numberline {6.4}Prognosis Model Results (BO3)}{30}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Comparative Performance Analysis}{30}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Winning Model Selection}{31}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.4.3}Detailed Performance: Gradient Boosting}{31}{subsection.6.4.3}%
+\contentsline {subsubsection}{Predictions vs. Actuals}{31}{subsection.6.4.3}%
+\contentsline {subsubsection}{Confusion Matrix (Evolution 6M)}{32}{figure.caption.26}%
+\contentsline {subsubsection}{ROC Curve Analysis}{32}{figure.caption.27}%
+\contentsline {subsubsection}{Residual Analysis}{33}{figure.caption.28}%
+\contentsline {subsection}{\numberline {6.4.4}Key Findings}{33}{subsection.6.4.4}%
+\contentsline {chapter}{\numberline {7}Deployment}{34}{chapter.7}%
+\contentsline {section}{\numberline {7.1}System Architecture}{34}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Backend Implementation}{34}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Technology Stack}{34}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}API Endpoints}{34}{subsection.7.2.2}%
+\contentsline {section}{\numberline {7.3}MLOps \& CI/CD Pipeline}{34}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Continuous Integration (CI)}{35}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Model Registry \& Artifacts}{35}{subsection.7.3.2}%
+\contentsline {section}{\numberline {7.4}Evidence-Based Deployment Logic}{35}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Clinical Interface (Frontend)}{36}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Conclusion}{37}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Code Appendix}{38}{appendix.A}%
+\contentsline {section}{\numberline {A.1}METABRIC Preprocessing Code}{38}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}Feature Selection}{38}{subsection.A.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}Data Imputation}{38}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Outlier Treatment}{38}{subsection.A.1.3}%
+\contentsline {subsection}{\numberline {A.1.4}Feature Engineering}{39}{subsection.A.1.4}%
+\contentsline {subsection}{\numberline {A.1.5}Target Variable Creation}{39}{subsection.A.1.5}%
+\contentsfinish 

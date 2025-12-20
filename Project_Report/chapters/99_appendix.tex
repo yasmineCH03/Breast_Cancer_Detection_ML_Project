@@ -1,0 +1,61 @@
+\chapter{Code Appendix}
+\label{appendix:code}
+
+This appendix contains the implementation details for the data preprocessing pipelines described in Chapter 4.
+
+\section{METABRIC Preprocessing Code}
+
+\subsection{Feature Selection}
+\label{app:feature_selection}
+\begin{lstlisting}[language=Python, caption=Feature Selection Logic]
+metabric_columns_to_keep = [
+    'patient_id', 'age_at_diagnosis', 'tumor_size', 'tumor_stage',
+    'neoplasm_histologic_grade', 'cellularity', 'nottingham_prognostic_index',
+    'er_status', 'her2_status', 'pr_status', 'lymph_nodes_examined_positive',
+    'pam50_+_claudin-low_subtype', 'integrative_cluster', '3-gene_classifier_subtype',
+    'mutation_count', 'pik3ca_mut', 'tp53_mut', 'gata3_mut', 'map3k1_mut', 'cdh1_mut',
+    'overall_survival_months', 'overall_survival', 'death_from_cancer'
+]
+metabric_selected = metabric_df[metabric_available_keep].copy()
+\end{lstlisting}
+
+\subsection{Data Imputation}
+\label{app:imputation}
+\begin{lstlisting}[language=Python, caption=Imputation Strategy]
+for col in metabric_clean.columns:
+    if metabric_clean[col].dtype == 'object':
+        metabric_clean[col] = metabric_clean[col].fillna(metabric_clean[col].mode()[0])
+    else:
+        metabric_clean[col] = metabric_clean[col].fillna(metabric_clean[col].median())
+\end{lstlisting}
+
+\subsection{Outlier Treatment}
+\label{app:outliers}
+\begin{lstlisting}[language=Python, caption=Outlier Capping]
+Q1 = metabric_clean[col].quantile(0.25)
+Q3 = metabric_clean[col].quantile(0.75)
+IQR = Q3 - Q1
+upper_bound = Q3 + 1.5 * IQR
+cap_value = metabric_clean[col].quantile(0.95)
+metabric_clean[col] = np.where(metabric_clean[col] > upper_bound, cap_value, metabric_clean[col])
+\end{lstlisting}
+
+\subsection{Feature Engineering}
+\label{app:feature_eng}
+\begin{lstlisting}[language=Python, caption=Feature Engineering]
+metabric_clean['hormone_receptor_score'] = metabric_clean['er_status_encoded'] + metabric_clean['pr_status_encoded']
+metabric_clean['triple_negative'] = ((metabric_clean['er_status_encoded'] == 0) & 
+                                     (metabric_clean['pr_status_encoded'] == 0) & 
+                                     (metabric_clean['her2_status_encoded'] == 0)).astype(int)
+\end{lstlisting}
+
+\subsection{Target Variable Creation}
+\label{app:target_creation}
+\begin{lstlisting}[language=Python, caption=Target Variable Logic]
+# Aggressiveness Score Calculation
+metabric_clean['aggressiveness_score'] = (grade_norm * 3 + stage_norm * 3 + nodes_norm * 2 + npi_norm * 2)
+
+# Evolution Target (Speed of Progression)
+metabric_clean['growth_rate'] = metabric_clean['aggressiveness_score'] / (metabric_clean['overall_survival_months'] + 1)
+metabric_clean['evolution_6m'] = pd.qcut(metabric_clean['growth_rate'], q=3, labels=[0, 1, 2])
+\end{lstlisting}

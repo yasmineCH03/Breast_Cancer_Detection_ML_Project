@@ -22,7 +22,7 @@ patient_id,predicted_class,probability,risk_tier,action,timestamp,danger_flag_co
 85382601,MALIGNANT,0.997,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-17T17:30:45.079Z,0,Concave Points Mean,0.12,Concavity Mean,0.24,Texture Worst,32.09,Concavity Worst,0.56,Symmetry Worst,0.35,,,2025-12-17
 854002,MALIGNANT,0.998,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-17T17:30:45.079Z,0,Concavity Worst,0.61,Symmetry Worst,0.37,Radius Worst,24.15,Area Worst,1813.0,Texture Worst,30.9,,,
 854039,MALIGNANT,0.96,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-17T17:30:45.079Z,0,Symmetry Worst,0.43,Concavity Worst,0.53,Concave Points Worst,0.19,Concave Points Mean,0.08,Radius Worst,20.21,,,
-854941,BENIGN,0.0069999999999999,LOW,CONTINUE SCREENING,2025-12-17T17:30:45.079Z,0,Symmetry Worst,0.2,Smoothness Worst,0.1,Concavity Worst,0.05,Radius SE,0.18,Concave Points Worst,0.05,,,
+854941,BENIGN,0.0069999999999999,LOW,CONTINUE SCREENING,2025-12-17T17:30:45.079Z,0,Symmetry Worst,0.2,Smoothness Worst,0.1,Concavity Worst,0.05,Radius SE,0.18,Concave Points Worst,0.05,,,2025-12-10
 857155,BENIGN,0.055,LOW,CONTINUE SCREENING,2025-12-17T17:30:45.079Z,0,Texture Worst,20.7,Concave Points Worst,0.07,Texture Mean,14.63,Smoothness Worst,0.15,Concave Points Mean,0.03,,,
 857156,BENIGN,0.294,LOW,CONTINUE SCREENING,2025-12-17T17:30:45.079Z,0,Texture Worst,31.82,Radius SE,0.23,Smoothness Worst,0.12,Compactness SE,0.01,Fractal Dim SE,0.0,,,
 857343,BENIGN,0.023,LOW,CONTINUE SCREENING,2025-12-17T17:30:45.079Z,0,Concave Points Mean,0.01,Concave Points Worst,0.04,Concavity Worst,0.06,Symmetry Worst,0.24,Smoothness Worst,0.11,,,
@@ -66,3 +66,13 @@ S-1766000334528,MALIGNANT,0.685,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-17T19:39:34.
 870008,BENIGN,0.021,LOW,CONTINUE SCREENING,2025-12-17T19:56:48.760Z,0,Symmetry Worst,0.23,Concave Points Mean,0.02,Radius SE,0.18,Concavity Worst,0.1,Smoothness Worst,0.11,,,
 870009,MALIGNANT,0.7829999999999999,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-17T19:56:48.760Z,0,Concavity Worst,0.5,Symmetry Worst,0.33,Concavity Mean,0.16,Concave Points Mean,0.07,Concave Points Worst,0.15,,,
 870010,MALIGNANT,0.951,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-17T19:56:48.760Z,0,Concavity Worst,0.56,Symmetry Worst,0.35,Concavity Mean,0.18,Concave Points Mean,0.08,Radius Worst,20.6,,,
+870001,MALIGNANT,0.6409999999999999,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-19T12:14:09.383Z,0,Concavity Worst,0.48,Concavity Mean,0.15,Concave Points Mean,0.07,Symmetry Worst,0.32,Texture Worst,23.5,,,
+870002,MALIGNANT,0.877,HIGH,DIAGNOSTIC IMAGING,2025-12-19T12:14:09.383Z,0,Concavity Worst,0.52,Symmetry Worst,0.34,Concavity Mean,0.17,Concave Points Mean,0.07,Concave Points Worst,0.16,,,
+870003,BENIGN,0.047,LOW,CONTINUE SCREENING,2025-12-19T12:14:09.383Z,0,Texture Worst,20.2,Texture Mean,14.1,Concave Points Worst,0.06,Radius SE,0.24,Concave Points Mean,0.03,,,
+870004,MALIGNANT,0.996,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-19T12:14:09.383Z,0,Concavity Worst,0.62,Symmetry Worst,0.37,Area Worst,1815.8,Radius Worst,23.8,Radius SE,0.74,,,
+870005,BENIGN,0.013000000000000001,LOW,CONTINUE SCREENING,2025-12-19T12:14:09.383Z,0,Concave Points Mean,0.01,Concave Points Worst,0.04,Concavity Worst,0.05,Symmetry Worst,0.24,Smoothness Worst,0.11,,,
+870006,MALIGNANT,0.998,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-19T12:14:09.383Z,0,Concavity Worst,0.61,Symmetry Worst,0.37,Radius Worst,24.1,Area Worst,1816.4,Texture Worst,31.3,,,
+870007,MALIGNANT,0.961,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-19T12:14:09.383Z,0,Symmetry Worst,0.43,Concavity Worst,0.53,Concave Points Worst,0.19,Concave Points Mean,0.08,Radius Worst,20.2,,,
+870008,BENIGN,0.021,LOW,CONTINUE SCREENING,2025-12-19T12:14:09.383Z,0,Symmetry Worst,0.23,Concave Points Mean,0.02,Radius SE,0.18,Concavity Worst,0.1,Smoothness Worst,0.11,,,
+870009,MALIGNANT,0.7829999999999999,MEDIUM,SHORT-TERM FOLLOW-UP,2025-12-19T12:14:09.383Z,0,Concavity Worst,0.5,Symmetry Worst,0.33,Concavity Mean,0.16,Concave Points Mean,0.07,Concave Points Worst,0.15,,,
+870010,MALIGNANT,0.951,CRITICAL,IMMEDIATE DIAGNOSTIC BIOPSY,2025-12-19T12:14:09.383Z,0,Concavity Worst,0.56,Symmetry Worst,0.35,Concavity Mean,0.18,Concave Points Mean,0.08,Radius Worst,20.6,,,

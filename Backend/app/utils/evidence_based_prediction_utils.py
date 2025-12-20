@@ -202,9 +202,9 @@ def get_evidence_based_risk_stratification(probability):
         tier = guidelines['risk_stratification']['critical_risk']
     elif probability >= 0.80:
         tier = guidelines['risk_stratification']['high_risk']
-    elif probability >= 0.60:
-        tier = guidelines['risk_stratification']['medium_risk']
     elif probability >= 0.40:
+        tier = guidelines['risk_stratification']['medium_risk']
+    elif probability >= 0.20:
         tier = guidelines['risk_stratification']['low_risk']
     else:
         tier = guidelines['risk_stratification']['very_low_risk']

@@ -1,0 +1,287 @@
+\documentclass[11pt,a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[default]{sourcesanspro} % Modern sans-serif font
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage[most,skins]{tcolorbox}
+\usepackage{titletoc}
+\usepackage{setspace} % For line spacing
+\usepackage{caption}  % For caption styling
+\usepackage{subcaption} % For subfigures
+\usepackage{enumitem} % For list customization
+\usepackage{amssymb} % For math symbols like \mathbb
+\usetikzlibrary{calc, fadings, shadows.blur, shapes.geometric}
+
+% Typography & Spacing
+\setstretch{1.15} % Slightly increased line spacing
+\setlength{\parskip}{1em} % Increased spacing between paragraphs
+\setlength{\parindent}{0pt} % No indentation
+
+% Caption Styling
+\captionsetup{
+    font={small, color=textGray},
+    labelfont={bf, color=primaryPink},
+    labelsep=endash,
+    margin=10pt
+}
+
+% List Styling - Compact
+\setlist[itemize]{label=\textcolor{primaryPink}{\textbullet}, leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt}
+\setlist[enumerate]{label=\textcolor{primaryPink}{\textbf{\arabic*.}}, leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt}
+
+% Custom Info Boxes - Minimalist
+\newtcolorbox{infobox}[1][]{
+    colback=white,
+    colframe=textGray,
+    coltitle=textDark,
+    title={\textbf{Insight}},
+    fonttitle=\bfseries\small,
+    arc=0mm,
+    boxrule=0.5pt,
+    left=5pt, right=5pt, top=2pt, bottom=2pt,
+    #1
+}
+
+\newtcolorbox{note}[1][]{
+    colback=white,
+    colframe=textGray,
+    coltitle=textDark,
+    title={\textbf{Note}},
+    fonttitle=\bfseries\small,
+    arc=0mm,
+    boxrule=0.5pt,
+    left=5pt, right=5pt, top=2pt, bottom=2pt,
+    #1
+}
+
+
+% Geometry - Balanced
+\geometry{
+    left=2.0cm,
+    right=2.0cm,
+    top=2.0cm,
+    bottom=2.0cm
+}
+\setlength{\headheight}{25pt}
+
+% Colors (Extracted from HTML)
+\definecolor{primaryPink}{RGB}{194, 24, 91}
+\definecolor{accentPink}{RGB}{233, 30, 99}
+\definecolor{textDark}{RGB}{26, 26, 26}
+\definecolor{textGray}{RGB}{107, 114, 128}
+\definecolor{bgLight}{RGB}{250, 250, 250}
+\definecolor{cardBg}{RGB}{255, 255, 255}
+
+% Hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryPink,
+    filecolor=primaryPink,
+    urlcolor=primaryPink,
+    citecolor=primaryPink,
+    pdftitle={OncoCare Project Report},
+}
+
+% Code listing style
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    keywordstyle=\color{primaryPink}\bfseries,
+    commentstyle=\color{textGray},
+    stringstyle=\color{green!50!black},
+    backgroundcolor=\color{gray!10}
+}
+
+% Title Format - Compact
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{textDark}}{\chaptertitlename\ \thechapter}{10pt}{\Huge}[\vspace{0.5ex}\color{primaryPink}\titlerule]
+\titlespacing*{\chapter}{0pt}{-40pt}{10pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{textDark}}{\color{primaryPink}\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{5pt}{2pt}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{textDark}}{\color{primaryPink}\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{5pt}{2pt}
+
+% Table of Contents Styling
+\titlecontents{chapter}[0em]
+  {\addvspace{0.5pc}\bfseries\color{textDark}}
+  {\color{textDark}\contentslabel[\thecontentslabel]{2em}}
+  {}
+  {\hfill\color{textDark}\bfseries\thecontentspage}
+
+\titlecontents{section}[2em]
+  {\addvspace{0.1pc}\color{textGray}}
+  {\contentslabel{2.3em}}
+  {}
+  {\titlerule*[0.75pc]{.}\contentspage}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.5pt} % Thin header line
+\renewcommand{\headrule}{\hbox to\headwidth{\color{textGray!50}\leaders\hrule height \headrulewidth\hfill}}
+\fancyhead[L]{\textcolor{textGray}{\small\bfseries OncoCare}}
+\fancyhead[R]{\textcolor{textGray}{\small \leftmark}}
+\fancyfoot[C]{\textcolor{textGray}{\thepage}}
+
+% Custom TColorBox for Cards
+\newtcolorbox{metacard}[2][]{
+    colback=cardBg,
+    colframe=gray!20,
+    width=#2,
+    boxrule=1pt,
+    arc=4mm,
+    auto outer arc,
+    boxsep=5pt,
+    left=5pt, right=5pt, top=5pt, bottom=5pt,
+    enhanced,
+    fontupper=\centering,
+    #1
+}
+
+\begin{document}
+
+% --- COVER PAGE ---
+\begin{titlepage}
+    \newgeometry{left=0cm, right=0cm, top=0cm, bottom=0cm}
+    \thispagestyle{empty}
+
+    % --- Professional Background & Visuals ---
+    \begin{tikzpicture}[remember picture, overlay]
+        % 1. Premium Left Sidebar (Brand Color Gradient)
+        \shade[top color=primaryPink, bottom color=accentPink] 
+            (current page.north west) rectangle ([xshift=3cm]current page.south west);
+        
+        % 2. Sidebar Texture (Subtle Dots)
+        \foreach \y in {-20,-19.5,...,20} {
+             \fill[white, opacity=0.15] (1.5,\y) circle (0.8pt);
+        }
+
+        % 3. Top Right Geometric Accent
+        \fill[primaryPink!5] 
+            ([xshift=0cm, yshift=-12cm]current page.north east) 
+            -- ([xshift=-12cm, yshift=0cm]current page.north east) 
+            -- (current page.north east) -- cycle;
+
+        % 4. Bottom Footer Bar (Dark Contrast)
+        \fill[textDark] 
+            ([xshift=3cm, yshift=0cm]current page.south west) rectangle (current page.south east);
+            
+        % 5. Abstract "Pink Ribbon" Flow (Subtle Background)
+        \path[fill=primaryPink!2] 
+            ([xshift=3cm, yshift=5cm]current page.south west) 
+            .. controls ([xshift=8cm, yshift=15cm]current page.south west) and ([xshift=15cm, yshift=10cm]current page.south west) 
+            .. (current page.north east) 
+            -- ([xshift=3cm]current page.north east) -- cycle;
+    \end{tikzpicture}
+
+    % --- Content Layout ---
+    \vspace{5cm} % Top Margin relative to page
+    \hspace{5cm} % Left Margin (clear of sidebar)
+    \begin{minipage}{0.75\textwidth}
+        
+        % Header: Institution & Context
+        \begin{flushright}
+            \vspace{-3cm}
+            {\fontfamily{qhv}\selectfont\scriptsize\bfseries\color{textGray} ÉCOLE SUPÉRIEURE PRIVÉE D'INGÉNIERIE ET DE TECHNOLOGIE} \\
+            {\fontfamily{qhv}\selectfont\tiny\bfseries\color{primaryPink} DÉPARTEMENT INFORMATIQUE — ANNÉE UNIVERSITAIRE 2025/2026}
+            \vspace{3cm}
+        \end{flushright}
+
+        % Project Label
+        {\fontfamily{qhv}\selectfont\scriptsize\bfseries\color{accentPink} \MakeUppercase{Projet de Recherche — Advanced Machine Learning}} \\
+        \vspace{0.3cm}
+
+        % Main Title (High Impact Typography)
+        {\fontsize{40}{48}\selectfont\bfseries\color{textDark} Intelligent Breast \\ Cancer Diagnosis \\ \textcolor{primaryPink}{and Triage System} \par}
+        
+        \vspace{1.5cm}
+        
+        % Mission Statement / Subtitle (Styled Box)
+        \begin{tcolorbox}[
+            colback=white,
+            colframe=primaryPink,
+            leftrule=3pt,
+            rightrule=0pt,
+            toprule=0pt,
+            bottomrule=0pt,
+            arc=0mm,
+            boxsep=0pt,
+            left=15pt,
+            width=\linewidth,
+            nobeforeafter
+        ]
+            \color{textGray}\small\itshape
+            "Un système d'aide à la décision clinique explicatif, conçu pour améliorer le triage précoce des lésions mammaires — en hommage à toutes les femmes touchées par le cancer du sein."
+        \end{tcolorbox}
+
+        \vspace{4.5cm}
+
+        % Team & Supervisor Grid
+        \begin{tabular}{@{}p{0.45\textwidth} p{0.45\textwidth}@{}}
+            {\scriptsize\bfseries\color{textGray} ÉQUIPE DE PROJET} & {\scriptsize\bfseries\color{textGray} ENCADRANTE} \\
+            \vspace{0.1cm} & \vspace{0.1cm} \\
+            \textbf{Yasmine Chebbi} & \textbf{Mme Wiem Trabelsi} \\
+            \textbf{Maram Chebbi} & \\
+            \textbf{Malek Kammoun} & {\scriptsize\bfseries\color{textGray} CLASSE / MODULE} \\
+            \textbf{Marwen Jnene} & 4DS11 — Advanced ML
+        \end{tabular}
+
+    \end{minipage}
+    
+    % --- Footer Info (On Dark Bar) ---
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[text=white, font=\footnotesize\bfseries, anchor=east] at ([xshift=-1.5cm, yshift=1cm]current page.south east) {TUNIS, TUNISIE};
+        \node[text=white, font=\footnotesize\bfseries, anchor=west] at ([xshift=4.5cm, yshift=1cm]current page.south west) {ESPRIT};
+    \end{tikzpicture}
+    
+    \restoregeometry
+\end{titlepage}
+
+
+
+% Table of Contents
+{
+  \newgeometry{left=3cm,right=3cm,top=2.5cm,bottom=2.5cm} % Wider margins
+  \hypersetup{linkcolor=textDark}
+  \setlength{\parskip}{2pt} % Compact spacing
+  \tableofcontents
+  \newpage
+  \listoffigures
+  \listoftables
+  \restoregeometry
+}
+
+% Chapters
+\include{chapters/01_introduction}
+\include{chapters/02_business_understanding}
+\include{chapters/03_data_understanding}
+\include{chapters/04_data_preprocessing}
+\include{chapters/05_modeling}
+\include{chapters/06_evaluation}
+\include{chapters/07_deployment}
+\include{chapters/08_conclusion}
+
+\appendix
+\include{chapters/99_appendix}
+
+\end{document}
